@@ -7,11 +7,13 @@
     tools:context=".MainActivity">
 
     <Button
+        android:id="@+id/button"
+        style="@style/MaterialDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Click me!"
         android:layout_marginBottom="10dp"
-        android:id="@+id/button"/>
+        android:text="Click me!"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
     <EditText
         android:layout_width="match_parent"
