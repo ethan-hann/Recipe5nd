@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click me!"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/button"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter search term here"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/button"
+        android:inputType="text"
+        android:id="@+id/search_param"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/search_param">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/button"
+            android:padding="10dp"
+            android:textSize="21sp"
+            android:id="@+id/fetched_data"
+            android:hint="Fetched Recipes Here!"/>
+    </ScrollView>
+
+
+
+</RelativeLayout>
