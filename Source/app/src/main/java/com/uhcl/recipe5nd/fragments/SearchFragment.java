@@ -1,9 +1,13 @@
 package com.uhcl.recipe5nd.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -11,6 +15,7 @@ import android.widget.TextView;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.backgroundTasks.FetchData;
 import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.Helper;
 import com.uhcl.recipe5nd.helperClasses.Recipe;
 
 import java.net.MalformedURLException;
@@ -39,33 +44,39 @@ public class SearchFragment extends Fragment
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                FetchData process = new FetchData();
-                try {
-                    //Build URL from user input
-                    URL searchURL = new URL(Constants.baseURL + Constants.API_KEY +
-                            Constants.searchSuffix + searchParams.getText());
-
-                    process.execute(searchURL);
-                    recipes = process.get();
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if (!recipes.isEmpty()) {
-                    data.setText(recipes.get(0).getRecipeInformation()); //TODO: display all recipes found
-                }
-                else
+            public void onClick(View view)
+            {
+                //make sure the text box is non-empty
+                if (!TextUtils.isEmpty(searchParams.getText()))
                 {
-                    data.setText("Sorry, no recipes could be found for " + searchParams.getText() + " :(");
+                    Helper.hideKeyboard(getActivity());
+                    searchParams.clearFocus();
+                    FetchData process = new FetchData();
+                    try {
+                        //Build URL from user input
+                        URL searchURL = new URL(Constants.baseURL + Constants.API_KEY +
+                                Constants.searchSuffix + searchParams.getText());
+
+                        process.execute(searchURL);
+                        recipes = process.get();
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (!recipes.isEmpty()) {
+                        data.setText(recipes.get(0).getRecipeInformation()); //TODO: display all recipes found
+                    }
+                    else
+                    {
+                        data.setText("Sorry, no recipes could be found for " + searchParams.getText() + " :(");
+                    }
                 }
             }
         });
-
         return view;
     }
 }
