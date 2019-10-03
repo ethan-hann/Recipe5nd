@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="MaterialDark" parent="Theme.AppCompat">
+    <style name="MaterialDark" parent="Theme.MaterialComponents">
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/secondaryColor</item>
@@ -9,6 +9,12 @@
         <item name="android:textColorSecondary">@color/secondaryTextColor</item>
         <item name="android:navigationBarColor">@color/nav_color</item>
         <item name="android:windowBackground">@color/window_background</item>
+        <item name="actionBarTheme">@style/Theme.MaterialComponents.DayNight.DarkActionBar</item>
+    </style>
+
+    <style name="MaterialDark.NoActionBar" parent="MaterialDark">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
 </resources>
