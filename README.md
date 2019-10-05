@@ -1,2 +1,2 @@
-# Reverse-Recipe-App
-An Android application that allows the user to search for recipes by ingredients.
+# Recipe5nd
+This branch of the project is for tracking the development of FR-01: searching by ingredients. For a list of features, see **README.md** in the master branch.
