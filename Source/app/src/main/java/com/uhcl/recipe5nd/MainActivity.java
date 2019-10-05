@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -22,10 +23,12 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.uhcl.recipe5nd.adapters.SearchIngredientsAdapter;
 import com.uhcl.recipe5nd.backgroundTasks.FetchData;
 import com.uhcl.recipe5nd.fragments.SearchFragment;
@@ -42,10 +45,9 @@ import java.util.concurrent.ExecutionException;
 //TODO: create string references in strings.xml
 //TODO: make 'catch' branches more specific
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-
+        implements NavigationView.OnNavigationItemSelectedListener
+{
     private DrawerLayout drawer;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,4 +130,5 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
 }

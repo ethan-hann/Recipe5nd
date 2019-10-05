@@ -58,6 +58,11 @@ public class SearchIngredientsAdapter extends RecyclerView.Adapter<SearchIngredi
         return usersIngredients.size();
     }
 
+    public void updateList(ArrayList<Ingredient> newList) {
+        usersIngredients = newList;
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         private SparseBooleanArray itemStateArray = new SparseBooleanArray();
