@@ -1,18 +1,17 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="MaterialDark" parent="Theme.MaterialComponents">
+    <!-- Base application theme. Used by application to apply overall styling -->
+    <style name="Theme.Recipe5nd.Dark" parent="Theme.MaterialComponents.DayNight">
         <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
-        <item name="colorAccent">@color/secondaryColor</item>
-        <item name="android:textColorPrimary">@color/primaryTextColor</item>
-        <item name="android:textColorSecondary">@color/secondaryTextColor</item>
-        <item name="android:navigationBarColor">@color/nav_color</item>
-        <item name="android:windowBackground">@color/window_background</item>
-        <item name="actionBarTheme">@style/Theme.MaterialComponents.DayNight.DarkActionBar</item>
+        <item name="colorPrimaryVariant">@color/primaryDarkColor</item>
+        <item name="colorOnPrimary">@color/primaryTextColor</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorSecondaryVariant">@color/secondaryDarkColor</item>
+        <item name="colorOnSecondary">@color/secondaryTextColor</item>
     </style>
 
-    <style name="MaterialDark.NoActionBar" parent="MaterialDark">
+    <!-- Base theme with no action bar. Used by all Fragments. -->
+    <style name="Theme.Recipe5nd.Dark.NoActionBar" parent="Theme.Recipe5nd.Dark">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

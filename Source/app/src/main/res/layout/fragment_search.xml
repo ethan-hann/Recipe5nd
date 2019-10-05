@@ -1,47 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:theme="@style/MaterialDark"
+    android:theme="@style/Theme.Recipe5nd.Dark"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:clickable="true">
 
-    <EditText
+    <TextView
+        android:id="@+id/search_help_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/search_term"
-        android:layout_marginBottom="10dp"
-        android:inputType="text"
-        android:id="@+id/searchTerm"/>
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:text="@string/search_help" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="576dp"
+        android:padding="10dp"
+        android:layout_below="@id/search_help_text">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <Button
-        android:id="@+id/button"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/searchTerm"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="10dp"
-        android:elevation="2dp"
-        android:text="@string/search_button_text"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Button" />
-
-    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/button">
-
-        <TextView
-            android:id="@+id/fetched_data"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/fetched_view_hint"
-            android:padding="10dp"
-            android:textSize="21sp" />
-    </ScrollView>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/recycler_view"
+        android:insetLeft="28dp"
+        android:insetTop="8dp"
+        android:insetRight="28dp"
+        android:insetBottom="8dp"
+        android:padding="16dp"
+        android:text="@string/search_button_text" />
 
 </RelativeLayout>

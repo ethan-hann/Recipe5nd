@@ -19,8 +19,8 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/primaryColor"
             android:id="@+id/toolbar"
-            android:theme="@style/MaterialDark"
-            app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light"
+            android:theme="@style/Theme.Recipe5nd.Dark"
+            app:popupTheme="@style/Theme.Recipe5nd.Dark"
             android:elevation="4dp" />
 
         <FrameLayout
@@ -34,7 +34,7 @@
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:theme="@style/MaterialDark"
+        android:theme="@style/Theme.Recipe5nd.Dark"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/drawer_menu" />
 

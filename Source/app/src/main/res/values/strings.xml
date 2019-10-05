@@ -4,13 +4,12 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="nav_drawer_search">Search for Recipes</string>
+    <string name="nav_drawer_search">Search</string>
     <string name="nav_drawer_pantry">Edit Ingredients</string>
     <string name="nav_drawer_viewFavorites">View Favorite Recipes</string>
-    <string name="nav_drawer_shopping">Shopping List</string>
+    <string name="nav_drawer_shopping">Shopping Lists</string>
 
-    <string name="search_term">Enter search term here &#x22EF;</string>
+    <string name="search_help">Select at least one ingredient below to build the search.</string>
     <string name="search_button_text">Search</string>
-    <string name="fetched_view_hint">Fetched Results Here</string>
 
 </resources>
