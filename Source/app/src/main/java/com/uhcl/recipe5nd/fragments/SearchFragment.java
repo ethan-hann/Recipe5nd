@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 
 import com.uhcl.recipe5nd.R;
@@ -26,14 +27,20 @@ import androidx.recyclerview.widget.RecyclerView;
 public class SearchFragment extends Fragment
 {
     private ArrayList<Ingredient> ingredientsList = new ArrayList<>();
+
     private RecyclerView recyclerView;
     private SearchIngredientsAdapter recyclerAdapter;
+    private Button searchButton;
+    private Button clearButton;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+
+        //initialize data
+        getIngredientsFromPantry();
 
         //get a reference to recyclerView
         recyclerView = rootView.findViewById(R.id.recycler_view);
@@ -47,11 +54,28 @@ public class SearchFragment extends Fragment
         //set adapter
         recyclerView.setAdapter(recyclerAdapter);
 
+        recyclerAdapter.notifyDataSetChanged();
+
         //set item animator
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        //initialize data
-        getIngredientsFromPantry();
+        searchButton = rootView.findViewById(R.id.search_button);
+        clearButton = rootView.findViewById(R.id.clear_search_button);
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("SEARCH HAS BEEN CLICKED!");//TODO: implement search
+            }
+        });
+
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("CLEAR HAS BEEN CLICKED!");//TODO: implement clearing
+            }
+        });
+
         return rootView;
     }
 
@@ -91,7 +115,5 @@ public class SearchFragment extends Fragment
         ingredientsList.add(ing14);
         ingredientsList.add(ing15);
         ingredientsList.add(ing16);
-
-        recyclerAdapter.notifyDataSetChanged();
     }
 }

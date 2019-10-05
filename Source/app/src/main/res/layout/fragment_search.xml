@@ -1,37 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:theme="@style/Theme.Recipe5nd.Dark"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:clickable="true">
+    android:clickable="true"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/search_help_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:padding="10dp"
+        android:text="@string/search_help"
         android:textAlignment="center"
-        android:text="@string/search_help" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="576dp"
-        android:padding="10dp"
-        android:layout_below="@id/search_help_text">
-
+        android:layout_height="0dp"
+        android:layout_weight="8.5"
+        android:layout_marginTop="8dp"
+        android:padding="10dp">
     </androidx.recyclerview.widget.RecyclerView>
 
-    <Button
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/recycler_view"
-        android:insetLeft="28dp"
-        android:insetTop="8dp"
-        android:insetRight="28dp"
-        android:insetBottom="8dp"
-        android:padding="16dp"
-        android:text="@string/search_button_text" />
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:layout_weight="1.0">
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_margin="8dp"
+            android:text="@string/search_button_text" />
+
+        <Button
+            android:id="@+id/clear_search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="8dp"
+            android:layout_toEndOf="@id/search_button"
+            android:text="@string/clear_search_button_text" />
+    </RelativeLayout>
+
+
+</LinearLayout>

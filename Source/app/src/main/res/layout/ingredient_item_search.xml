@@ -11,10 +11,12 @@
     android:paddingEnd="16dp"
     android:paddingTop="10dp">
 
-    <CheckBox
+    <CheckedTextView
         android:id="@+id/ingredient_item_checkbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:checked="false"
+        android:drawableStart="?android:attr/listChoiceIndicatorMultiple"
         android:layout_alignParentTop="true"/>
-
+    <!--android:checkMark="?android:attr/listChoiceIndicatorMultiple"-->
 </RelativeLayout>

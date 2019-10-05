@@ -10,6 +10,7 @@
     <string name="nav_drawer_shopping">Shopping Lists</string>
 
     <string name="search_help">Select at least one ingredient below to build the search.</string>
-    <string name="search_button_text">Search</string>
+    <string name="search_button_text">Search For Recipes</string>
+    <string name="clear_search_button_text">Clear</string>
 
 </resources>

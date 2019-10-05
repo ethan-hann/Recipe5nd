@@ -12,5 +12,5 @@ public class Constants
 
     public static final int SEARCH_TIMEOUT = 5;
 
-    public static ArrayList<Ingredient> ingredientsToIncludeInSearch = new ArrayList<>();
+    public static ArrayList<Ingredient> selectedIngredients;
 }
