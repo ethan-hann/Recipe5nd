@@ -1,4 +1,4 @@
-package com.uhcl.recipe5nd;
+package com.uhcl.recipe5nd.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -6,41 +6,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
-import com.uhcl.recipe5nd.adapters.SearchIngredientsAdapter;
-import com.uhcl.recipe5nd.backgroundTasks.FetchData;
+import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.fragments.SearchFragment;
-import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.Helper;
-import com.uhcl.recipe5nd.helperClasses.Ingredient;
-import com.uhcl.recipe5nd.helperClasses.Recipe;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 //TODO: create string references in strings.xml
 //TODO: make 'catch' branches more specific
@@ -98,6 +75,7 @@ public class MainActivity extends AppCompatActivity
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
         if (savedInstanceState == null)
         {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,

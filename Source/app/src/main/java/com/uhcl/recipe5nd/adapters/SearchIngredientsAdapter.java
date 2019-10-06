@@ -21,8 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
  * Includes a nested class @ViewHolder that defines the individual item within the recycler view
  */
 
-//TODO: Look into using 'CheckedTextView' instead of checkboxes:
-// https://android.jlelse.eu/android-handling-checkbox-state-in-recycler-views-71b03f237022
 public class SearchIngredientsAdapter extends RecyclerView.Adapter<SearchIngredientsAdapter.ViewHolder>
 {
     private static final String TAG = "SearchIngAdapter: ";

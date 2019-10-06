@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Recipe5nd.Dark">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:theme="@style/Theme.Recipe5nd.Dark.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
