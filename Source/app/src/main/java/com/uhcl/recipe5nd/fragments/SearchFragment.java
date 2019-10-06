@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.adapters.SearchIngredientsAdapter;
 import com.uhcl.recipe5nd.backgroundTasks.FetchIds;
-import com.uhcl.recipe5nd.backgroundTasks.FetchRecipe;
+import com.uhcl.recipe5nd.backgroundTasks.FetchRecipes;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.FilterResult;
 import com.uhcl.recipe5nd.helperClasses.Ingredient;
@@ -85,25 +85,22 @@ public class SearchFragment extends Fragment
                 }
                 else
                 {
-                    FetchIds process = new FetchIds();
-                    FetchRecipe recipeProcess = new FetchRecipe();
                     try {
                         //Build query and search based on ingredients; returns recipe ids
                         String query = buildQuery();
                         Log.i(TAG, "url: ".concat(query));
-                        process.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new URL(query));
-                        ArrayList<FilterResult> fetchedRecipeIds = process.get(Constants.SEARCH_TIMEOUT, TimeUnit.SECONDS);
-                        //TODO: figure out how to run and return multiple asynctasks at the same time...
-                        //After getting result from fetching recipe ids, need to now fetch individual recipes
-                        ArrayList<Recipe> recipes = new ArrayList<>();
-                        for (int i = 0; i < fetchedRecipeIds.size(); i++) {
-                            Recipe r = new Recipe();
-                            recipeProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, fetchedRecipeIds.get(i).getId());
-                            recipes.add(r);
+                        FetchIds getIds = new FetchIds();
+                        getIds.execute(new URL(query));
+                        ArrayList<FilterResult> ids = getIds.get(Constants.SEARCH_TIMEOUT, TimeUnit.SECONDS);
+                        ArrayList<String> stringIds = new ArrayList<>();
+                        for (FilterResult f : ids) {
+                            stringIds.add(f.getId());
                         }
-                        for (Recipe r : recipes) {
-                            System.out.println(r.getRecipeInformation());
-                        }
+                        FetchRecipes recipeProcess = new FetchRecipes();
+                        recipeProcess.execute(stringIds);
+                        ArrayList<Recipe> recipes = recipeProcess.get(Constants.SEARCH_TIMEOUT, TimeUnit.SECONDS);
+
+                        System.out.println(recipes.size());
                     } catch (MalformedURLException |
                             ExecutionException |
                             InterruptedException |
