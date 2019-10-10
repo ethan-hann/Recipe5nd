@@ -1,6 +1,5 @@
 package com.uhcl.recipe5nd.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,18 +11,19 @@ import android.widget.Toast;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.adapters.SearchIngredientsAdapter;
 import com.uhcl.recipe5nd.backgroundTasks.FetchIds;
-import com.uhcl.recipe5nd.backgroundTasks.FetchRecipes;
+import com.uhcl.recipe5nd.backgroundTasks.FetchRecipe;
+import com.uhcl.recipe5nd.helperClasses.APIConnector;
 import com.uhcl.recipe5nd.helperClasses.Constants;
-import com.uhcl.recipe5nd.helperClasses.FilterResult;
 import com.uhcl.recipe5nd.helperClasses.Ingredient;
+import com.uhcl.recipe5nd.helperClasses.QueryType;
 import com.uhcl.recipe5nd.helperClasses.Recipe;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -80,35 +80,65 @@ public class SearchFragment extends Fragment
             public void onClick(View view) {
                 //ensure at least one ingredient is selected to include in search
                 if (Constants.selectedIngredients.isEmpty()) {
-                    Toast t = Toast.makeText(getContext(), "You must select at least one ingredient!", Toast.LENGTH_LONG);
+                    Toast t = Toast.makeText(getContext(), "Please select at least one ingredient", Toast.LENGTH_LONG);
                     t.show();
                 }
                 else
                 {
-                    try {
-                        //Build query and search based on ingredients; returns recipe ids
-                        String query = buildQuery();
-                        Log.i(TAG, "url: ".concat(query));
-                        FetchIds getIds = new FetchIds();
-                        getIds.execute(new URL(query));
-                        ArrayList<FilterResult> ids = getIds.get(Constants.SEARCH_TIMEOUT, TimeUnit.SECONDS);
-                        ArrayList<String> stringIds = new ArrayList<>();
-                        for (FilterResult f : ids) {
-                            stringIds.add(f.getId());
-                        }
-                        FetchRecipes recipeProcess = new FetchRecipes();
-                        recipeProcess.execute(stringIds);
-                        ArrayList<Recipe> recipes = recipeProcess.get(Constants.SEARCH_TIMEOUT, TimeUnit.SECONDS);
+                    try
+                    {
+                        /*
+                         To look up recipes by their ingredients, we have to look up by both id and ingredients.
+                         The first API call returns a list of ids that match meals who include the ingredients.
+                         The second API call returns a list of recipes that match those ids.
 
-                        System.out.println(recipes.size());
-                    } catch (MalformedURLException |
-                            ExecutionException |
-                            InterruptedException |
-                            TimeoutException e) {
-                        e.printStackTrace();
+                         Note that these two calls cannot be run in parallel because the second
+                         call depends on the result of the first.
+                         */
+                        String ingredientQuery = APIConnector.buildQueryString(QueryType.SEARCH_BY_INGREDIENTS, "");
+                        Log.i(TAG, "idURL: " + ingredientQuery);
+                        ArrayList<String> ids = new FetchIds().execute(new URL(ingredientQuery)).get();
+
+                        if (ids != null) {
+                            ArrayList<String> recipeQueries = new ArrayList<>();
+                            for (int i = 0; i < ids.size(); i++) {
+                                recipeQueries.add(APIConnector.buildQueryString(QueryType.SEARCH_BY_ID, ids.get(i)));
+                            }
+
+                            URL[] recipeQueryURLS = new URL[recipeQueries.size()];
+
+                            for (int i = 0; i < recipeQueryURLS.length; i++) {
+                                recipeQueryURLS[i] = new URL(recipeQueries.get(i));
+                            }
+
+                            ArrayList<Recipe> recipes = new FetchRecipe().execute(recipeQueryURLS).get();
+
+                            if (recipes != null) {
+                                Log.i(TAG, "Search returned " + recipes.size() + " recipes");
+                                for (Recipe r : recipes) {
+                                    Log.i(TAG, "Recipe Info: " + r.getRecipeInformation());
+                                }
+                                Toast t = Toast.makeText(getContext(),
+                                        String.format(Locale.US, "Found %d recipes",
+                                                recipes.size()), Toast.LENGTH_LONG);
+                                t.show();
+                            }
+                            else
+                            {
+                                Log.i(TAG, "No recipes found");
+                            }
+                        }
+                        else
+                        {
+                            Toast t = Toast.makeText(getContext(), "No recipes were found with those ingredients", Toast.LENGTH_LONG);
+                            t.show();
+                        }
+
+                    } catch (MalformedURLException | ExecutionException | InterruptedException e)
+                    {
+                        Log.e(TAG, "onClick: ", e);
                     }
                 }
-                System.out.println("SEARCH HAS BEEN CLICKED!");//TODO: implement search
             }
         });
 
@@ -124,23 +154,9 @@ public class SearchFragment extends Fragment
         return rootView;
     }
 
-    private String buildQuery() {
-        StringBuilder builder = new StringBuilder();
-        String base = Constants.BASE_URL.concat(Constants.API_KEY).concat(Constants.FILTER_SUFFIX);
-        ArrayList<String> ingredientStrings = new ArrayList<>();
-        builder.append(base);
 
-        for (Ingredient i : Constants.selectedIngredients) {
-            ingredientStrings.add(i.getName());
-        }
-        for (int i = 0; i < ingredientStrings.size()-1; i++) {
-            builder.append(ingredientStrings.get(i).concat(","));
-        }
-        builder.append(ingredientStrings.get(ingredientStrings.size()-1));
-        return builder.toString();
-    }
 
-    //TODO: implement reading from saved ingredients file!
+    //TODO: implement reading from saved JSON file containing user's ingredients!
     //TODO: TEMPORARY METHOD FOR TESTING
     private void getIngredientsFromPantry() {
         Ingredient ing1 = new Ingredient("Chicken");

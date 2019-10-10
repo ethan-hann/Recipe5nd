@@ -28,7 +28,8 @@ public class SearchIngredientsAdapter extends RecyclerView.Adapter<SearchIngredi
 
     public SearchIngredientsAdapter(ArrayList<Ingredient> ingredients) {
         this.usersIngredients = ingredients;
-        if (Constants.selectedIngredients == null) {
+        if (Constants.selectedIngredients == null)
+        {
             Constants.selectedIngredients = new ArrayList<>();
         }
     }
@@ -74,7 +75,8 @@ public class SearchIngredientsAdapter extends RecyclerView.Adapter<SearchIngredi
         }
 
         void bind(int pos) {
-            if (!itemStateArray.get(pos, false)) {
+            if (!itemStateArray.get(pos, false))
+            {
                 ingredientItem.setChecked(false);
             } else {
                 ingredientItem.setChecked(true);
