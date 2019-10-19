@@ -14,6 +14,8 @@ import com.uhcl.recipe5nd.backgroundTasks.FetchIds;
 import com.uhcl.recipe5nd.backgroundTasks.FetchRecipe;
 import com.uhcl.recipe5nd.helperClasses.APIConnector;
 import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.CreateJSON;
+import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Ingredient;
 import com.uhcl.recipe5nd.helperClasses.QueryType;
 import com.uhcl.recipe5nd.helperClasses.Recipe;
@@ -21,7 +23,6 @@ import com.uhcl.recipe5nd.helperClasses.Recipe;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
@@ -45,6 +46,7 @@ public class SearchFragment extends Fragment
     private SearchIngredientsAdapter recyclerAdapter;
     private Button searchButton;
     private Button clearButton;
+
 
     @Nullable
     @Override
@@ -147,7 +149,7 @@ public class SearchFragment extends Fragment
             public void onClick(View view) {
                 Constants.selectedIngredients = new ArrayList<>();
                 recyclerAdapter.notifyDataSetChanged();
-                System.out.println("CLEAR HAS BEEN CLICKED!");//TODO: implement clearing
+                System.out.println("CLEAR HAS BEEN CLICKED!");
             }
         });
 
@@ -159,6 +161,25 @@ public class SearchFragment extends Fragment
     //TODO: implement reading from saved JSON file containing user's ingredients!
     //TODO: TEMPORARY METHOD FOR TESTING
     private void getIngredientsFromPantry() {
+        FileHelper fileHelper = new FileHelper();
+        Recipe r = new Recipe();
+        r.setId("0");
+        r.setStrMeal("Spicy Arrabiata Penne");
+        r.setStrMealThumb("https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg");
+        r.setStrYoutube("https://www.youtube.com/watch?v=1IszT_guI08");
+        r.addIngredient("penne rigate");
+        r.addMeasurement("1 pound");
+        r.addIngredient("olive oil");
+        r.addMeasurement("1/4 cup");
+        r.setStrInstructions("Bring a large pot of water to a boil. Add kosher salt to the boiling water, then add the pasta. Cook according to the package instructions, about 9 minutes.\r\nIn a large skillet over medium-high heat, add the olive oil and heat until the oil starts to shimmer. Add the garlic and cook, stirring, until fragrant, 1 to 2 minutes. Add the chopped tomatoes, red chile flakes, Italian seasoning and salt and pepper to taste. Bring to a boil and cook for 5 minutes. Remove from the heat and add the chopped basil.\r\nDrain the pasta and add it to the sauce. Garnish with Parmigiano-Reggiano flakes and more basil and serve warm.");
+        ArrayList<Recipe> recipes = new ArrayList<>();
+        recipes.add(r);
+        String json = CreateJSON.createRecipeJSON(recipes);
+
+        fileHelper.saveFile(json, getContext(), "recipes.json");
+        //fileHelper.readFile(getContext(), "ingredients.json");
+
+
         Ingredient ing1 = new Ingredient("Chicken");
         Ingredient ing2 = new Ingredient("Beef");
         Ingredient ing3 = new Ingredient("Salmon");

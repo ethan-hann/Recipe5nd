@@ -10,6 +10,8 @@ import java.util.Locale;
 
 public class ParseJSON
 {
+    private static FileHelper fileHelper = new FileHelper();
+
     /**
      * Parses recipe ids from API based on a supplied HTTP response string
      * @param response the HTTP response
@@ -76,9 +78,24 @@ public class ParseJSON
      * @param ingredientFile the file to parse from
      * @return ArrayList of Ingredients representing the parsed data
      */
-    public static ArrayList<Ingredient> parseIngredients(File ingredientFile)
+    public static ArrayList<Ingredient> parseIngredients(String ingredientFile) throws JSONException
     {
-        //TODO: implement parsing ingredient JSON information from files
-        return null;
+        ArrayList<Ingredient> ingredients = new ArrayList<>();
+        JSONObject obj = new JSONObject(ingredientFile);
+        JSONArray objArray = obj.getJSONArray("ingredients");
+
+        if (objArray.isNull(0)) {
+            return null;
+        }
+
+        Ingredient ing = new Ingredient();
+        for (int i = 0; i < objArray.length(); i++) {
+            ing.setName(objArray.getJSONObject(i).get("name").toString());
+            ing.setPrimaryTag((PrimaryTag) objArray.getJSONObject(i).get("primaryTag"));
+            ing.setOptionalTag(objArray.getJSONObject(i).get("optionalTag").toString());
+            ingredients.add(ing);
+        }
+
+        return ingredients;
     }
 }
