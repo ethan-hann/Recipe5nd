@@ -14,5 +14,6 @@
     <string name="clear_search_button_text">Clear</string>
 
     <string name="search_results_image_content_description">recipe_image</string>
+    <string name="search_results_imageButton_favorite_content_description">favorite_button</string>
 
 </resources>
