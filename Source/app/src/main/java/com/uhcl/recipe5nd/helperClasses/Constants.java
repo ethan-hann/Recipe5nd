@@ -10,4 +10,5 @@ public class Constants
     public static final String INGREDIENT_SEARCH_SUFFIX = "/filter.php?i="; //can search by ingredient(s)
 
     public static ArrayList<Ingredient> selectedIngredients;
+    public static ArrayList<Recipe> returnedRecipesFromSearch;
 }

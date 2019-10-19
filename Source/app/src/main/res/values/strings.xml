@@ -13,4 +13,6 @@
     <string name="search_button_text">Search For Recipes</string>
     <string name="clear_search_button_text">Clear</string>
 
+    <string name="search_results_image_content_description">recipe_image</string>
+
 </resources>

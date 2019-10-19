@@ -117,6 +117,15 @@ public class SearchFragment extends Fragment
 
                             if (recipes != null) {
                                 Log.i(TAG, "Search returned " + recipes.size() + " recipes");
+                                Constants.returnedRecipesFromSearch = recipes;
+
+                                //Switch to the search results fragment and add to the stack
+                                //This allows the use of the back button to return to this Fragment
+                                getFragmentManager().beginTransaction()
+                                        .addToBackStack("searchResults")
+                                        .replace(R.id.fragment_container, new SearchResultsFragment())
+                                        .commit();
+
                                 for (Recipe r : recipes) {
                                     Log.i(TAG, "Recipe Info: " + r.getRecipeInformation());
                                 }
