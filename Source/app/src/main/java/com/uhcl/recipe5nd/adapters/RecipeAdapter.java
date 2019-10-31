@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
 import com.uhcl.recipe5nd.R;
+import com.uhcl.recipe5nd.backgroundTasks.FetchImages;
+import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.Recipe;
 
 import java.io.BufferedInputStream;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,7 +34,9 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder>
 {
+    private static final String TAG = "RecipeAdapter: ";
     private ArrayList<Recipe> returnedRecipes;
+    private ArrayList<String> imageURLS;
     private ImageView cardImage;
     private TextView cardText;
 
@@ -40,44 +45,27 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             returnedRecipes = new ArrayList<>();
         }
         this.returnedRecipes = recipes;
+
+        Constants.returnedRecipeImages = new ArrayList<>();
+
+        getRecipeImageURLS();
+        if (!imageURLS.isEmpty()) 
+        {
+            String[] urls = new String[imageURLS.size()];
+            urls = imageURLS.toArray(urls);
+            new FetchImages().execute(urls);
+        }
     }
 
-    private void setImage(Drawable drawable) {
-        cardImage.setImageDrawable(drawable);
-    }
-
-    public class DownloadImage extends AsyncTask<String, Integer, Drawable> {
-
-        private static final String TAG = "DownloadImage";
-        @Override
-        protected Drawable doInBackground(String... strings) {
-            return downloadImage(strings[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Drawable drawable) {
-            setImage(drawable);
-        }
-
-        private Drawable downloadImage(String url) {
-            URL imageURL;
-            InputStream in;
-            BufferedInputStream bufferedInputStream;
-
-            try {
-                imageURL = new URL(url);
-                in = imageURL.openStream();
-                bufferedInputStream = new BufferedInputStream(in);
-
-                Bitmap bMap = BitmapFactory.decodeStream(bufferedInputStream);
-                in.close();
-                bufferedInputStream.close();
-
-                return new BitmapDrawable(bMap);
-            } catch (IOException e) {
-                Log.e(TAG, "Error downloading image file:", e);
-            }
-            return null;
+    /**
+     * Gets image urls from returned recipes and puts them in an array list
+     */
+    private void getRecipeImageURLS()
+    {
+        imageURLS = new ArrayList<>();
+        for (Recipe r : returnedRecipes)
+        {
+            imageURLS.add(r.getStrMealThumb());
         }
     }
 
@@ -92,8 +80,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RecipeAdapter.ViewHolder holder, int position) {
-        new DownloadImage().execute(returnedRecipes.get(position).getStrMealThumb());
         holder.bind(position);
+        try {
+            cardImage.setImageDrawable(Constants.returnedRecipeImages.get(position));
+            Log.i(TAG, "onBindViewHolder: size of image array:" + Constants.returnedRecipeImages.size());
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, "onBindViewHolder: ", e);
+        }
+
     }
 
     @Override
@@ -128,4 +122,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             //TODO: Implement recipe details
         }
     }
+
+
 }

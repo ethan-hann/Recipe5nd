@@ -42,4 +42,34 @@ public class CreateJSON
         }
         return "";
     }
+
+    public static String createIngredientsJSON(ArrayList<Ingredient> savedIngredients)
+    {
+        //TODO: implement creation of Ingredients JSON
+        try
+        {
+            JSONArray ingredients = new JSONArray();
+            for (Ingredient i : savedIngredients)
+            {
+                JSONObject ingredientObject = new JSONObject();
+                ingredientObject.put("name", i.getName());
+                ingredientObject.put("primaryTag", i.getPrimaryTag().toString());
+                ingredientObject.put("optionalTag", i.getOptionalTag());
+                ingredients.put(ingredientObject);
+            }
+
+            return ingredients.toString();
+        } catch (JSONException e)
+        {
+            Log.e(TAG, "createIngredientsJSON: ", e);
+        }
+        return "";
+        
+    }
+
+    public static String createShoppingListsJSON()
+    {
+        //TODO: implement creation of Shopping Lists JSON
+        return "";
+    }
 }

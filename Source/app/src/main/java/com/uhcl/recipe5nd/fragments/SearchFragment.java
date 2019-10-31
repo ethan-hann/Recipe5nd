@@ -40,7 +40,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class SearchFragment extends Fragment
 {
     private static final String TAG = "SearchFragment";
-    private ArrayList<Ingredient> ingredientsList = new ArrayList<>();
+    private ArrayList<Ingredient> ingredientsList;
 
     private RecyclerView recyclerView;
     private SearchIngredientsAdapter recyclerAdapter;
@@ -188,7 +188,7 @@ public class SearchFragment extends Fragment
         fileHelper.saveFile(json, getContext(), "recipes.json");
         //fileHelper.readFile(getContext(), "ingredients.json");
 
-
+        ingredientsList = new ArrayList<>();
         Ingredient ing1 = new Ingredient("Chicken");
         Ingredient ing2 = new Ingredient("Beef");
         Ingredient ing3 = new Ingredient("Salmon");

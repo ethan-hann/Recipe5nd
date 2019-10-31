@@ -28,10 +28,7 @@ public class SearchIngredientsAdapter extends RecyclerView.Adapter<SearchIngredi
 
     public SearchIngredientsAdapter(ArrayList<Ingredient> ingredients) {
         this.usersIngredients = ingredients;
-        if (Constants.selectedIngredients == null)
-        {
-            Constants.selectedIngredients = new ArrayList<>();
-        }
+        Constants.selectedIngredients = new ArrayList<>();
     }
 
     @NonNull
