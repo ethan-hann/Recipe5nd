@@ -68,15 +68,13 @@ public class SearchFragment extends Fragment
         //set layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        //initialize adapter
+        //initialize data and adapter
+        getIngredientsFromPantry();
         recyclerAdapter = new SearchIngredientsAdapter(ingredientsList);
+        recyclerAdapter.notifyDataSetChanged();
 
         //set adapter
         recyclerView.setAdapter(recyclerAdapter);
-
-        //initialize data
-        getIngredientsFromPantry();
-        recyclerAdapter.notifyDataSetChanged();
 
         //set item animator
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -113,7 +111,8 @@ public class SearchFragment extends Fragment
                         Log.i(TAG, "idURL: " + ingredientQuery);
                         ArrayList<String> ids = new FetchIds().execute(new URL(ingredientQuery)).get();
 
-                        if (ids != null) {
+                        if (ids != null)
+                        {
                             ArrayList<String> recipeQueries = new ArrayList<>();
                             for (int i = 0; i < ids.size(); i++) {
                                 recipeQueries.add(APIConnector.buildQueryString(QueryType.SEARCH_BY_ID, ids.get(i)));
@@ -127,7 +126,8 @@ public class SearchFragment extends Fragment
 
                             ArrayList<Recipe> recipes = new FetchRecipe().execute(recipeQueryURLS).get();
 
-                            if (recipes != null) {
+                            if (recipes != null)
+                            {
                                 Log.i(TAG, "Search returned " + recipes.size() + " recipes");
                                 Constants.returnedRecipesFromSearch = recipes;
 
@@ -145,10 +145,6 @@ public class SearchFragment extends Fragment
                                         String.format(Locale.US, "Found %d recipes",
                                                 recipes.size()), Toast.LENGTH_LONG);
                                 t.show();
-                            }
-                            else
-                            {
-                                Log.i(TAG, "No recipes found");
                             }
                         }
                         else
@@ -168,8 +164,7 @@ public class SearchFragment extends Fragment
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Constants.selectedIngredients = new ArrayList<>();
-                recyclerAdapter.notifyDataSetChanged();
+                recyclerAdapter.clearSelectedItems();
                 System.out.println("CLEAR HAS BEEN CLICKED!");
             }
         });
@@ -213,11 +208,6 @@ public class SearchFragment extends Fragment
                 String jsonResponse = fileHelper.readFile(getContext(), "ingredients.json");
                 System.out.println(jsonResponse);
                 ingredientsList = ParseJSON.parseIngredients(jsonResponse);
-                for (Ingredient i : ingredientsList) {
-                    System.out.println(i.getName());
-                    System.out.println(i.getPrimaryTag());
-                    System.out.println(i.getOptionalTag());
-                }
                 helpText.setText(R.string.search_help);
             } catch (JSONException e) {
                 Log.e(TAG, "getIngredientsFromPantry: ", e);

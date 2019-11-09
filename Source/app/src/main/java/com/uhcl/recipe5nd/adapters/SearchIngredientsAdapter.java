@@ -25,6 +25,7 @@ public class SearchIngredientsAdapter extends RecyclerView.Adapter<SearchIngredi
 {
     private static final String TAG = "SearchIngAdapter: ";
     private ArrayList<Ingredient> usersIngredients;
+    private SparseBooleanArray itemStateArray = new SparseBooleanArray();
 
     public SearchIngredientsAdapter(ArrayList<Ingredient> ingredients) {
         this.usersIngredients = ingredients;
@@ -59,9 +60,15 @@ public class SearchIngredientsAdapter extends RecyclerView.Adapter<SearchIngredi
         notifyDataSetChanged();
     }
 
+    public void clearSelectedItems()
+    {
+        Constants.selectedIngredients = new ArrayList<>();
+        itemStateArray = new SparseBooleanArray();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
-        private SparseBooleanArray itemStateArray = new SparseBooleanArray();
+
         private CheckedTextView ingredientItem;
 
         ViewHolder(View view)
