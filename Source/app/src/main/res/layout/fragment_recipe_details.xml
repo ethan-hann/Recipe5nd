@@ -19,7 +19,6 @@
             android:layout_width="411dp"
             android:layout_height="@android:dimen/thumbnail_height"
             android:contentDescription="@string/recipe_details_image_content_description"
-            android:elevation="2dp"
             android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

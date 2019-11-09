@@ -90,8 +90,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         try {
             cardImage.setImageDrawable(Constants.returnedRecipeImages.get(position));
             holder.cardView.setOnClickListener(new View.OnClickListener() {
+
+                //Switch to the recipe results fragment when a card view is clicked on
                 @Override
                 public void onClick(View view) {
+                    Constants.currentlyViewedRecipe = Constants.returnedRecipesFromSearch.get(position);
+                    Constants.currentlyViewedRecipeImage = Constants.returnedRecipeImages.get(position);
+
                     AppCompatActivity activity = Helper.unwrap(view.getContext());
                     activity
                             .getSupportFragmentManager()

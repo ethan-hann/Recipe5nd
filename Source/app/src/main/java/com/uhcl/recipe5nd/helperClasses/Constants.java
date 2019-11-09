@@ -15,6 +15,9 @@ public class Constants
     public static boolean doesRecipeFileExist = false;
     public static boolean doesShoppingListExist = false;
 
+    public static Recipe currentlyViewedRecipe;
+    public static Drawable currentlyViewedRecipeImage;
+
 
     public static ArrayList<Drawable> returnedRecipeImages;
     public static ArrayList<Ingredient> selectedIngredients;
