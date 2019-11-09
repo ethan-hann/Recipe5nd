@@ -11,6 +11,11 @@ public class Constants
     public static final String ID_SUFFIX = "/lookup.php?i="; //can lookup meals by their id
     public static final String INGREDIENT_SEARCH_SUFFIX = "/filter.php?i="; //can search by ingredient(s)
 
+    public static boolean doesIngredientsFileExist = false;
+    public static boolean doesRecipeFileExist = false;
+    public static boolean doesShoppingListExist = false;
+
+
     public static ArrayList<Drawable> returnedRecipeImages;
     public static ArrayList<Ingredient> selectedIngredients;
     public static ArrayList<Recipe> returnedRecipesFromSearch;

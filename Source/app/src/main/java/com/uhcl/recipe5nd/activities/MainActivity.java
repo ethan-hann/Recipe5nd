@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import com.google.android.material.navigation.NavigationView;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.fragments.SearchFragment;
+import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Helper;
 
 //TODO: create string references in strings.xml
@@ -41,6 +42,12 @@ public class MainActivity extends AppCompatActivity
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(this.getResources().getColor(R.color.primaryLightColor));
         }
+
+        //Checking files exists
+        FileHelper fileHelper = new FileHelper();
+        fileHelper.exists(this, "ingredients.json");
+        fileHelper.exists(this, "recipes.json");
+        fileHelper.exists(this, "shoppingLists.json");
 
         drawer = findViewById(R.id.drawer_layout);
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {

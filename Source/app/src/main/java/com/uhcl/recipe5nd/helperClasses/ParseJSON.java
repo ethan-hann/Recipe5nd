@@ -1,5 +1,7 @@
 package com.uhcl.recipe5nd.helperClasses;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,6 +12,7 @@ import java.util.Locale;
 
 public class ParseJSON
 {
+    private static final String TAG = "ParseJSON";
     private static FileHelper fileHelper = new FileHelper();
 
     /**
@@ -81,18 +84,26 @@ public class ParseJSON
     public static ArrayList<Ingredient> parseIngredients(String ingredientFile) throws JSONException
     {
         ArrayList<Ingredient> ingredients = new ArrayList<>();
-        JSONObject obj = new JSONObject(ingredientFile);
-        JSONArray objArray = obj.getJSONArray("ingredients");
+        JSONArray objArray = new JSONArray(ingredientFile);
 
         if (objArray.isNull(0)) {
             return null;
         }
 
-        Ingredient ing = new Ingredient();
-        for (int i = 0; i < objArray.length(); i++) {
-            ing.setName(objArray.getJSONObject(i).get("name").toString());
-            ing.setPrimaryTag((PrimaryTag) objArray.getJSONObject(i).get("primaryTag"));
-            ing.setOptionalTag(objArray.getJSONObject(i).get("optionalTag").toString());
+        for (int i = 0; i < objArray.length(); i++)
+        {
+            Ingredient ing = new Ingredient();
+            JSONObject object = objArray.getJSONObject(i);
+            ing.setName(object.get("name").toString());
+
+            ing.setPrimaryTag(PrimaryTag.valueOf(object.get("primaryTag").toString()));
+
+            //Checking if the ingredient has an optional tag
+            if (!object.isNull("optionalTag"))
+            {
+                ing.setOptionalTag(object.get("optionalTag").toString());
+            }
+
             ingredients.add(ing);
         }
 

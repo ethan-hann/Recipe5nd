@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.uhcl.recipe5nd.R;
@@ -17,9 +18,14 @@ import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Ingredient;
+import com.uhcl.recipe5nd.helperClasses.ParseJSON;
+import com.uhcl.recipe5nd.helperClasses.PrimaryTag;
 import com.uhcl.recipe5nd.helperClasses.QueryType;
 import com.uhcl.recipe5nd.helperClasses.Recipe;
 
+import org.json.JSONException;
+
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -40,8 +46,9 @@ import androidx.recyclerview.widget.RecyclerView;
 public class SearchFragment extends Fragment
 {
     private static final String TAG = "SearchFragment";
-    private ArrayList<Ingredient> ingredientsList;
+    private ArrayList<Ingredient> ingredientsList = new ArrayList<>();
 
+    private TextView helpText;
     private RecyclerView recyclerView;
     private SearchIngredientsAdapter recyclerAdapter;
     private Button searchButton;
@@ -53,9 +60,7 @@ public class SearchFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
-
-        //initialize data
-        getIngredientsFromPantry();
+        helpText = rootView.findViewById(R.id.search_help_text);
 
         //get a reference to recyclerView
         recyclerView = rootView.findViewById(R.id.recycler_view);
@@ -69,6 +74,8 @@ public class SearchFragment extends Fragment
         //set adapter
         recyclerView.setAdapter(recyclerAdapter);
 
+        //initialize data
+        getIngredientsFromPantry();
         recyclerAdapter.notifyDataSetChanged();
 
         //set item animator
@@ -81,7 +88,12 @@ public class SearchFragment extends Fragment
             @Override
             public void onClick(View view) {
                 //ensure at least one ingredient is selected to include in search
-                if (Constants.selectedIngredients.isEmpty()) {
+                if (!Constants.doesIngredientsFileExist)
+                {
+                    Toast t = Toast.makeText(getContext(), "No ingredients were found. Please add some in \"Edit Ingredients\".", Toast.LENGTH_LONG);
+                    t.show();
+                }
+                else if (Constants.selectedIngredients.isEmpty()) {
                     Toast t = Toast.makeText(getContext(), "Please select at least one ingredient", Toast.LENGTH_LONG);
                     t.show();
                 }
@@ -171,6 +183,13 @@ public class SearchFragment extends Fragment
     //TODO: TEMPORARY METHOD FOR TESTING
     private void getIngredientsFromPantry() {
         FileHelper fileHelper = new FileHelper();
+        ArrayList<Ingredient> testIngredients = new ArrayList<>();
+        testIngredients.add(new Ingredient("Chicken", PrimaryTag.HOT));
+        testIngredients.add(new Ingredient("Beef", PrimaryTag.COLD, "Meats"));
+        String json = CreateJSON.createIngredientsJSON(testIngredients);
+        fileHelper.saveFile(json, getContext(), "ingredients.json");
+
+        /*FileHelper fileHelper = new FileHelper();
         Recipe r = new Recipe();
         r.setId("0");
         r.setStrMeal("Spicy Arrabiata Penne");
@@ -186,10 +205,31 @@ public class SearchFragment extends Fragment
         String json = CreateJSON.createRecipeJSON(recipes);
 
         fileHelper.saveFile(json, getContext(), "recipes.json");
-        //fileHelper.readFile(getContext(), "ingredients.json");
+        //fileHelper.readFile(getContext(), "ingredients.json");*/
 
-        ingredientsList = new ArrayList<>();
-        Ingredient ing1 = new Ingredient("Chicken");
+        boolean exists = fileHelper.exists(getContext(), "ingredients.json");
+        if (exists) {
+            try {
+                String jsonResponse = fileHelper.readFile(getContext(), "ingredients.json");
+                System.out.println(jsonResponse);
+                ingredientsList = ParseJSON.parseIngredients(jsonResponse);
+                for (Ingredient i : ingredientsList) {
+                    System.out.println(i.getName());
+                    System.out.println(i.getPrimaryTag());
+                    System.out.println(i.getOptionalTag());
+                }
+                helpText.setText(R.string.search_help);
+            } catch (JSONException e) {
+                Log.e(TAG, "getIngredientsFromPantry: ", e);
+            }
+        }
+        else
+        {
+            helpText.setText(R.string.no_ingredients_file_warning);
+        }
+
+
+        /*Ingredient ing1 = new Ingredient("Chicken");
         Ingredient ing2 = new Ingredient("Beef");
         Ingredient ing3 = new Ingredient("Salmon");
         Ingredient ing4 = new Ingredient("Salt");
@@ -221,6 +261,6 @@ public class SearchFragment extends Fragment
         ingredientsList.add(ing13);
         ingredientsList.add(ing14);
         ingredientsList.add(ing15);
-        ingredientsList.add(ing16);
+        ingredientsList.add(ing16);*/
     }
 }

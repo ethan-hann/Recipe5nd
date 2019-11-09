@@ -67,9 +67,32 @@ public class CreateJSON
         
     }
 
-    public static String createShoppingListsJSON()
+    public static String createShoppingListsJSON(ArrayList<ShoppingData> shoppingData)
     {
         //TODO: implement creation of Shopping Lists JSON
+        try
+        {
+            JSONArray shoppingLists = new JSONArray();
+            for (ShoppingData s : shoppingData)
+            {
+                JSONObject shoppingObject = new JSONObject();
+                shoppingObject.put("title", s.getTitle());
+                shoppingObject.put("date", s.getDate().toString());
+
+                JSONArray shoppingItems = new JSONArray();
+                JSONObject itemObject = new JSONObject();
+                itemObject.put("names", s.getItems());
+                itemObject.put("isChecked", s.isChecked());
+                shoppingItems.put(itemObject);
+
+                shoppingObject.put("items", shoppingItems);
+            }
+
+            return shoppingLists.toString();
+        } catch (JSONException e)
+        {
+            Log.e(TAG, "createShoppingListsJSON: ", e);
+        }
         return "";
     }
 }

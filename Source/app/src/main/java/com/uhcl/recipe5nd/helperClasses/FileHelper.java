@@ -10,19 +10,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-public class FileHelper
-{
+public class FileHelper {
     private static final String TAG = "FileHelper";
 
     /**
      * Saves a file to the private file directory of the application
-     * @param s : the string to save
-     * @param context : the context of the application
+     *
+     * @param s        : the string to save
+     * @param context  : the context of the application
      * @param fileName : the fileName the file should be saved as
      * @return boolean : true if saving was successful, false if not
      */
-    public boolean saveFile(String s, Context context, String fileName)
-    {
+    public boolean saveFile(String s, Context context, String fileName) {
         try {
             OutputStreamWriter outputStreamWriter =
                     new OutputStreamWriter(context.openFileOutput(fileName, Context.MODE_PRIVATE));
@@ -39,13 +38,13 @@ public class FileHelper
 
     /**
      * Reads into a string a saved file.
-     * @param context : the context of the application
+     *
+     * @param context  : the context of the application
      * @param fileName : the fileName to read from
      * @return String : contents of the file,
      * or an empty string if the file could not be read or found
      */
-    public String readFile(Context context, String fileName)
-    {
+    public String readFile(Context context, String fileName) {
         try {
             InputStream inputStream = context.openFileInput(fileName);
 
@@ -67,5 +66,36 @@ public class FileHelper
             Log.e(TAG, "Could not read file: ", e);
         }
         return "";
+    }
+
+    public boolean exists(Context context, String fileName)
+    {
+        switch (fileName)
+        {
+            case "ingredients.json": {
+
+                Constants.doesIngredientsFileExist = true;
+                break;
+            }
+            case "recipes.json": {
+                Constants.doesRecipeFileExist = true;
+                break;
+            }
+            default: {
+                Constants.doesIngredientsFileExist = false;
+                Constants.doesRecipeFileExist = false;
+                Constants.doesShoppingListExist = false;
+            }
+        }
+
+        String[] files = context.fileList();
+        for (String file : files)
+        {
+            if (file.equals(fileName))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
