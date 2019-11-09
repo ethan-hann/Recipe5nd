@@ -73,7 +73,6 @@ public class FileHelper {
         switch (fileName)
         {
             case "ingredients.json": {
-
                 Constants.doesIngredientsFileExist = true;
                 break;
             }

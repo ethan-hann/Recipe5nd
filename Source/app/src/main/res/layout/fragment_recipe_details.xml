@@ -57,16 +57,50 @@
             app:layout_constraintTop_toTopOf="@id/divider">
 
             <LinearLayout
-                android:id="@+id/recipe_results_scrollview_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/recipe_details_text"
+                    android:id="@+id/recipe_name_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/lorem_ipsum" />
+                    android:text="@string/empty_string"
+                    android:textSize="24sp"
+                    android:padding="@dimen/text_padding"/>
+
+                <TextView
+                    android:id="@+id/recipe_ingredients_and_measures_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recipe_details_ingredients_title"
+                    android:textSize="16sp"
+                    android:padding="@dimen/text_padding"/>
+
+                <TextView
+                    android:id="@+id/recipe_ingredients_and_measures_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/empty_string"
+                    android:textSize="14sp"
+                    android:padding="@dimen/text_padding"/>
+
+                <TextView
+                    android:id="@+id/recipe_steps_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recipe_details_steps_title"
+                    android:textSize="16sp"
+                    android:padding="@dimen/text_padding"/>
+
+                <TextView
+                    android:id="@+id/recipe_steps_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/empty_string"
+                    android:textSize="14sp"
+                    android:padding="@dimen/text_padding"/>
+
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
