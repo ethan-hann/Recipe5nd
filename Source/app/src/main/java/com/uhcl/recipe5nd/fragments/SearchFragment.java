@@ -164,6 +164,7 @@ public class SearchFragment extends Fragment
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO: figure out why checkedTextView not clearing check marks
                 recyclerAdapter.clearSelectedItems();
                 System.out.println("CLEAR HAS BEEN CLICKED!");
             }

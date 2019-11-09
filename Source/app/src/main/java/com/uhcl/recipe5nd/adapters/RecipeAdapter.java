@@ -1,5 +1,6 @@
 package com.uhcl.recipe5nd.adapters;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -15,7 +16,10 @@ import android.widget.TextView;
 import com.google.android.material.card.MaterialCardView;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.backgroundTasks.FetchImages;
+import com.uhcl.recipe5nd.fragments.RecipeDetailsFragment;
+import com.uhcl.recipe5nd.fragments.SearchResultsFragment;
 import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.Helper;
 import com.uhcl.recipe5nd.helperClasses.Recipe;
 
 import java.io.BufferedInputStream;
@@ -26,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -39,6 +44,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     private ArrayList<String> imageURLS;
     private ImageView cardImage;
     private TextView cardText;
+    private View rootView;
 
     public RecipeAdapter(ArrayList<Recipe> recipes) {
         if (recipes == null) {
@@ -72,7 +78,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     @NonNull
     @Override
     public RecipeAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View rootView = LayoutInflater.from(parent.getContext())
+        rootView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.returned_recipe_card, parent, false);
 
         return new ViewHolder(rootView);
@@ -83,6 +89,18 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         holder.bind(position);
         try {
             cardImage.setImageDrawable(Constants.returnedRecipeImages.get(position));
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AppCompatActivity activity = Helper.unwrap(view.getContext());
+                    activity
+                            .getSupportFragmentManager()
+                            .beginTransaction()
+                            .addToBackStack("recipe_results")
+                            .replace(R.id.fragment_container, new RecipeDetailsFragment())
+                            .commit();
+                }
+            });
             Log.i(TAG, "onBindViewHolder: size of image array:" + Constants.returnedRecipeImages.size());
         } catch (IndexOutOfBoundsException e) {
             Log.e(TAG, "onBindViewHolder: ", e);
@@ -99,7 +117,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         return returnedRecipes.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    public class ViewHolder extends RecyclerView.ViewHolder
     {
         MaterialCardView cardView;
 
@@ -107,7 +125,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         {
             super(view);
             cardView = view.findViewById(R.id.search_results_cardView);
-            view.setOnClickListener(this);
         }
 
         void bind(int pos) {
@@ -116,12 +133,5 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
             cardText.setText(returnedRecipes.get(pos).getStrMeal());
         }
-
-        @Override
-        public void onClick(View view) {
-            //TODO: Implement recipe details
-        }
     }
-
-
 }
