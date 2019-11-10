@@ -1,5 +1,6 @@
 package com.uhcl.recipe5nd.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,6 +55,9 @@ public class SearchFragment extends Fragment
     private Button searchButton;
     private Button clearButton;
 
+    private String toastText = "";
+    FileHelper fileHelper = new FileHelper();
+
 
     @Nullable
     @Override
@@ -69,7 +73,7 @@ public class SearchFragment extends Fragment
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         //initialize data and adapter
-        getIngredientsFromPantry();
+        getIngredientsFromPantry(getContext());
         recyclerAdapter = new SearchIngredientsAdapter(ingredientsList);
         recyclerAdapter.notifyDataSetChanged();
 
@@ -86,19 +90,19 @@ public class SearchFragment extends Fragment
             @Override
             public void onClick(View view) {
                 //ensure at least one ingredient is selected to include in search
-                if (!Constants.doesIngredientsFileExist)
+                if (!fileHelper.exists(getContext(), "ingredients.json"))
                 {
-                    Toast t = Toast.makeText(getContext(), "No ingredients were found. Please add some in \"Edit Ingredients\".", Toast.LENGTH_LONG);
+                    toastText = "No ingredients were found. Please add some in \"Edit Ingredients\".";
+                    Toast t = Toast.makeText(getContext(), toastText, Toast.LENGTH_LONG);
                     t.show();
-                }
-                else if (Constants.selectedIngredients.isEmpty()) {
-                    Toast t = Toast.makeText(getContext(), "Please select at least one ingredient", Toast.LENGTH_LONG);
-                    t.show();
-                }
-                else
+                } else if (Constants.selectedIngredients.isEmpty())
                 {
-                    try
+                    toastText = "Please select at least one ingredient";
+                    Toast t = Toast.makeText(getContext(), toastText, Toast.LENGTH_LONG);
+                    t.show();
+                } else
                     {
+                        try {
                         /*
                          To look up recipes by their ingredients, we have to look up by both id and ingredients.
                          The first API call returns a list of ids that match meals who include the ingredients.
@@ -107,59 +111,55 @@ public class SearchFragment extends Fragment
                          Note that these two calls cannot be run in parallel because the second
                          call depends on the result of the first.
                          */
-                        String ingredientQuery = APIConnector.buildQueryString(QueryType.SEARCH_BY_INGREDIENTS, "");
-                        Log.i(TAG, "idURL: " + ingredientQuery);
-                        ArrayList<String> ids = new FetchIds().execute(new URL(ingredientQuery)).get();
+                            String ingredientQuery = APIConnector.buildQueryString(QueryType.SEARCH_BY_INGREDIENTS, "");
+                            Log.i(TAG, "idURL: " + ingredientQuery);
+                            ArrayList<String> ids = new FetchIds().execute(new URL(ingredientQuery)).get();
 
-                        if (ids != null)
-                        {
-                            ArrayList<String> recipeQueries = new ArrayList<>();
-                            for (int i = 0; i < ids.size(); i++) {
-                                recipeQueries.add(APIConnector.buildQueryString(QueryType.SEARCH_BY_ID, ids.get(i)));
-                            }
-
-                            URL[] recipeQueryURLS = new URL[recipeQueries.size()];
-
-                            for (int i = 0; i < recipeQueryURLS.length; i++) {
-                                recipeQueryURLS[i] = new URL(recipeQueries.get(i));
-                            }
-
-                            ArrayList<Recipe> recipes = new FetchRecipe().execute(recipeQueryURLS).get();
-
-                            if (recipes != null)
-                            {
-                                Log.i(TAG, "Search returned " + recipes.size() + " recipes");
-                                Constants.returnedRecipesFromSearch = recipes;
-
-                                //Switch to the search results fragment and add to the stack
-                                //This allows the use of the back button to return to this Fragment
-                                getFragmentManager().beginTransaction()
-                                        .addToBackStack("searchResults")
-                                        .replace(R.id.fragment_container, new SearchResultsFragment())
-                                        .commit();
-
-                                for (Recipe r : recipes) {
-                                    Log.i(TAG, "Recipe Info: " + r.getRecipeInformation());
+                            if (ids != null) {
+                                ArrayList<String> recipeQueries = new ArrayList<>();
+                                for (int i = 0; i < ids.size(); i++) {
+                                    recipeQueries.add(APIConnector.buildQueryString(QueryType.SEARCH_BY_ID, ids.get(i)));
                                 }
-                                Toast t = Toast.makeText(getContext(),
-                                        String.format(Locale.US, "Found %d recipes",
-                                                recipes.size()), Toast.LENGTH_LONG);
+
+                                URL[] recipeQueryURLS = new URL[recipeQueries.size()];
+
+                                for (int i = 0; i < recipeQueryURLS.length; i++) {
+                                    recipeQueryURLS[i] = new URL(recipeQueries.get(i));
+                                }
+
+                                ArrayList<Recipe> recipes = new FetchRecipe().execute(recipeQueryURLS).get();
+
+                                if (recipes != null) {
+                                    Log.i(TAG, "Search returned " + recipes.size() + " recipes");
+                                    Constants.returnedRecipesFromSearch = recipes;
+
+                                    //Switch to the search results fragment and add to the stack
+                                    //This allows the use of the back button to return to this Fragment
+                                    getFragmentManager().beginTransaction()
+                                            .addToBackStack("searchResults")
+                                            .replace(R.id.fragment_container, new SearchResultsFragment())
+                                            .commit();
+
+                                    for (Recipe r : recipes) {
+                                        Log.i(TAG, "Recipe Info: " + r.getRecipeInformation());
+                                    }
+                                    Toast t = Toast.makeText(getContext(),
+                                            String.format(Locale.US, "Found %d recipes",
+                                                    recipes.size()), Toast.LENGTH_LONG);
+                                    t.show();
+                                }
+                            } else {
+                                Toast t = Toast.makeText(getContext(), "No recipes were found with those ingredients", Toast.LENGTH_LONG);
                                 t.show();
                             }
-                        }
-                        else
-                        {
-                            Toast t = Toast.makeText(getContext(), "No recipes were found with those ingredients", Toast.LENGTH_LONG);
-                            t.show();
-                        }
 
-                    } catch (MalformedURLException | ExecutionException | InterruptedException e)
-                    {
-                        Log.e(TAG, "onClick: ", e);
+                        } catch (MalformedURLException | ExecutionException | InterruptedException e) {
+                            Log.e(TAG, "onClick: ", e);
+                        }
                     }
+
                 }
-            }
-        });
+            });
 
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,36 +177,17 @@ public class SearchFragment extends Fragment
 
     //TODO: implement reading from saved JSON file containing user's ingredients!
     //TODO: TEMPORARY METHOD FOR TESTING
-    private void getIngredientsFromPantry() {
-        FileHelper fileHelper = new FileHelper();
-        ArrayList<Ingredient> testIngredients = new ArrayList<>();
+    private void getIngredientsFromPantry(Context context) {
+        /*ArrayList<Ingredient> testIngredients = new ArrayList<>();
         testIngredients.add(new Ingredient("Chicken", PrimaryTag.HOT));
         testIngredients.add(new Ingredient("Beef", PrimaryTag.COLD, "Meats"));
         String json = CreateJSON.createIngredientsJSON(testIngredients);
-        fileHelper.saveFile(json, getContext(), "ingredients.json");
+        fileHelper.saveFile(json, context, "ingredients.json");*/
 
-        /*FileHelper fileHelper = new FileHelper();
-        Recipe r = new Recipe();
-        r.setId("0");
-        r.setStrMeal("Spicy Arrabiata Penne");
-        r.setStrMealThumb("https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg");
-        r.setStrYoutube("https://www.youtube.com/watch?v=1IszT_guI08");
-        r.addIngredient("penne rigate");
-        r.addMeasurement("1 pound");
-        r.addIngredient("olive oil");
-        r.addMeasurement("1/4 cup");
-        r.setStrInstructions("Bring a large pot of water to a boil. Add kosher salt to the boiling water, then add the pasta. Cook according to the package instructions, about 9 minutes.\r\nIn a large skillet over medium-high heat, add the olive oil and heat until the oil starts to shimmer. Add the garlic and cook, stirring, until fragrant, 1 to 2 minutes. Add the chopped tomatoes, red chile flakes, Italian seasoning and salt and pepper to taste. Bring to a boil and cook for 5 minutes. Remove from the heat and add the chopped basil.\r\nDrain the pasta and add it to the sauce. Garnish with Parmigiano-Reggiano flakes and more basil and serve warm.");
-        ArrayList<Recipe> recipes = new ArrayList<>();
-        recipes.add(r);
-        String json = CreateJSON.createRecipeJSON(recipes);
-
-        fileHelper.saveFile(json, getContext(), "recipes.json");
-        //fileHelper.readFile(getContext(), "ingredients.json");*/
-
-        boolean exists = fileHelper.exists(getContext(), "ingredients.json");
+        boolean exists = fileHelper.exists(context, "ingredients.json");
         if (exists) {
             try {
-                String jsonResponse = fileHelper.readFile(getContext(), "ingredients.json");
+                String jsonResponse = fileHelper.readFile(context, "ingredients.json");
                 System.out.println(jsonResponse);
                 ingredientsList = ParseJSON.parseIngredients(jsonResponse);
                 helpText.setText(R.string.search_help);

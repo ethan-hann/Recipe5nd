@@ -10,7 +10,7 @@
     <string name="nav_drawer_shopping">Shopping Lists</string>
 
     <string name="search_help">Select at least one ingredient below to build the search.</string>
-    <string name="no_ingredients_file_warning">You don\'t have any ingredients in your pantry!\nGo to "Edit Ingredients" to add some.</string>
+    <string name="no_ingredients_file_warning">You don\'t have any ingredients in your pantry!\nGo to \"Edit Ingredients\" to add some.</string>
     <string name="search_button_text">Search For Recipes</string>
     <string name="clear_search_button_text">Clear</string>
 

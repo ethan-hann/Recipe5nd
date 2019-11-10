@@ -4,7 +4,10 @@ import android.content.Context;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -23,16 +26,28 @@ public class FileHelper {
      */
     public boolean saveFile(String s, Context context, String fileName) {
         try {
-            OutputStreamWriter outputStreamWriter =
-                    new OutputStreamWriter(context.openFileOutput(fileName, Context.MODE_PRIVATE));
-            outputStreamWriter.write(s);
-            outputStreamWriter.close();
-            Log.i(TAG, "saveFile: " + context.getFilesDir() + "/" + fileName);
+            //Checking if file exists before saving. This determines if we need to write or append
+            if (!exists(context, fileName))
+            {
+                FileOutputStream fos = new FileOutputStream(new File(context.getFilesDir().getAbsolutePath().concat("/"+fileName)), false);
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fos);
+                outputStreamWriter.write(s);
+                outputStreamWriter.flush();
+                outputStreamWriter.close();
+                Log.i(TAG, "saveFile written: " + context.getFilesDir() + "/" + fileName);
+            } else
+            {
+                FileOutputStream fos = new FileOutputStream(new File(context.getFilesDir().getAbsolutePath().concat("/"+fileName)), true);
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fos);
+                outputStreamWriter.append(s);
+                outputStreamWriter.flush();
+                outputStreamWriter.close();
+                Log.i(TAG, "saveFile appended: " + context.getFilesDir() + "/" + fileName);
+            }
             return true;
         } catch (IOException e) {
             Log.e(TAG, "Saving file failed: ", e);
         }
-
         return false;
     }
 
@@ -46,19 +61,22 @@ public class FileHelper {
      */
     public String readFile(Context context, String fileName) {
         try {
-            InputStream inputStream = context.openFileInput(fileName);
-
-            if (inputStream != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            if (exists(context, fileName))
+            {
+                FileInputStream fis = new FileInputStream(new File(context.getFilesDir().getAbsolutePath().concat("/" + fileName)));
+                InputStreamReader isr = new InputStreamReader(fis);
+                BufferedReader br = new BufferedReader(isr);
                 String line;
                 StringBuilder builder = new StringBuilder();
-                while ((line = bufferedReader.readLine()) != null) {
+                while ((line = br.readLine()) != null) {
                     builder.append(line);
                 }
-
-                inputStream.close();
+                isr.close();
                 return builder.toString();
+            }
+            else
+            {
+                throw new FileNotFoundException();
             }
         } catch (FileNotFoundException e) {
             Log.e(TAG, "File not found: ", e);
