@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import com.google.android.material.navigation.NavigationView;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.fragments.SearchFragment;
+import com.uhcl.recipe5nd.fragments.ViewRecipesFragment;
 import com.uhcl.recipe5nd.helperClasses.Helper;
 
 //TODO: create string references in strings.xml
@@ -90,6 +91,11 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_search:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new SearchFragment()).commit();
+                break;
+
+            case R. id.nav_favorites:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new ViewRecipesFragment()).commit();
                 break;
         }
 
