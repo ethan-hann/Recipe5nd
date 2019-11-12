@@ -1,0 +1,13 @@
+{
+  "ingredients": [{
+    "name": "Chicken",
+    "primaryTag": "HOT",
+    "optionalTag": null
+  },
+    {
+      "name": "Beef",
+      "primaryTag": "COLD",
+      "optionalTag": "Meats"
+    }
+  ]
+}
