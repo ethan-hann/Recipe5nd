@@ -45,7 +45,6 @@ public class CreateJSON
 
     public static String createIngredientsJSON(ArrayList<Ingredient> savedIngredients)
     {
-        //TODO: implement creation of Ingredients JSON
         try
         {
             JSONArray ingredients = new JSONArray();
