@@ -12,7 +12,7 @@ public class Constants
     public static final String INGREDIENT_SEARCH_SUFFIX = "/filter.php?i="; //can search by ingredient(s)
 
     public static boolean doesIngredientsFileExist = false;
-    public static boolean doesRecipeFileExist = false;
+    public static boolean doesFavoritesExist = false;
     public static boolean doesShoppingListExist = false;
 
     public static Recipe currentlyViewedRecipe;
