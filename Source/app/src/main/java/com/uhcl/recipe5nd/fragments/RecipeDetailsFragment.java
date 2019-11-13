@@ -92,6 +92,6 @@ public class RecipeDetailsFragment extends Fragment
 
         String json = CreateJSON.createRecipeJSON(Constants.favoriteRecipes);
         FileHelper fileHelper = new FileHelper();
-        return fileHelper.saveFile(json, context, "recipes.json");
+        return fileHelper.saveFile(json, context, "favorites.json");
     }
 }
