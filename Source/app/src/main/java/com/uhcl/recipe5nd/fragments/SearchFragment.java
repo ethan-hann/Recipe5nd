@@ -180,8 +180,16 @@ public class SearchFragment extends Fragment
     private void getIngredientsFromPantry() {
         FileHelper fileHelper = new FileHelper();
         ArrayList<Ingredient> testIngredients = new ArrayList<>();
-        testIngredients.add(new Ingredient("Chicken", PrimaryTag.HOT));
-        testIngredients.add(new Ingredient("Beef", PrimaryTag.COLD, "Meats"));
+
+        /////////////////////////////////
+        int loadOnce = 0;
+        if(loadOnce == 0) {
+            testIngredients.add(new Ingredient("Hot", PrimaryTag.HOT));
+            testIngredients.add(new Ingredient("Room", PrimaryTag.ROOM));
+            testIngredients.add(new Ingredient("Cold", PrimaryTag.COLD));
+        }
+        /////////////////////////////////
+
         String json = CreateJSON.createIngredientsJSON(testIngredients);
         fileHelper.saveFile(json, getContext(), "ingredients.json");
 
