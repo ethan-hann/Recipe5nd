@@ -56,7 +56,8 @@ public class SearchFragment extends Fragment
     private Button clearButton;
 
     private String toastText = "";
-    FileHelper fileHelper = new FileHelper();
+    private FileHelper fileHelper = new FileHelper();
+    private Context context;
 
 
     @Nullable
@@ -65,6 +66,7 @@ public class SearchFragment extends Fragment
                              @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
         helpText = rootView.findViewById(R.id.search_help_text);
+        context = getContext();
 
         //get a reference to recyclerView
         recyclerView = rootView.findViewById(R.id.recycler_view);
@@ -73,7 +75,7 @@ public class SearchFragment extends Fragment
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         //initialize data and adapter
-        getIngredientsFromPantry(getContext());
+        getIngredientsFromPantry(context);
         recyclerAdapter = new SearchIngredientsAdapter(ingredientsList);
         recyclerAdapter.notifyDataSetChanged();
 
@@ -86,19 +88,21 @@ public class SearchFragment extends Fragment
         searchButton = rootView.findViewById(R.id.search_button);
         clearButton = rootView.findViewById(R.id.clear_search_button);
 
+        //Search button functionality
+        //Not using lambda's for backwards Java compatibility
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //ensure at least one ingredient is selected to include in search
-                if (!fileHelper.exists(getContext(), "ingredients.json"))
+                if (!fileHelper.exists(context, "ingredients.json"))
                 {
                     toastText = "No ingredients were found. Please add some in \"Edit Ingredients\".";
-                    Toast t = Toast.makeText(getContext(), toastText, Toast.LENGTH_LONG);
+                    Toast t = Toast.makeText(context, toastText, Toast.LENGTH_LONG);
                     t.show();
                 } else if (Constants.selectedIngredients.isEmpty())
                 {
                     toastText = "Please select at least one ingredient";
-                    Toast t = Toast.makeText(getContext(), toastText, Toast.LENGTH_LONG);
+                    Toast t = Toast.makeText(context, toastText, Toast.LENGTH_LONG);
                     t.show();
                 } else
                     {
@@ -143,13 +147,13 @@ public class SearchFragment extends Fragment
                                     for (Recipe r : recipes) {
                                         Log.i(TAG, "Recipe Info: " + r.getRecipeInformation());
                                     }
-                                    Toast t = Toast.makeText(getContext(),
+                                    Toast t = Toast.makeText(context,
                                             String.format(Locale.US, "Found %d recipes",
                                                     recipes.size()), Toast.LENGTH_LONG);
                                     t.show();
                                 }
                             } else {
-                                Toast t = Toast.makeText(getContext(), "No recipes were found with those ingredients", Toast.LENGTH_LONG);
+                                Toast t = Toast.makeText(context, "No recipes were found with those ingredients", Toast.LENGTH_LONG);
                                 t.show();
                             }
 
@@ -161,6 +165,7 @@ public class SearchFragment extends Fragment
                 }
             });
 
+        //Clear button functionality
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,19 +178,8 @@ public class SearchFragment extends Fragment
         return rootView;
     }
 
-
-
-    //TODO: implement reading from saved JSON file containing user's ingredients!
-    //TODO: TEMPORARY METHOD FOR TESTING
     private void getIngredientsFromPantry(Context context) {
-        /*ArrayList<Ingredient> testIngredients = new ArrayList<>();
-        testIngredients.add(new Ingredient("Chicken", PrimaryTag.HOT));
-        testIngredients.add(new Ingredient("Beef", PrimaryTag.COLD, "Meats"));
-        String json = CreateJSON.createIngredientsJSON(testIngredients);
-        fileHelper.saveFile(json, context, "ingredients.json");*/
-
-        boolean exists = fileHelper.exists(context, "ingredients.json");
-        if (exists) {
+        if (Constants.doesIngredientsFileExist) {
             try {
                 String jsonResponse = fileHelper.readFile(context, "ingredients.json");
                 System.out.println(jsonResponse);
@@ -199,40 +193,5 @@ public class SearchFragment extends Fragment
         {
             helpText.setText(R.string.no_ingredients_file_warning);
         }
-
-
-        /*Ingredient ing1 = new Ingredient("Chicken");
-        Ingredient ing2 = new Ingredient("Beef");
-        Ingredient ing3 = new Ingredient("Salmon");
-        Ingredient ing4 = new Ingredient("Salt");
-        Ingredient ing5 = new Ingredient("Kale");
-        Ingredient ing6 = new Ingredient("Jasmine Rice");
-        Ingredient ing7 = new Ingredient("Jalapeno");
-        Ingredient ing8 = new Ingredient("Lamb");
-        Ingredient ing9 = new Ingredient("Ground Almonds");
-        Ingredient ing10 = new Ingredient("Green Salsa");
-        Ingredient ing11 = new Ingredient("Ginger Paste");
-        Ingredient ing12 = new Ingredient("Lemon Juice");
-        Ingredient ing13 = new Ingredient("Lemons");
-        Ingredient ing14 = new Ingredient("Macaroni");
-        Ingredient ing15 = new Ingredient("Milk");
-        Ingredient ing16 = new Ingredient("Potatoes");
-
-        ingredientsList.add(ing1);
-        ingredientsList.add(ing2);
-        ingredientsList.add(ing3);
-        ingredientsList.add(ing4);
-        ingredientsList.add(ing5);
-        ingredientsList.add(ing6);
-        ingredientsList.add(ing7);
-        ingredientsList.add(ing8);
-        ingredientsList.add(ing9);
-        ingredientsList.add(ing10);
-        ingredientsList.add(ing11);
-        ingredientsList.add(ing12);
-        ingredientsList.add(ing13);
-        ingredientsList.add(ing14);
-        ingredientsList.add(ing15);
-        ingredientsList.add(ing16);*/
     }
 }
