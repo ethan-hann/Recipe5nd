@@ -181,7 +181,7 @@ public class SearchFragment extends Fragment
     private void getIngredientsFromPantry(Context context) {
         if (Constants.doesIngredientsFileExist) {
             try {
-                String jsonResponse = fileHelper.readFile(context, "ingredients.json");
+                String jsonResponse = fileHelper.readFile(context, Constants.INGREDIENTS_FILE_NAME);
                 System.out.println(jsonResponse);
                 ingredientsList = ParseJSON.parseIngredients(jsonResponse);
                 helpText.setText(R.string.search_help);

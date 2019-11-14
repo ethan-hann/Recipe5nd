@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity
             window.setStatusBarColor(this.getResources().getColor(R.color.primaryLightColor));
         }
 
+        //Initialize files
+        Constants.init(this);
+
         /*
          * TODO: TEMPORARY CODE BELOW THIS LINE: REMOVE BEFORE PRODUCTION
          */
@@ -58,18 +61,11 @@ public class MainActivity extends AppCompatActivity
         ArrayList<Ingredient> testIngredients = new ArrayList<>();
         testIngredients.add(new Ingredient("Chicken", PrimaryTag.HOT));
         testIngredients.add(new Ingredient("Beef", PrimaryTag.COLD, "Meats"));
-        String json = CreateJSON.createIngredientsJSON(testIngredients);
-        fileHelper.saveFile(json, this, "ingredients.json");
-        //TODO: In FileHelper.saveFile() method, figure out how to format JSON if the file exists,
-        //      so we can append to it and still have valid JSON files
+        String json = CreateJSON.createIngredientsJSON(this, testIngredients);
+        fileHelper.saveFile(json, this, Constants.INGREDIENTS_FILE_NAME);
         /*
          * TODO: TEMPORARY CODE ABOVE THIS LINE: REMOVE BEFORE PRODUCTION
          */
-
-        //Setting global booleans based on whether the files exist
-        Constants.doesIngredientsFileExist = fileHelper.exists(this, "ingredients.json");
-        Constants.doesFavoritesExist = fileHelper.exists(this, "favorites.json");
-        Constants.doesShoppingListExist = fileHelper.exists(this, "shopping.json");
 
         drawer = findViewById(R.id.drawer_layout);
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
