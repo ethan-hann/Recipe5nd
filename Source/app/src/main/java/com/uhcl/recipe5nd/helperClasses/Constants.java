@@ -1,5 +1,6 @@
 package com.uhcl.recipe5nd.helperClasses;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import java.util.ArrayList;
@@ -11,15 +12,27 @@ public class Constants
     public static final String ID_SUFFIX = "/lookup.php?i="; //can lookup meals by their id
     public static final String INGREDIENT_SEARCH_SUFFIX = "/filter.php?i="; //can search by ingredient(s)
 
-    public static boolean doesIngredientsFileExist = false;
-    public static boolean doesRecipeFileExist = false;
-    public static boolean doesShoppingListExist = false;
+    public static final String INGREDIENTS_FILE_NAME = "ingredients.json";
+    public static final String FAVORITES_FILE_NAME = "favorites.json";
+    public static final String SHOPPING_LIST_FILE_NAME = "shopping.json";
+
+    public static boolean doesIngredientsFileExist;
+    public static boolean doesFavoritesExist;
+    public static boolean doesShoppingListExist;
 
     public static Recipe currentlyViewedRecipe;
     public static Drawable currentlyViewedRecipeImage;
+    public static ArrayList<Recipe> favoriteRecipes;
 
 
     public static ArrayList<Drawable> returnedRecipeImages;
     public static ArrayList<Ingredient> selectedIngredients;
     public static ArrayList<Recipe> returnedRecipesFromSearch;
+
+    public static void init(Context context) {
+        FileHelper fileHelper = new FileHelper();
+        fileHelper.createIfNotExists(context, Constants.INGREDIENTS_FILE_NAME);
+        fileHelper.createIfNotExists(context, Constants.FAVORITES_FILE_NAME);
+        fileHelper.createIfNotExists(context, Constants.SHOPPING_LIST_FILE_NAME);
+    }
 }

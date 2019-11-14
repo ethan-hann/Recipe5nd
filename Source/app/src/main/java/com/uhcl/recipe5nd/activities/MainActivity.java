@@ -18,11 +18,16 @@ import com.google.android.material.navigation.NavigationView;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.fragments.EditIngredientsFragment;
 import com.uhcl.recipe5nd.fragments.SearchFragment;
+import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Helper;
+import com.uhcl.recipe5nd.helperClasses.Ingredient;
+import com.uhcl.recipe5nd.helperClasses.PrimaryTag;
+
+import java.util.ArrayList;
 
 //TODO: create string references in strings.xml
-//TODO: make 'catch' branches more specific
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
@@ -33,10 +38,11 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Using a Toolbar instead of an Action bar to adhere to Material Design
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Changing color of status bar
+        //Changing color of status bar if our ANDROID BUILD is above SDK 21
         if (Build.VERSION.SDK_INT >= 21) {
             Window window = this.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -44,11 +50,21 @@ public class MainActivity extends AppCompatActivity
             window.setStatusBarColor(this.getResources().getColor(R.color.primaryLightColor));
         }
 
-        //Checking files exists
+        //Initialize files
+        Constants.init(this);
+
+        /*
+         * TODO: TEMPORARY CODE BELOW THIS LINE: REMOVE BEFORE PRODUCTION
+         */
         FileHelper fileHelper = new FileHelper();
-        fileHelper.exists(this, "ingredients.json");
-        fileHelper.exists(this, "recipes.json");
-        fileHelper.exists(this, "shoppingLists.json");
+        ArrayList<Ingredient> testIngredients = new ArrayList<>();
+        testIngredients.add(new Ingredient("Chicken", PrimaryTag.HOT));
+        testIngredients.add(new Ingredient("Beef", PrimaryTag.COLD, "Meats"));
+        String json = CreateJSON.createIngredientsJSON(this, testIngredients);
+        fileHelper.saveFile(json, this, Constants.INGREDIENTS_FILE_NAME);
+        /*
+         * TODO: TEMPORARY CODE ABOVE THIS LINE: REMOVE BEFORE PRODUCTION
+         */
 
         drawer = findViewById(R.id.drawer_layout);
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {

@@ -5,21 +5,43 @@ import java.util.Locale;
 
 public class StringFormatter
 {
+    private static int getLongestMeasurementString(Recipe r)
+    {
+        int maxLength = 0;
+        for (String s : r.getMeasurements())
+        {
+            if (s.length() > maxLength)
+            {
+                maxLength = s.length();
+            }
+        }
+        return maxLength;
+    }
+
     public static String formatRecipeIngredientsAndMeasures(Recipe r)
     {
         StringBuilder builder = new StringBuilder();
+        int maxLength = getLongestMeasurementString(r);
 
+        //Just a utility check, these should always be the same size
         if (r.getIngredients().size() == r.getMeasurements().size())
         {
-            builder.append("\n");
+            //builder.append("\n");
             for (int i = 0; i < r.getIngredients().size(); i++)
             {
-                //TODO: Figure out why sometimes getting 'null' as a value
-                //if (r.getIngredients().get(i).equals("null"))
-                builder.append(r.getIngredients().get(i))
-                        .append("\t\t\t\t\t\t\t\t\t\t\t\t")
-                        .append(r.getMeasurements().get(i));
-                builder.append("\n");
+                if (!r.getIngredients().get(i).equals(""))
+                {
+                    builder.append(r.getMeasurements().get(i));
+
+                    //Seperating the measurements and ingredients based on longest measurement string
+                    for (int j = 0; j < maxLength; j++)
+                    {
+                        builder.append(" ");
+                    }
+
+                    builder.append(r.getIngredients().get(i));
+                    builder.append("\n");
+                }
             }
         }
 
@@ -33,8 +55,8 @@ public class StringFormatter
         ArrayList<String> instructions = r.tokenizeInstructions();
         for (int i = 0; i < instructions.size(); i++)
         {
-            builder.append(String.format(Locale.US, "%d. ", i + 1))
-                    .append(instructions.get(i));
+            System.out.println(instructions.get(i));
+            builder.append(instructions.get(i));
             builder.append("\n");
         }
 
