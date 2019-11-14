@@ -25,24 +25,12 @@ public class FileHelper {
      */
     public boolean saveFile(String s, Context context, String fileName) {
         try {
-            //Checking if file exists before saving. This determines if we need to write or append
-            if (!exists(context, fileName))
-            {
-                FileOutputStream fos = new FileOutputStream(new File(context.getFilesDir().getAbsolutePath().concat("/"+fileName)), false);
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fos);
-                outputStreamWriter.write(s);
-                outputStreamWriter.flush();
-                outputStreamWriter.close();
-                Log.i(TAG, "saveFile written: " + context.getFilesDir() + "/" + fileName);
-            } else
-            {
-                FileOutputStream fos = new FileOutputStream(new File(context.getFilesDir().getAbsolutePath().concat("/"+fileName)), true);
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fos);
-                outputStreamWriter.append(s);
-                outputStreamWriter.flush();
-                outputStreamWriter.close();
-                Log.i(TAG, "saveFile appended: " + context.getFilesDir() + "/" + fileName);
-            }
+            FileOutputStream fos = new FileOutputStream(new File(context.getFilesDir().getAbsolutePath().concat("/" + fileName)), false);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fos);
+            outputStreamWriter.write(s);
+            outputStreamWriter.flush();
+            outputStreamWriter.close();
+            Log.i(TAG, "saveFile written: " + context.getFilesDir() + "/" + fileName);
             return true;
         } catch (IOException e) {
             Log.e(TAG, "Saving file failed: ", e);
@@ -85,7 +73,29 @@ public class FileHelper {
     }
 
     /**
-     * Checks in the supplied context for the file. Also sets global vars to match
+     * Creates a file with a single JSON array like so: []
+     * @param context : the application's context
+     * @param fileName : the file to create
+     * @return true if file is created successfully; false if not
+     */
+    private boolean createBlankFile(Context context, String fileName)
+    {
+        try {
+            FileOutputStream fos = new FileOutputStream(new File(context.getFilesDir().getAbsolutePath().concat("/"+fileName)), false);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fos);
+            outputStreamWriter.write("[]");
+            outputStreamWriter.flush();
+            outputStreamWriter.close();
+            Log.i(TAG, "Blank file " + context.getFilesDir() + "/" + fileName + " created");
+            return true;
+        } catch (IOException e) {
+            Log.e(TAG, "createBlankFile: ", e);
+        }
+        return false;
+    }
+
+    /**
+     * Checks in the supplied context for the file.
      * @param context : the application's context
      * @param fileName : the file to search for
      * @return true if file exists; false if not
@@ -97,9 +107,63 @@ public class FileHelper {
         {
             if (file.equals(fileName))
             {
+                switch (fileName) {
+                    case Constants.INGREDIENTS_FILE_NAME:
+                    {
+                        Constants.doesIngredientsFileExist = true;
+                        break;
+                    }
+                    case Constants.FAVORITES_FILE_NAME:
+                    {
+                        Constants.doesFavoritesExist = true;
+                        break;
+                    }
+                    case Constants.SHOPPING_LIST_FILE_NAME:
+                    {
+                        Constants.doesShoppingListExist = true;
+                        break;
+                    }
+                    default:
+                    {
+                        Log.i(TAG, "exists: file exists but is not of known type");
+                    }
+                }
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Creates a file if it doesn't exist. This method calls createBlankFile() if a file does not
+     * exist
+     * @param context : the application's context
+     * @param fileName : the file to search for
+     */
+    public void createIfNotExists(Context context, String fileName)
+    {
+        if (!exists(context, fileName))
+        {
+            createBlankFile(context, fileName);
+            if (createBlankFile(context, fileName)) {
+                switch (fileName) {
+                    case Constants.INGREDIENTS_FILE_NAME: {
+                        Constants.doesIngredientsFileExist = true;
+                        break;
+                    }
+                    case Constants.FAVORITES_FILE_NAME: {
+                        Constants.doesFavoritesExist = true;
+                        break;
+                    }
+                    case Constants.SHOPPING_LIST_FILE_NAME: {
+                        Constants.doesShoppingListExist = true;
+                        break;
+                    }
+                    default: {
+                        Log.i(TAG, "createIfNotExists: file exists but is not of known type");
+                    }
+                }
+            }
+        }
     }
 }
