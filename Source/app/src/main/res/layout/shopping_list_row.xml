@@ -6,6 +6,7 @@
     android:id="@+id/shoppingList_card_view"
     android:layout_margin="10dp"
     android:layout_height="200dp">
+
     <LinearLayout
         android:id="@+id/shoppingListParent"
         android:layout_gravity="center"
@@ -28,5 +29,6 @@
             android:textSize="25sp"
             android:textColor="#FFF"
             android:layout_height="wrap_content" />
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>
