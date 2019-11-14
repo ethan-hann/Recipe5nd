@@ -10,10 +10,14 @@
     <string name="nav_drawer_shopping">Shopping Lists</string>
 
     <string name="search_help">Select at least one ingredient below to build the search.</string>
+    <string name="no_ingredients_file_warning">You don\'t have any ingredients in your pantry!\nGo to \"Edit Ingredients\" to add some.</string>
     <string name="search_button_text">Search For Recipes</string>
     <string name="clear_search_button_text">Clear</string>
 
     <string name="search_results_image_content_description">recipe_image</string>
-    <string name="search_results_imageButton_favorite_content_description">favorite_button</string>
+    <string name="recipe_details_image_content_description">recipe_details_image</string>
+    <string name="recipe_details_ingredients_title">Ingredients and Measurements:</string>
+    <string name="recipe_details_steps_title">Steps:</string>
+    <string name="empty_string"></string>
 
 </resources>

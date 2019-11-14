@@ -12,6 +12,7 @@ import com.uhcl.recipe5nd.helperClasses.Constants;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,5 +42,4 @@ public class SearchResultsFragment extends Fragment
 
         return rootView;
     }
-
 }

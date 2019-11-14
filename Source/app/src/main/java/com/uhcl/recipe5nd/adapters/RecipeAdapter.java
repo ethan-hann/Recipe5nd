@@ -1,10 +1,5 @@
 package com.uhcl.recipe5nd.adapters;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,77 +9,67 @@ import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
 import com.uhcl.recipe5nd.R;
+import com.uhcl.recipe5nd.backgroundTasks.FetchImages;
+import com.uhcl.recipe5nd.fragments.RecipeDetailsFragment;
+import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.Helper;
 import com.uhcl.recipe5nd.helperClasses.Recipe;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+//TODO: Fix card images not loading until user scrolls recyclerview
+//TODO: Fix some card images not loading at all
 /**
  * Adapater class for the RecyclerView of the SearchResultsFragment
  * This class handles displaying and updating CardViews in the RecyclerView
  */
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder>
 {
+    private static final String TAG = "RecipeAdapter: ";
     private ArrayList<Recipe> returnedRecipes;
+    private ArrayList<String> imageURLS;
     private ImageView cardImage;
     private TextView cardText;
+    private View rootView;
+
 
     public RecipeAdapter(ArrayList<Recipe> recipes) {
         if (recipes == null) {
             returnedRecipes = new ArrayList<>();
         }
         this.returnedRecipes = recipes;
+
+        Constants.returnedRecipeImages = new ArrayList<>();
+
+        getRecipeImageURLS();
+        if (!imageURLS.isEmpty()) 
+        {
+            String[] urls = new String[imageURLS.size()];
+            urls = imageURLS.toArray(urls);
+            new FetchImages().execute(urls);
+        }
     }
 
-    private void setImage(Drawable drawable) {
-        cardImage.setImageDrawable(drawable);
-    }
-
-    public class DownloadImage extends AsyncTask<String, Integer, Drawable> {
-
-        private static final String TAG = "DownloadImage";
-        @Override
-        protected Drawable doInBackground(String... strings) {
-            return downloadImage(strings[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Drawable drawable) {
-            setImage(drawable);
-        }
-
-        private Drawable downloadImage(String url) {
-            URL imageURL;
-            InputStream in;
-            BufferedInputStream bufferedInputStream;
-
-            try {
-                imageURL = new URL(url);
-                in = imageURL.openStream();
-                bufferedInputStream = new BufferedInputStream(in);
-
-                Bitmap bMap = BitmapFactory.decodeStream(bufferedInputStream);
-                in.close();
-                bufferedInputStream.close();
-
-                return new BitmapDrawable(bMap);
-            } catch (IOException e) {
-                Log.e(TAG, "Error downloading image file:", e);
-            }
-            return null;
+    /**
+     * Gets image urls from returned recipes and puts them in an array list
+     */
+    private void getRecipeImageURLS()
+    {
+        imageURLS = new ArrayList<>();
+        for (Recipe r : returnedRecipes)
+        {
+            imageURLS.add(r.getStrMealThumb());
         }
     }
 
     @NonNull
     @Override
     public RecipeAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View rootView = LayoutInflater.from(parent.getContext())
+        rootView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.returned_recipe_card, parent, false);
 
         return new ViewHolder(rootView);
@@ -92,8 +77,32 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RecipeAdapter.ViewHolder holder, int position) {
-        new DownloadImage().execute(returnedRecipes.get(position).getStrMealThumb());
         holder.bind(position);
+        try {
+            //cardImage.setImageDrawable(Constants.returnedRecipeImages.get(position));
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+
+                //Switch to the recipe results fragment when a card view is clicked on
+                @Override
+                public void onClick(View view) {
+                    Constants.currentlyViewedRecipe = Constants.returnedRecipesFromSearch.get(position);
+                    Constants.currentlyViewedRecipeImage = Constants.returnedRecipeImages.get(position);
+
+                    AppCompatActivity activity = Helper.unwrap(view.getContext());
+                    activity
+                            .getSupportFragmentManager()
+                            .beginTransaction()
+                            .addToBackStack("recipe_results")
+                            .replace(R.id.fragment_container, new RecipeDetailsFragment())
+                            .commit();
+                }
+            });
+            Log.i(TAG, "onBindViewHolder: size of image array:" + Constants.returnedRecipeImages.size());
+
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, "onBindViewHolder: ", e);
+        }
+
     }
 
     @Override
@@ -105,7 +114,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         return returnedRecipes.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    class ViewHolder extends RecyclerView.ViewHolder
     {
         MaterialCardView cardView;
 
@@ -113,7 +122,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         {
             super(view);
             cardView = view.findViewById(R.id.search_results_cardView);
-            view.setOnClickListener(this);
         }
 
         void bind(int pos) {
@@ -121,11 +129,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             cardText = cardView.findViewById(R.id.search_results_card_text);
 
             cardText.setText(returnedRecipes.get(pos).getStrMeal());
-        }
+            try {
+                cardImage.setImageDrawable(Constants.returnedRecipeImages.get(pos));
+            } catch (IndexOutOfBoundsException e) {
+                Log.e(TAG, "bind: ", e);
+            }
 
-        @Override
-        public void onClick(View view) {
-            //TODO: Implement recipe details
         }
     }
 }

@@ -25,10 +25,10 @@
             <ImageView
                 android:id="@+id/search_results_card_image"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="@android:dimen/thumbnail_height"
                 android:layout_centerHorizontal="false"
-                android:scaleType="fitXY"
-                android:contentDescription="@string/search_results_image_content_description" />
+                android:contentDescription="@string/search_results_image_content_description"
+                android:scaleType="fitXY" />
 
             <TextView
                 android:id="@+id/search_results_card_text"

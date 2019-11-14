@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources >
     <dimen name="material_card_spacing">16dp</dimen>
+    <dimen name="text_padding">8dp</dimen>
+    <dimen name="h1">96sp</dimen>
+    <dimen name="h2">60sp</dimen>
+    <dimen name="h3">48sp</dimen>
+    <dimen name="h4">34sp</dimen>
+    <dimen name="h5">24sp</dimen>
+    <dimen name="h6">20sp</dimen>
+    <dimen name="subtitle1">16sp</dimen>
+    <dimen name="subtitle2">14sp</dimen>
+    <dimen name="body1">16sp</dimen>
+    <dimen name="body2">14sp</dimen>
+    <dimen name="caption">12sp</dimen>
 </resources>

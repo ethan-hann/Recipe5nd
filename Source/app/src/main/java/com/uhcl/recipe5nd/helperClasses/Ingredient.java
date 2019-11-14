@@ -7,7 +7,7 @@ public class Ingredient
 {
     private String name;
     private PrimaryTag primaryTag;
-    private String optionalTag;
+    private String optionalTag = "";
 
     public Ingredient(String name, PrimaryTag pTag, String oTag) {
         this.name = name;
