@@ -14,37 +14,84 @@ public class CreateJSON
 {
     private static final String TAG = "CreateJSON";
 
-    public static String createRecipeJSON(ArrayList<Recipe> savedRecipes)
+    /**
+     * Creates a JSON string representing a list of Recipe objects
+     * This method will get the existing JSON string from the file if it exists and use that
+     * as a basis for the new JSON string
+     * @param context : the application's context
+     * @param savedRecipes : an ArrayList containing Recipe objects
+     * @return
+     */
+    public static String createRecipeJSON(Context context, ArrayList<Recipe> savedRecipes)
     {
         try {
-            JSONArray recipes = new JSONArray();
-            for (Recipe r : savedRecipes) {
-                JSONObject recipeObject = new JSONObject();
-                recipeObject.put("id", r.getId());
-                recipeObject.put("name", r.getStrMeal());
-                recipeObject.put("strThumbnail", r.getStrMealThumb());
-                recipeObject.put("strYoutube", r.getStrYoutube());
+            FileHelper fileHelper = new FileHelper();
+            if (Constants.doesFavoritesExist)
+            {
+                String fileContents = fileHelper.readFile(context, Constants.FAVORITES_FILE_NAME);
+                JSONArray recipes = new JSONArray(fileContents);
+                for (Recipe r : savedRecipes)
+                {
+                    JSONObject recipeObject = new JSONObject();
+                    recipeObject.put("id", r.getId());
+                    recipeObject.put("name", r.getStrMeal());
+                    recipeObject.put("strThumbnail", r.getStrMealThumb());
+                    recipeObject.put("strYoutube", r.getStrYoutube());
 
-                JSONArray ingredients = new JSONArray();
-                for (int i = 0; i < r.getIngredients().size(); i++) {
-                    JSONObject ingredientObject = new JSONObject();
-                    ingredientObject.put("name", r.getIngredients().get(i));
-                    ingredientObject.put("measure", r.getMeasurements().get(i));
-                    ingredients.put(ingredientObject);
+                    JSONArray ingredients = new JSONArray();
+                    for (int i = 0; i < r.getIngredients().size(); i++) {
+                        JSONObject ingredientObject = new JSONObject();
+                        ingredientObject.put("name", r.getIngredients().get(i));
+                        ingredientObject.put("measure", r.getMeasurements().get(i));
+                        ingredients.put(ingredientObject);
+                    }
+                    recipeObject.put("ingredients", ingredients);
+
+                    recipeObject.put("instructions", r.getStrInstructions());
+                    recipes.put(recipeObject);
                 }
-                recipeObject.put("ingredients", ingredients);
-
-                recipeObject.put("instructions", r.getStrInstructions());
-                recipes.put(recipeObject);
+                return recipes.toString();
             }
+            else
+            {
+                Log.i(TAG, "createRecipeJSON: " + Constants.FAVORITES_FILE_NAME + " does not exist. Creating new JSON string.");
+                JSONArray recipes = new JSONArray();
+                for (Recipe r : savedRecipes)
+                {
+                    JSONObject recipeObject = new JSONObject();
+                    recipeObject.put("id", r.getId());
+                    recipeObject.put("name", r.getStrMeal());
+                    recipeObject.put("strThumbnail", r.getStrMealThumb());
+                    recipeObject.put("strYoutube", r.getStrYoutube());
 
-            return recipes.toString();
+                    JSONArray ingredients = new JSONArray();
+                    for (int i = 0; i < r.getIngredients().size(); i++) {
+                        JSONObject ingredientObject = new JSONObject();
+                        ingredientObject.put("name", r.getIngredients().get(i));
+                        ingredientObject.put("measure", r.getMeasurements().get(i));
+                        ingredients.put(ingredientObject);
+                    }
+                    recipeObject.put("ingredients", ingredients);
+
+                    recipeObject.put("instructions", r.getStrInstructions());
+                    recipes.put(recipeObject);
+                }
+                return recipes.toString();
+            }
         } catch (JSONException e) {
             Log.e(TAG, "createRecipeJSON: ", e);
         }
         return "";
     }
 
+    /**
+     * Creates a JSON string representing a list of Ingredient objects
+     * This method will get the existing JSON string from the file if it exists and use that
+     * as a basis for the new JSON string
+     * @param context : the application's context
+     * @param savedIngredients : an ArrayList containing Ingredient objects
+     * @return string : a string representation of the formatted JSON
+     */
     public static String createIngredientsJSON(Context context, ArrayList<Ingredient> savedIngredients)
     {
         try
@@ -66,8 +113,17 @@ public class CreateJSON
             }
             else
             {
-                Log.i(TAG, "createIngredientsJSON: " + Constants.INGREDIENTS_FILE_NAME + " does not exist.");
-                return "";
+                Log.i(TAG, "createIngredientsJSON: " + Constants.INGREDIENTS_FILE_NAME + " does not exist. Creating new JSON string.");
+                JSONArray ingredients = new JSONArray();
+                for (Ingredient i : savedIngredients)
+                {
+                    JSONObject ingredientObject = new JSONObject();
+                    ingredientObject.put("name", i.getName());
+                    ingredientObject.put("primaryTag", i.getPrimaryTag().toString());
+                    ingredientObject.put("optionalTag", i.getOptionalTag());
+                    ingredients.put(ingredientObject);
+                }
+                return ingredients.toString();
             }
         } catch (JSONException e)
         {
