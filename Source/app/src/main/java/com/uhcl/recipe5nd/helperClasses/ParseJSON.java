@@ -78,13 +78,13 @@ public class ParseJSON
 
     /**
      * Parses ingredients from a local saved JSON file
-     * @param ingredientFile the file to parse from
+     * @param ingredientsString the string to parse from
      * @return ArrayList of Ingredients representing the parsed data
      */
-    public static ArrayList<Ingredient> parseIngredients(String ingredientFile) throws JSONException
+    public static ArrayList<Ingredient> parseIngredients(String ingredientsString) throws JSONException
     {
         ArrayList<Ingredient> ingredients = new ArrayList<>();
-        JSONArray objArray = new JSONArray(ingredientFile);
+        JSONArray objArray = new JSONArray(ingredientsString);
 
         if (objArray.isNull(0)) {
             return null;
