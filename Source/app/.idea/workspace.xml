@@ -10,10 +10,7 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="63cc5655-64b3-4fed-b23a-c0e6107f6edf" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/uhcl/recipe5nd/activities/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/uhcl/recipe5nd/activities/MainActivity.java" afterDir="false" />
-    </list>
+    <list default="true" id="63cc5655-64b3-4fed-b23a-c0e6107f6edf" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,8 +51,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/uhcl/recipe5nd/activities/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="122" column="35" selection-start-line="122" selection-start-column="22" selection-end-line="122" selection-end-column="35" />
+            <state relative-caret-position="291">
+              <caret line="119" column="42" lean-forward="true" selection-start-line="119" selection-start-column="42" selection-end-line="119" selection-end-column="42" />
             </state>
           </provider>
         </entry>
@@ -454,17 +451,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/uhcl/recipe5nd/activities/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="291">
+          <caret line="119" column="42" lean-forward="true" selection-start-line="119" selection-start-column="42" selection-end-line="119" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/uhcl/recipe5nd/helperClasses/FileHelper.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="84">
           <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/uhcl/recipe5nd/activities/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="122" column="35" selection-start-line="122" selection-start-column="22" selection-end-line="122" selection-end-column="35" />
         </state>
       </provider>
     </entry>
