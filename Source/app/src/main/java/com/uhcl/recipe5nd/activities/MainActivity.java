@@ -49,13 +49,8 @@ public class MainActivity extends AppCompatActivity
             window.setStatusBarColor(this.getResources().getColor(R.color.primaryLightColor));
         }
 
-        //Creating files if they don't already exist
-        /*FileHelper fileHelper = new FileHelper();
-        fileHelper.createIfNotExists(this, Constants.INGREDIENTS_FILE_NAME);
-        fileHelper.createIfNotExists(this, Constants.FAVORITES_FILE_NAME);
-        fileHelper.createIfNotExists(this, Constants.SHOPPING_LIST_FILE_NAME);*/
+        //Initialize files
         Constants.init(this);
-
 
         /*
          * TODO: TEMPORARY CODE BELOW THIS LINE: REMOVE BEFORE PRODUCTION
@@ -66,8 +61,6 @@ public class MainActivity extends AppCompatActivity
         testIngredients.add(new Ingredient("Beef", PrimaryTag.COLD, "Meats"));
         String json = CreateJSON.createIngredientsJSON(this, testIngredients);
         fileHelper.saveFile(json, this, Constants.INGREDIENTS_FILE_NAME);
-        //TODO: In FileHelper.saveFile() method, figure out how to format JSON if the file exists,
-        //      so we can append to it and still have valid JSON files
         /*
          * TODO: TEMPORARY CODE ABOVE THIS LINE: REMOVE BEFORE PRODUCTION
          */

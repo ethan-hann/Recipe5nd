@@ -90,7 +90,7 @@ public class RecipeDetailsFragment extends Fragment
         }
         Constants.favoriteRecipes.add(Constants.currentlyViewedRecipe);
 
-        String json = CreateJSON.createRecipeJSON(Constants.favoriteRecipes);
+        String json = CreateJSON.createRecipeJSON(context, Constants.favoriteRecipes);
         FileHelper fileHelper = new FileHelper();
         return fileHelper.saveFile(json, context, "favorites.json");
     }
