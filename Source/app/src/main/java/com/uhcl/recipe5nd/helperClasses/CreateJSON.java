@@ -1,11 +1,13 @@
 package com.uhcl.recipe5nd.helperClasses;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class CreateJSON
@@ -43,27 +45,35 @@ public class CreateJSON
         return "";
     }
 
-    public static String createIngredientsJSON(ArrayList<Ingredient> savedIngredients)
+    public static String createIngredientsJSON(Context context, ArrayList<Ingredient> savedIngredients)
     {
         try
         {
-            JSONArray ingredients = new JSONArray();
-            for (Ingredient i : savedIngredients)
+            FileHelper fileHelper = new FileHelper();
+            if (Constants.doesIngredientsFileExist)
             {
-                JSONObject ingredientObject = new JSONObject();
-                ingredientObject.put("name", i.getName());
-                ingredientObject.put("primaryTag", i.getPrimaryTag().toString());
-                ingredientObject.put("optionalTag", i.getOptionalTag());
-                ingredients.put(ingredientObject);
+                String fileContents = fileHelper.readFile(context, Constants.INGREDIENTS_FILE_NAME);
+                JSONArray ingredients = new JSONArray(fileContents);
+                for (Ingredient i : savedIngredients)
+                {
+                    JSONObject ingredientObject = new JSONObject();
+                    ingredientObject.put("name", i.getName());
+                    ingredientObject.put("primaryTag", i.getPrimaryTag().toString());
+                    ingredientObject.put("optionalTag", i.getOptionalTag());
+                    ingredients.put(ingredientObject);
+                }
+                return ingredients.toString();
             }
-
-            return ingredients.toString();
+            else
+            {
+                Log.i(TAG, "createIngredientsJSON: " + Constants.INGREDIENTS_FILE_NAME + " does not exist.");
+                return "";
+            }
         } catch (JSONException e)
         {
             Log.e(TAG, "createIngredientsJSON: ", e);
         }
         return "";
-        
     }
 
     public static String createShoppingListsJSON(ArrayList<ShoppingData> shoppingData)
