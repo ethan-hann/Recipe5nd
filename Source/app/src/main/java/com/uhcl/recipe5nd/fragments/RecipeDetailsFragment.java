@@ -5,16 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.uhcl.recipe5nd.R;
-import com.uhcl.recipe5nd.adapters.RecipeAdapter;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
@@ -26,11 +22,8 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-public class RecipeDetailsFragment extends Fragment
+public class RecipeDetailsFragment extends Fragment implements View.OnClickListener
 {
     private ImageView imageView;
     private TextView recipeNameText;
@@ -48,36 +41,17 @@ public class RecipeDetailsFragment extends Fragment
         imageView.setImageDrawable(Constants.currentlyViewedRecipeImage);
 
         fab = rootView.findViewById(R.id.favorite_recipe_fab);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean success = addRecipeToFavorites(getContext());
-
-                if (!success)
-                {
-                    Toast t = Toast.makeText(getContext(), "Could not save recipe to favorites.", Toast.LENGTH_LONG);
-                    t.show();
-                }
-                else
-                {
-                    Toast t = Toast.makeText(getContext(), "Recipe Saved!", Toast.LENGTH_LONG);
-                    t.show();
-                }
-            }
-        });
-
-        recipeNameText = rootView.findViewById(R.id.recipe_name_text);
-        recipeIngredientsAndMeasuresText = rootView.findViewById(R.id.recipe_ingredients_and_measures_text);
-        recipeStepsText = rootView.findViewById(R.id.recipe_steps_text);
+        fab.setOnClickListener(this);
 
         Recipe r = Constants.currentlyViewedRecipe;
-
+        recipeNameText = rootView.findViewById(R.id.recipe_name_text);
         recipeNameText.setText(r.getStrMeal());
-        recipeIngredientsAndMeasuresText.setText(StringFormatter.formatRecipeIngredientsAndMeasures(r));
-        recipeStepsText.setText(StringFormatter.formatRecipeSteps(r));
 
-        //recipeDetails.setText(StringFormatter.formatRecipeDetails(Constants.currentlyViewedRecipe));
+        recipeIngredientsAndMeasuresText = rootView.findViewById(R.id.recipe_ingredients_and_measures_text);
+        recipeIngredientsAndMeasuresText.setText(StringFormatter.formatRecipeIngredientsAndMeasures(r));
+
+        recipeStepsText = rootView.findViewById(R.id.recipe_steps_text);
+        recipeStepsText.setText(StringFormatter.formatRecipeSteps(r));
 
         return rootView;
     }
@@ -88,10 +62,36 @@ public class RecipeDetailsFragment extends Fragment
         {
             Constants.favoriteRecipes = new ArrayList<>();
         }
+
+        if (Constants.favoriteRecipeImages == null)
+        {
+            Constants.favoriteRecipeImages = new ArrayList<>();
+        }
+
         Constants.favoriteRecipes.add(Constants.currentlyViewedRecipe);
+        Constants.favoriteRecipeImages.add(Constants.currentlyViewedRecipeImage);
 
         String json = CreateJSON.createRecipeJSON(context, Constants.favoriteRecipes);
         FileHelper fileHelper = new FileHelper();
-        return fileHelper.saveFile(json, context, "favorites.json");
+        return fileHelper.saveFile(json, context, Constants.FAVORITES_FILE_NAME);
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+        Context context = view.getContext();
+        boolean success = addRecipeToFavorites(context);
+
+        if (!success)
+        {
+            Toast t = Toast.makeText(context, "Could not save recipe to favorites.", Toast.LENGTH_LONG);
+            t.show();
+        }
+        else
+        {
+            Toast t = Toast.makeText(context, "Recipe Saved!", Toast.LENGTH_LONG);
+            t.show();
+        }
     }
 }
+

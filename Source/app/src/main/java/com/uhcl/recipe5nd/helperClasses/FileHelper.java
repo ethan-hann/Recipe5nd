@@ -26,10 +26,12 @@ public class FileHelper {
     public boolean saveFile(String s, Context context, String fileName) {
         try {
             FileOutputStream fos = new FileOutputStream(new File(context.getFilesDir().getAbsolutePath().concat("/" + fileName)), false);
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fos);
-            outputStreamWriter.write(s);
-            outputStreamWriter.flush();
-            outputStreamWriter.close();
+            OutputStreamWriter osw = new OutputStreamWriter(fos);
+            osw.write(s);
+            osw.flush();
+            osw.close();
+            fos.flush();
+            fos.close();
             Log.i(TAG, "saveFile written: " + context.getFilesDir() + "/" + fileName);
             return true;
         } catch (IOException e) {
@@ -57,7 +59,9 @@ public class FileHelper {
                 while ((line = br.readLine()) != null) {
                     builder.append(line);
                 }
+                fis.close();
                 isr.close();
+                br.close();
                 return builder.toString();
             }
             else
@@ -82,10 +86,12 @@ public class FileHelper {
     {
         try {
             FileOutputStream fos = new FileOutputStream(new File(context.getFilesDir().getAbsolutePath().concat("/"+fileName)), false);
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fos);
-            outputStreamWriter.write("[]");
-            outputStreamWriter.flush();
-            outputStreamWriter.close();
+            OutputStreamWriter osw = new OutputStreamWriter(fos);
+            osw.write("[]");
+            osw.flush();
+            osw.close();
+            fos.flush();
+            fos.close();
             Log.i(TAG, "Blank file " + context.getFilesDir() + "/" + fileName + " created");
             return true;
         } catch (IOException e) {
