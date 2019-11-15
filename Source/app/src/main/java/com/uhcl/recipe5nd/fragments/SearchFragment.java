@@ -23,6 +23,7 @@ import com.uhcl.recipe5nd.helperClasses.ParseJSON;
 import com.uhcl.recipe5nd.helperClasses.PrimaryTag;
 import com.uhcl.recipe5nd.helperClasses.QueryType;
 import com.uhcl.recipe5nd.helperClasses.Recipe;
+import com.uhcl.recipe5nd.helperClasses.SortBasedOnName;
 
 import org.json.JSONException;
 
@@ -30,6 +31,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
@@ -53,7 +55,6 @@ public class SearchFragment extends Fragment
     private RecyclerView recyclerView;
     private SearchIngredientsAdapter recyclerAdapter;
     private Button searchButton;
-    private Button clearButton;
 
     private String toastText = "";
     private FileHelper fileHelper = new FileHelper();
@@ -86,7 +87,6 @@ public class SearchFragment extends Fragment
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         searchButton = rootView.findViewById(R.id.search_button);
-        clearButton = rootView.findViewById(R.id.clear_search_button);
 
         //Search button functionality
         //Not using lambda's for backwards Java compatibility
@@ -94,9 +94,10 @@ public class SearchFragment extends Fragment
             @Override
             public void onClick(View view) {
                 //ensure at least one ingredient is selected to include in search
-                if (!fileHelper.exists(context, "ingredients.json"))
+                if (!fileHelper.exists(context, Constants.INGREDIENTS_FILE_NAME)
+                        || ingredientsList == null)
                 {
-                    toastText = "No ingredients were found. Please add some in \"Edit Ingredients\".";
+                    toastText = "Add some ingredients first in \"Edit Ingredients\"";
                     Toast t = Toast.makeText(context, toastText, Toast.LENGTH_LONG);
                     t.show();
                 } else if (Constants.selectedIngredients.isEmpty())
@@ -165,16 +166,6 @@ public class SearchFragment extends Fragment
                 }
             });
 
-        //Clear button functionality
-        clearButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO: figure out why checkedTextView not clearing check marks
-                recyclerAdapter.clearSelectedItems();
-                System.out.println("CLEAR HAS BEEN CLICKED!");
-            }
-        });
-
         return rootView;
     }
 
@@ -184,7 +175,16 @@ public class SearchFragment extends Fragment
                 String jsonResponse = fileHelper.readFile(context, Constants.INGREDIENTS_FILE_NAME);
                 System.out.println(jsonResponse);
                 ingredientsList = ParseJSON.parseIngredients(jsonResponse);
-                helpText.setText(R.string.search_help);
+                if (ingredientsList == null)
+                {
+                    helpText.setText(R.string.no_ingredients_file_warning);
+                }
+                else
+                {
+                    helpText.setText(R.string.search_help);
+                    Collections.sort(ingredientsList, new SortBasedOnName());
+                }
+
             } catch (JSONException e) {
                 Log.e(TAG, "getIngredientsFromPantry: ", e);
             }
