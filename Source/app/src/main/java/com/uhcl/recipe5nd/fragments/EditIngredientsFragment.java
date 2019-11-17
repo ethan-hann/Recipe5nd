@@ -1,214 +1,212 @@
 package com.uhcl.recipe5nd.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.material.snackbar.Snackbar;
+import androidx.fragment.app.Fragment;
 import com.uhcl.recipe5nd.R;
-import com.uhcl.recipe5nd.adapters.SearchIngredientsAdapter;
+import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Ingredient;
-import com.uhcl.recipe5nd.helperClasses.ParseJSON;
 import com.uhcl.recipe5nd.helperClasses.PrimaryTag;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.jar.Attributes;
-import java.util.zip.Inflater;
 public class EditIngredientsFragment extends Fragment{
     public EditIngredientsFragment() {/* Required empty public constructor*/}
-    public static EditIngredientsFragment newInstance() {EditIngredientsFragment fragment = new EditIngredientsFragment();return fragment;}
 
-    private EditText foodItem;
-    private EditText optTag;
-    private int item;
-    private String jsonResponse;
+    // Arrays & Constructors
+    private ArrayList<Ingredient> arrayListIngredientObjects = new ArrayList<>();
+    private ArrayList<String> arrayListIngredientStrings = new ArrayList<>();
+    private List<PrimaryTag> spinnerPrimaryTagItemList = new ArrayList<>();
+    private FileHelper fileHelper = new FileHelper();
+    private ArrayList<Ingredient> temporaryArrayList = new ArrayList<>();
 
-    // Start //
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        // To Identify Items using view.findViewByID
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+                 //////////////////////////////////////////////////////////////////
+                //          TODO:Remove This Block Before Implementation
+ //-->    ///////////////////////////////////////////////////////////////////////////////////////////   <--//
+         ///     Adding Ingredients Manually    ////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
+
+        String TAG = EditIngredientsFragment.class.getSimpleName();
+        Log.d(TAG, "Words;");
+        arrayListIngredientObjects.add(new Ingredient("Chips (A Room Item)", PrimaryTag.ROOM));
+        arrayListIngredientObjects.add(new Ingredient("Beef (A Cold Item)", PrimaryTag.COLD, "Meats"));
+        arrayListIngredientObjects.add(new Ingredient("Chicken (A Hot Item)", PrimaryTag.HOT));
+        arrayListIngredientObjects.add(new Ingredient("A Room Item", PrimaryTag.ROOM));
+        arrayListIngredientObjects.add(new Ingredient("A Cold Item", PrimaryTag.COLD, "Meats"));
+        arrayListIngredientObjects.add(new Ingredient("A Hot Item", PrimaryTag.HOT));
+//------------>                                                       <----------------------------------//
+
+
+
+
+
+          ///////////////////////////////////////////////////////////////////////////////////////////
+         ///     Identifying Fields    /////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
+
         View view = inflater.inflate(R.layout.edit_ingredients_fragment, container, false);
+        ListView listView = view.findViewById(R.id.pantryListView);
+        Button addButton = view.findViewById(R.id.pantryButton);
+        EditText pantryTextBox = view.findViewById(R.id.pantryTextBox);
+        EditText pantryOptTag = view.findViewById(R.id.pantryOptionalTag);
+        Spinner pantrySpinnerField = view.findViewById(R.id.pantrySpinner);
+        String ingredientsJSON = CreateJSON.createIngredientsJSON(getContext(), arrayListIngredientObjects);
 
-        // Arrays
-        ArrayList<String> foods = new ArrayList<String>();
-        ArrayList<Ingredient> pantryIngredient = new ArrayList<>();
+          ///////////////////////////////////////////////////////////////////////////////////////////
+         ///     Implementing The Spinner    ///////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
 
-        // Constructors
-        FileHelper fileHelper = new FileHelper();
+        // Select which temperature should be applied to the ingredient
+        spinnerPrimaryTagItemList.add(PrimaryTag.HOT);
+        spinnerPrimaryTagItemList.add(PrimaryTag.ROOM);
+        spinnerPrimaryTagItemList.add(PrimaryTag.COLD);
 
-        // identify fields
-        ListView listView = (ListView) view.findViewById(R.id.pantryListView);
-        Button button = (Button) view.findViewById(R.id.pantryButton);
-        foodItem = (EditText) view.findViewById(R.id.pantryTextBox);
-        optTag = (EditText) view.findViewById(R.id.pantryOptionalTag);
-        Spinner pantrySpinner = view.findViewById(R.id.pantrySpinner);
+        // Adapter for the spinner
+        ArrayAdapter<PrimaryTag> dataAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, spinnerPrimaryTagItemList);
 
-        // --# Spinner #-- //
-        // select which temperature should be applied to the ingredient
-        List<PrimaryTag> spinnerList = new ArrayList<>();
-        spinnerList.add(PrimaryTag.HOT);
-        spinnerList.add(PrimaryTag.ROOM);
-        spinnerList.add(PrimaryTag.COLD);
-        //adapter for the spinner
-        ArrayAdapter<PrimaryTag> dataAdapter = new ArrayAdapter<PrimaryTag>(getActivity(), android.R.layout.simple_spinner_item, spinnerList);
-        // set these options as dropdown options for the spinner
+        // Set these options as dropdown options for the spinner
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // spinner adapter call
-        pantrySpinner.setAdapter(dataAdapter);
 
-        // array adapter to tell list view what to display
-        ArrayAdapter<String> listViewAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, foods);
+        // Spinner adapter call
+        pantrySpinnerField.setAdapter(dataAdapter);
+
+          ////////////////////////////////////////////////////////////////////////////////////////////
+         ///        ListView Adapter        /////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+        // Array adapter to tell list view what to display
+        ArrayAdapter<String> listViewAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, arrayListIngredientStrings);
+
+        // Set the adapter
         listView.setAdapter(listViewAdapter);
 
+          //////////////////////////////////////////////////////////////////////////////////////////
+         ///     Populating The List     //////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-          // It breaks without this
-         //But doesnt read ingredients.json??????????
-////////////////////////////////////////////////////////////////////////////////
-        //check if ingredients.json exists
-        String ingredientsFile = "ingredients.json";
-        String jsonResponse = fileHelper.readFile(getContext(), ingredientsFile);
-        boolean jsonExists = fileHelper.exists(getContext(), ingredientsFile);
-        if(jsonExists) {
-            try {
-                pantryIngredient = ParseJSON.parseIngredients(jsonResponse);
-            }catch (JSONException e) {e.printStackTrace();} //end catch
-
-        } //end if
-        else{Toast.makeText(getActivity(), "Nope", Toast.LENGTH_LONG).show();}
-//////////////////////////////////////////////////////////////////////////////
-
-
-                    //Sort the listView Items by Hot, Room, then Cold
-        try {
-            JSONArray jsonArray = new JSONArray(jsonResponse);
-            for(int i = 0, size = jsonArray.length(); i<size; i++){
-                JSONObject thisJsonObject = jsonArray.getJSONObject(i);
-                String ingredientNames = thisJsonObject.getString("name");
-                String primaryTags = thisJsonObject.getString("primaryTag");
-                String optionalTags = thisJsonObject.getString("optionalTag");
-                // Display hot items
-                if(primaryTags.equals("HOT")){
-                    foods.add(ingredientNames);
+        boolean jsonExists = fileHelper.exists(Objects.requireNonNull(getContext()), Constants.INGREDIENTS_FILE_NAME);
+        if (jsonExists) {
+            for (Ingredient pantryIngredient : arrayListIngredientObjects) {
+                if(pantryIngredient.getPrimaryTag().equals(PrimaryTag.HOT)){
+                    String pantryIngredientString = pantryIngredient.getName();
+                    arrayListIngredientStrings.add(pantryIngredientString);
                 }
             }
-            for(int i = 0, size = jsonArray.length(); i<size; i++){
-                JSONObject thisJsonObject = jsonArray.getJSONObject(i);
-                String ingredientNames = thisJsonObject.getString("name");
-                String primaryTags = thisJsonObject.getString("primaryTag");
-                String optionalTags = thisJsonObject.getString("optionalTag");
-                // Display warm items
-                if(primaryTags.equals("ROOM")){
-                    foods.add(ingredientNames);
+            for (Ingredient pantryIngredient : arrayListIngredientObjects) {
+                if(pantryIngredient.getPrimaryTag().equals(PrimaryTag.ROOM)){
+                    String pantryIngredientString = pantryIngredient.getName();
+                    arrayListIngredientStrings.add(pantryIngredientString);
                 }
             }
-            for(int i = 0, size = jsonArray.length(); i<size; i++){
-                JSONObject thisJsonObject = jsonArray.getJSONObject(i);
-                String ingredientNames = thisJsonObject.getString("name");
-                String primaryTags = thisJsonObject.getString("primaryTag");
-                String optionalTags = thisJsonObject.getString("optionalTag");
-                // Display cold items
-                if(primaryTags.equals("COLD")){
-                    foods.add(ingredientNames);
+            for (Ingredient pantryIngredient : arrayListIngredientObjects) {
+                if(pantryIngredient.getPrimaryTag().equals(PrimaryTag.COLD)){
+                    String pantryIngredientString = pantryIngredient.getName();
+                    arrayListIngredientStrings.add(pantryIngredientString);
                 }
             }
-        }catch (JSONException e) {e.printStackTrace();}
+            listViewAdapter.notifyDataSetChanged();
+        } else {
+            Toast.makeText(getActivity(), "Ingredients.json does not exist", Toast.LENGTH_LONG).show();
+        }
 
-        // Refresh the adapter after running the sort by temperature
-        listViewAdapter.notifyDataSetChanged();
+          //////////////////////////////////////////////////////////////////////////////////////////
+         ///  When a listView Item is Clicked -> implementing ingredient deletion  ////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////
 
-        // When a listView Item is Clicked -> implementing ingredient deletion
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position == position){
-                   int intID = l2i(id);
-                    try{
-                        JSONArray jsonArray = new JSONArray(jsonResponse);
-                        for(int i = 0, size = jsonArray.length(); i<size; i++) {
-                            JSONObject thisJsonObject = jsonArray.getJSONObject(i);
-                            String ingredientNames = thisJsonObject.getString("name");
-                            String primaryTags = thisJsonObject.getString("primaryTag");
-                            String optionalTags = thisJsonObject.getString("optionalTag");
+        listView.setOnItemClickListener((parent, view1, position, id) -> {
+            // Remove the clicked item
+            arrayListIngredientObjects.remove(position);
+            arrayListIngredientStrings.remove(position);
 
-                            // Expecting the first 3 IDs (0, 1, 2) to be the category labels for hot, room, and cold.
-                            // If this is not implemented, just need to delete this outer if statement and keep the inner one.
-                            if(intID > 2){
-                                if (i == intID) {
-                                    foods.remove(ingredientNames);
-                                    foods.remove(primaryTags);
-                                    foods.remove(optionalTags);
-                                    listViewAdapter.notifyDataSetChanged();
-                                }
-                            }else{
-                                Toast.makeText(getActivity(), "Unable to remove category item!", Toast.LENGTH_LONG).show();
-                            }
-
-                        }
-                    }catch(JSONException e){e.printStackTrace();}
-                }
-            }
+            fileHelper.saveFile(ingredientsJSON, getContext(), Constants.INGREDIENTS_FILE_NAME);
+            listViewAdapter.notifyDataSetChanged();
         }); // end setOnItemClickListener
 
+          //////////////////////////////////////////////////////////////////////////////////////////
+         /// When the ADD addButton is clicked ////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////
 
-        // onClick for the ADD Button
-        ArrayList<Ingredient> finalPantryIngredient = pantryIngredient;
-        button.setOnClickListener(v -> {Toast.makeText(getActivity(), "Added to pantry", Toast.LENGTH_SHORT).show();
+        addButton.setOnClickListener(v -> {
+            String newItem = pantryTextBox.getText().toString();
+            PrimaryTag newItemPrimaryTag = (PrimaryTag) pantrySpinnerField.getSelectedItem();
+            String newItemOptionalTag = pantryOptTag.getText().toString();
 
-            //Make both EditTexts values into type String
-            String foodString = foodItem.getText().toString();
-            String optString = optTag.getText().toString();
+            // Add the item to the list of ingredients
 
-            //add the food String to the arrayList of food Strings to update the listView
-            foods.add(foodString);
+              //====================================================================================//
+             // Copy data to a new array list to sort the current array list into the proper order //
+            //====================================================================================//
 
-            //add the items to the ArrayList of <Ingredient>
-            if (finalPantryIngredient != null) {
-                finalPantryIngredient.add(new Ingredient(foodString, (PrimaryTag) pantrySpinner.getSelectedItem(), optString));
+            // First check to see if the ingredient with the same name already exists
+            if(!arrayListIngredientStrings.contains(newItem)) {
+                arrayListIngredientObjects.add(new Ingredient(newItem, newItemPrimaryTag, newItemOptionalTag));
+                arrayListIngredientStrings.add(newItem);
+                // If not, then make sure the temporary array is clear. If not, clear it
+                if (!temporaryArrayList.isEmpty()) {
+                    temporaryArrayList.clear();
+                }
+                // Next copy each ingredient into the temporary array list. Then, clear out the original list.
+                else {
+                    temporaryArrayList.addAll(arrayListIngredientObjects);
+                    arrayListIngredientObjects.clear();
+
+                    // Copy each ingredient into the temporary array list if its primary tag is HOT
+                    for (Ingredient h : temporaryArrayList) {
+                        if (h.getPrimaryTag().equals(PrimaryTag.HOT)) {
+                            arrayListIngredientObjects.add(h);
+                        }
+                    }
+
+                    // Copy each ingredient into the temporary array list if its primary tag is ROOM
+                    for (Ingredient r : temporaryArrayList) {
+                        if (r.getPrimaryTag().equals(PrimaryTag.ROOM)) {
+                            arrayListIngredientObjects.add(r);
+                        }
+                    }
+
+                    // Copy each ingredient into the temporary array list if its primary tag is COLD
+                    for (Ingredient c : temporaryArrayList) {
+                        if (c.getPrimaryTag().equals(PrimaryTag.COLD)) {
+                            arrayListIngredientObjects.add(c);
+                        }
+                    }
+                    // Now they are in order with the newly added item.
+
+                    // Next we need to clear out the array list of strings. If they're not in the same order as the objects are it causes problems.
+                    arrayListIngredientStrings.clear();
+
+                    // For each object in the ArrayList of objects, get its name and copy it into the array list of Strings.
+                    for (Ingredient obj2str : arrayListIngredientObjects) {
+                        String objStr = obj2str.getName();
+                        arrayListIngredientStrings.add(objStr);
+                    }
+                    // Save that boiiiii
+                    fileHelper.saveFile(ingredientsJSON, getContext(), Constants.INGREDIENTS_FILE_NAME);
+                }
+            }
+            // This is the else statement for the original check to see if the item already exists or not. If it does we don't need to do anything.
+            else{
+                Toast.makeText(getActivity(), "Item already exists in pantry!", Toast.LENGTH_LONG).show();
             }
 
-            // After clicking the add button, the last thing to do is update the listView again to display the new item
+            // FINALLY we refresh adapter
             listViewAdapter.notifyDataSetChanged();
-        }); // end setOnClickListener
-
+        }); //end setOnClickListener
         return view;
     } // end onCreateView
-
-    public static int l2i(long l) {
-        if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
-            throw new IllegalArgumentException
-                    (l + " cannot be cast to int without changing its value.");}
-        return (int) l;
-    }
 } // end class
