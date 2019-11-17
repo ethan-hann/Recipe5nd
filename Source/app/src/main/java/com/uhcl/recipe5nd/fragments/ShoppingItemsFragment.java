@@ -8,59 +8,59 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.uhcl.recipe5nd.R;
-import com.uhcl.recipe5nd.adapters.ShoppingAdapter;
+import com.uhcl.recipe5nd.adapters.ShoppingItemsAdapter;
 import com.uhcl.recipe5nd.helperClasses.ShoppingData;
 import com.uhcl.recipe5nd.helperClasses.ShoppingFile;
 
-import org.json.JSONArray;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class ShoppingFragment extends Fragment {
+public class ShoppingItemsFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private ShoppingAdapter shoppingAdapter;
-    private List<ShoppingData> shoppingList;
-    private SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy");
+    private ShoppingItemsAdapter shoppingItemsAdapter;
+    private List<String> items;
+    private Bundle bundle;
+    private ShoppingData data;
     private ShoppingFile file;
-    private JSONArray array;
+    private int i;
 
 
     @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState){
-
-
         file = new ShoppingFile(getContext());
-        array = file.getJsonArray();
-        shoppingList = file.getData();
 
         View rootView = inflater.inflate(R.layout.fragment_shopping_list, container, false);
         FloatingActionButton add =  rootView.findViewById(R.id.shoppingAddButton);
+
         recyclerView = rootView.findViewById(R.id.shoppingList_recycler_view);
 
-        shoppingAdapter = new ShoppingAdapter(shoppingList, file);
+        bundle = getArguments();
+        data = (ShoppingData) bundle.getSerializable("items");
+        i = bundle.getInt("i");
+        items = data.getItems();
 
+
+        shoppingItemsAdapter = new ShoppingItemsAdapter(items,i,file);
 
         addButton(add);
-        RecyclerView.LayoutManager manager = new GridLayoutManager(getActivity(), 2);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(shoppingAdapter);
+        recyclerView.setAdapter(shoppingItemsAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipe());
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        System.out.println(file.readFile()+"kkk");
 
         return rootView;
     }
@@ -71,6 +71,7 @@ public class ShoppingFragment extends Fragment {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 View dailogView =  LayoutInflater.from(getContext()).inflate(R.layout.shopping_dialog, null);
 
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
@@ -86,19 +87,22 @@ public class ShoppingFragment extends Fragment {
                 text.setVisibility(View.VISIBLE);
 
                 TextView textView = dailogView.findViewById(R.id.shoppingDialogTextView);
-                textView.setText("Enter Shopping List Title");
+                textView.setText("Enter Shopping List Items");
 
                 ok.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
                         if (text.getText().toString().isEmpty()) {
-                            file.writeFile("New Shopping List ",dateFormatter.format(new Date()),new ArrayList<>() );
+                            Toast toast = Toast.makeText(getContext(), "Item cannot be empty.", Toast.LENGTH_SHORT);
+
+                            toast.show();
                         }else{
-                            file.writeFile(text.getText().toString(),dateFormatter.format(new Date()),new ArrayList<>() );
+                            file.addItems(i,text.getText().toString());
                         }
 
-                        shoppingAdapter.setShoppingList(file.getData());
-                        shoppingAdapter.notifyDataSetChanged();
+                        shoppingItemsAdapter.setItems(file.getItems(i));
+                        shoppingItemsAdapter.notifyDataSetChanged();
+
                         alert.dismiss();
 
                     }
@@ -118,11 +122,35 @@ public class ShoppingFragment extends Fragment {
 
                 alert.show();
 
+
             }
         });
     }
 
+    private ItemTouchHelper.SimpleCallback swipe(){
+        return new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT ) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+
+                int position = viewHolder.getAdapterPosition();
+
+                file.removeListItem(i,position);
+                file.deleteCrossed(i,position);
+                shoppingItemsAdapter.setItems(file.getItems(i));
+
+                shoppingItemsAdapter.notifyDataSetChanged();
+
+            }
+        };
+    }
+
+
 
 }
-
-

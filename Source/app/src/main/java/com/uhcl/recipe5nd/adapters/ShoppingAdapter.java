@@ -1,9 +1,8 @@
 package com.uhcl.recipe5nd.adapters;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.graphics.Color;
-import android.text.TextWatcher;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,23 +11,35 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.*;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.uhcl.recipe5nd.R;
+import com.uhcl.recipe5nd.fragments.ShoppingItemsFragment;
+import com.uhcl.recipe5nd.helperClasses.Helper;
 import com.uhcl.recipe5nd.helperClasses.ShoppingData;
+import com.uhcl.recipe5nd.helperClasses.ShoppingFile;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ShoppingViewHolder> {
 
+    private final ShoppingFile file;
     private List<ShoppingData> shoppingList;
-    private Context context;
+    private ShoppingItemsFragment itemsFrag = new ShoppingItemsFragment();
+    private Bundle bundle = new Bundle();
+    private List<String> items = new ArrayList();
 
-    public ShoppingAdapter(List<ShoppingData> shoppingList, Context context){
+    public ShoppingAdapter(List<ShoppingData> shoppingList, ShoppingFile file){
         this.shoppingList = shoppingList;
-        this.context = context;
+        this.file = file;
+    }
 
+    public void setShoppingList(List<ShoppingData> list){
+        this.shoppingList =list;
     }
 
     @NonNull
@@ -47,6 +58,29 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
         viewHolder.parent.setBackgroundColor(color);
         viewHolder.shoppingName.setText(data.getName());
         viewHolder.shoppingDate.setText(data.getDate());
+
+
+
+        viewHolder.parent.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+
+
+                bundle.putSerializable("items",data);
+                bundle.putInt("i",i);
+                itemsFrag.setArguments(bundle);
+
+                AppCompatActivity activity = Helper.unwrap(v.getContext());
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .addToBackStack("k")
+                        .replace(R.id.fragment_container, itemsFrag)
+                        .commit();
+
+
+
+            }
+        });
 
         viewHolder.parent.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -74,11 +108,14 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
                     @Override
                     public void onClick(View v) {
                         shoppingList.remove(i);
+                        file.removeItem(i);
                         notifyDataSetChanged();
                         alert.dismiss();
                     }
 
                 });
+
+
 
                 cancel.setOnClickListener(new View.OnClickListener(){
                     @Override
@@ -128,6 +165,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
                     @Override
                     public void onClick(View v) {
                         data.setName(text.getText().toString());
+                        file.editName(i,text.getText().toString());
                         notifyDataSetChanged();
                         alert.dismiss();
                     }
