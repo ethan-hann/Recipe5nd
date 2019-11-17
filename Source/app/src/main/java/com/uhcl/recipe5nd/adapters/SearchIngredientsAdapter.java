@@ -25,11 +25,22 @@ public class SearchIngredientsAdapter extends RecyclerView.Adapter<SearchIngredi
 {
     private static final String TAG = "SearchIngAdapter: ";
     private ArrayList<Ingredient> usersIngredients;
-    private SparseBooleanArray itemStateArray = new SparseBooleanArray();
+    private SparseBooleanArray itemStateArray;
 
     public SearchIngredientsAdapter(ArrayList<Ingredient> ingredients) {
         this.usersIngredients = ingredients;
         Constants.selectedIngredients = new ArrayList<>();
+
+        itemStateArray = new SparseBooleanArray();
+        initItemStates();
+    }
+
+    private void initItemStates()
+    {
+        for (int i = 0; i < usersIngredients.size(); i++)
+        {
+            itemStateArray.put(i, false);
+        }
     }
 
     @NonNull
@@ -55,20 +66,14 @@ public class SearchIngredientsAdapter extends RecyclerView.Adapter<SearchIngredi
         return usersIngredients.size();
     }
 
-    public void updateList(ArrayList<Ingredient> newList) {
+    public void updateList(ArrayList<Ingredient> newList)
+    {
         usersIngredients = newList;
         notifyDataSetChanged();
     }
 
-    public void clearSelectedItems()
-    {
-        Constants.selectedIngredients = new ArrayList<>();
-        itemStateArray = new SparseBooleanArray();
-    }
-
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
-
         private CheckedTextView ingredientItem;
 
         ViewHolder(View view)
