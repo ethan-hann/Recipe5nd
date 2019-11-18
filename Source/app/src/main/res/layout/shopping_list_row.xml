@@ -13,8 +13,9 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:gravity="center"
-
         android:layout_height="match_parent">
+
+
         <TextView
             android:id="@+id/shoppingName"
             android:layout_width="wrap_content"
@@ -31,4 +32,5 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>

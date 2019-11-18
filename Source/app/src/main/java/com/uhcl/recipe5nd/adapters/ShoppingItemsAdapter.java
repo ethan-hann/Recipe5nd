@@ -1,9 +1,12 @@
 package com.uhcl.recipe5nd.adapters;
 
+import android.app.AlertDialog;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -67,7 +70,52 @@ public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdap
         viewHolder.item.setOnLongClickListener(new View.OnLongClickListener(){
 
             @Override
-            public boolean onLongClick(View view) {
+            public boolean onLongClick(View v) {
+
+                View dailogView =  LayoutInflater.from(v.getContext()).inflate(R.layout.shopping_dialog, null);
+
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
+                builder1.setCancelable(true);
+
+                builder1.setView(dailogView);
+                AlertDialog alert = builder1.create();
+
+
+                EditText text = dailogView.findViewById(R.id.shoppingDialogEditText);
+                text.setText(file.getItems(x).get(i));
+                text.setSelection(file.getItems(x).get(i).length());
+                text.setVisibility(View.VISIBLE);
+
+                TextView textView = dailogView.findViewById(R.id.shoppingDialogTextView);
+                textView.setText("Edit Shopping List Item");
+
+                Button ok = dailogView.findViewById(R.id.shoppingDialogOk);
+                Button cancel = dailogView.findViewById(R.id.shoppingDialogCancel);
+
+                ok.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        file.editItem(x,i,text.getText().toString());
+                        items.set(i,file.getItems(x).get(i));
+                        notifyDataSetChanged();
+                        alert.dismiss();
+                    }
+
+                });
+
+                cancel.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+
+                        alert.dismiss();
+
+                    }
+
+                });
+
+                alert.show();
+
+
                 return true;
             }
 

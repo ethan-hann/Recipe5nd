@@ -3,10 +3,11 @@ package com.uhcl.recipe5nd.helperClasses;
 import java.io.Serializable;
 import java.util.List;
 
-public class ShoppingData implements Serializable {
+public class ShoppingData implements Serializable,Comparable<ShoppingData> {
     private String name;
     private String date;
     private List<String> items;
+    private int datePos;
 
     public ShoppingData(String name, String date, List<String> items ){
         this.name = name;
@@ -14,9 +15,6 @@ public class ShoppingData implements Serializable {
         this.items = items;
     }
 
-    public ShoppingData(){
-
-    }
 
     public String getDate(){
         return this.date;
@@ -38,4 +36,16 @@ public class ShoppingData implements Serializable {
         return this.items;
     }
 
+    public void setDatePos(int datePos){
+        this.datePos = datePos;
+    }
+
+    public int getDatePos(){
+        return this.datePos;
+    }
+
+    @Override
+    public int compareTo(ShoppingData shoppingData) {
+        return this.getDatePos() - shoppingData.getDatePos();
+    }
 }

@@ -21,10 +21,9 @@ import com.uhcl.recipe5nd.adapters.ShoppingAdapter;
 import com.uhcl.recipe5nd.helperClasses.ShoppingData;
 import com.uhcl.recipe5nd.helperClasses.ShoppingFile;
 
-import org.json.JSONArray;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -33,9 +32,8 @@ public class ShoppingFragment extends Fragment {
     private RecyclerView recyclerView;
     private ShoppingAdapter shoppingAdapter;
     private List<ShoppingData> shoppingList;
-    private SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy");
+    private SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
     private ShoppingFile file;
-    private JSONArray array;
 
 
     @NonNull
@@ -45,8 +43,9 @@ public class ShoppingFragment extends Fragment {
 
 
         file = new ShoppingFile(getContext());
-        array = file.getJsonArray();
+
         shoppingList = file.getData();
+
 
         View rootView = inflater.inflate(R.layout.fragment_shopping_list, container, false);
         FloatingActionButton add =  rootView.findViewById(R.id.shoppingAddButton);
@@ -60,7 +59,6 @@ public class ShoppingFragment extends Fragment {
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(shoppingAdapter);
 
-        System.out.println(file.readFile()+"kkk");
 
         return rootView;
     }

@@ -22,6 +22,8 @@ import com.uhcl.recipe5nd.helperClasses.ShoppingData;
 import com.uhcl.recipe5nd.helperClasses.ShoppingFile;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -40,6 +42,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
 
     public void setShoppingList(List<ShoppingData> list){
         this.shoppingList =list;
+
     }
 
     @NonNull
@@ -52,7 +55,9 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
 
     @Override
     public void onBindViewHolder(ShoppingViewHolder viewHolder, int i){
+
         ShoppingData data = shoppingList.get(i);
+        data.setDatePos(i);
         Random k = new Random();
         int color = Color.argb(255,k.nextInt(255),k.nextInt(255),k.nextInt(255));
         viewHolder.parent.setBackgroundColor(color);
@@ -153,6 +158,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
 
                 EditText text = dailogView.findViewById(R.id.shoppingDialogEditText);
                 text.setText(data.getName());
+                text.setSelection(data.getName().length());
                 text.setVisibility(View.VISIBLE);
 
                 TextView textView = dailogView.findViewById(R.id.shoppingDialogTextView);

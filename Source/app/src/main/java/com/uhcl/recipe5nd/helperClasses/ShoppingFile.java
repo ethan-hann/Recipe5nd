@@ -93,6 +93,7 @@ public class ShoppingFile{
 
             writer.write(array.toString());
 
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -147,6 +148,7 @@ public class ShoppingFile{
 
             writer.write(array.toString());
 
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -166,6 +168,7 @@ public class ShoppingFile{
             temp.put("Name",s);
             array.put(i,temp);
             writer.write(array.toString());
+
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -188,6 +191,7 @@ public class ShoppingFile{
             temp.put("Items",items);
             array.put(i,temp);
             writer.write(array.toString());
+
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -256,6 +260,7 @@ public class ShoppingFile{
 
             writer.write(array.toString());
 
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -310,6 +315,7 @@ public class ShoppingFile{
 
             writer.write(array.toString());
 
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -321,7 +327,38 @@ public class ShoppingFile{
         }
     }
 
-    public void 
+    public void editItem(int i, int pos, String item){
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream(file.getPath()), "utf-8"))) {
+
+            JSONObject temp = (JSONObject) array.get(i);
+            JSONArray items = new JSONArray();
+
+            if(temp.isNull("Items")){
+
+                temp.put("Items",items);
+            }else{
+                items = (JSONArray) temp.get("Items");
+            }
+
+            items.put(pos,item);
+
+            temp.put("Items",items);
+            array.put(i,temp);
+
+            writer.write(array.toString());
+
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void deleteFile(){
         file.delete();
