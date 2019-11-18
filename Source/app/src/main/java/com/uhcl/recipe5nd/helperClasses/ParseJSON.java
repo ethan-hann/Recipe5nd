@@ -39,6 +39,66 @@ public class ParseJSON
     }
 
     /**
+     * Parses recipe from favorites JSON file
+     * @param response object string from favorites file
+     * @return Single Recipe object
+     * @throws JSONException if the JSON is invalid or null and cannot be parsed successfully
+     */
+    public static ArrayList<Recipe> parseLocalRecipe(String response) throws JSONException
+    {
+        ArrayList<Recipe> recipeArrayList = new ArrayList<Recipe>();
+        JSONArray recipeArray = new JSONArray(response);
+
+        for(int i=0; i<recipeArray.length(); i++){
+            Recipe r = new Recipe();
+            JSONObject recipeObjectFromFile = recipeArray.getJSONObject(i);
+
+            if (recipeArray.isNull(0)) {
+                return null;
+            }else{
+                r.setId(recipeObjectFromFile.get("id").toString());
+                r.setStrMeal(recipeObjectFromFile.get("name").toString());
+                if(recipeObjectFromFile.has("strDrinkAlternate"))
+                    r.setStrDrinkAlternative(recipeObjectFromFile.get("strDrinkAlternate").toString());
+                if(recipeObjectFromFile.has("strCategory"))
+                    r.setStrCategory(recipeObjectFromFile.get("strCategory").toString());
+                if(recipeObjectFromFile.has("strArea"))
+                    r.setStrArea(recipeObjectFromFile.get("strArea").toString());
+                if(recipeObjectFromFile.has("instructions"))
+                    r.setStrInstructions(recipeObjectFromFile.get("instructions").toString());
+                if(recipeObjectFromFile.has("strThumbnail"))
+                    r.setStrMealThumb(recipeObjectFromFile.get("strThumbnail").toString());
+                if(recipeObjectFromFile.has("strTags"))
+                    r.setStrTags(recipeObjectFromFile.get("strTags").toString());
+                if(recipeObjectFromFile.has("strYoutube"))
+                    r.setStrYoutube(recipeObjectFromFile.get("strYoutube").toString());
+                if(recipeObjectFromFile.has("strSource"))
+                    r.setStrSource(recipeObjectFromFile.get("strSource").toString());
+
+                if(recipeObjectFromFile.has("ingredients")){
+                    try{
+                        JSONArray ingredientsArray = recipeObjectFromFile.getJSONArray("ingredients");
+                        for (int j = 0; j < ingredientsArray.length(); j++) {
+                            Log.d("Favorites ingredients: ",ingredientsArray.get(j).toString());
+
+                            r.addIngredient(ingredientsArray.getJSONObject(j).get("name").toString());
+                            r.addMeasurement(ingredientsArray.getJSONObject(j).get("measure").toString());
+                        }
+                    }catch(Exception e){
+                        Log.d("Favorites Debugging: ","Can\'t read array of ingredients.");
+                    }
+
+                }
+        }
+
+        recipeArrayList.add(r);
+
+        }
+        return recipeArrayList;
+    }
+
+
+    /**
      * Parses recipe details from API based on a supplied HTTP response string
      * @param response the HTTP response
      * @return Recipe a single recipe
