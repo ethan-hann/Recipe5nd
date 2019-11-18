@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.backgroundTasks.FetchFavoriteImages;
+import com.uhcl.recipe5nd.fragments.FavoriteRecipeDetailsFragment;
 import com.uhcl.recipe5nd.fragments.RecipeDetailsFragment;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.Helper;
@@ -32,18 +33,15 @@ public class FavoriteRecipeAdapter extends RecipeAdapter{
                 //Switch to the recipe results fragment when a card view is clicked on
                 @Override
                 public void onClick(View view) {
-                    Log.d(TAG, "Testing favorite recipes details 1");
                     Constants.currentlyViewedRecipe = Constants.favoriteRecipes.get(position);
                     Constants.currentlyViewedRecipeImage = Constants.favoriteRecipeImages.get(position);
-
-                    Log.d(TAG, "Testing favorite recipes details 2");
 
                     AppCompatActivity activity = Helper.unwrap(view.getContext());
                     activity
                             .getSupportFragmentManager()
                             .beginTransaction()
                             .addToBackStack("recipe_results")
-                            .replace(R.id.fragment_container, new RecipeDetailsFragment())
+                            .replace(R.id.fragment_container, new FavoriteRecipeDetailsFragment())
                             .commit();
                 }
             });
