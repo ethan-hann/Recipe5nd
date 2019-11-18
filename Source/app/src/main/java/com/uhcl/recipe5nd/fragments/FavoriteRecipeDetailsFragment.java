@@ -15,8 +15,12 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.CreateJSON;
+import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Recipe;
 import com.uhcl.recipe5nd.helperClasses.StringFormatter;
+
+import java.util.ArrayList;
 
 public class FavoriteRecipeDetailsFragment extends RecipeDetailsFragment implements View.OnClickListener {
     private static final String TAG = "FavDebugging: ";
@@ -38,26 +42,30 @@ public class FavoriteRecipeDetailsFragment extends RecipeDetailsFragment impleme
     public void onClick(View view)
     {
         Context context = view.getContext();
-
+/*
         //Delete all recipes that match favorited ID just in case there's more than one
-        int[] positionsToRemove = new int[Constants.favoriteRecipes.size()];
+        ArrayList<Recipe> recipesToKeep = new ArrayList<Recipe>();
         int count = 0;
         String currentId = Constants.currentlyViewedRecipe.getId();
         for(int i=0; i<Constants.favoriteRecipes.size(); i++){
-            if(Constants.favoriteRecipes.get(i).getId().equals(currentId)){
-                positionsToRemove[count] = i;
+            if(!Constants.favoriteRecipes.get(i).getId().equals(currentId)){
+                Log.d(TAG,"#"+i+" | Recipes to keep: "+Constants.favoriteRecipes.get(i).getStrMeal());
+                recipesToKeep.add(Constants.favoriteRecipes.get(i));
                 count++;
-
-                Log.d(TAG,"#"+count+" | Removing: "+Constants.currentlyViewedRecipe.getStrMeal());
             }
         }
 
-        for(int i=0; i<positionsToRemove.length; i++){
-            Constants.favoriteRecipes.remove(positionsToRemove[i]);
-            Constants.favoriteRecipeImages.remove(positionsToRemove[i]);
-            Constants.currentlyViewedRecipe = null;
-            Constants.currentlyViewedRecipeImage = null;
+        Constants.favoriteRecipes = recipesToKeep;
+
+        for(int i=0; i<Constants.favoriteRecipes.size(); i++){
+            Log.d(TAG,"pos#"+i+" | Still in favorite recipes: "+Constants.favoriteRecipes.get(i).getStrMeal());
         }
-        //getFragmentManager().popBackStack();
+
+        new FileHelper().reWriteFavoritesFile(CreateJSON.createRecipeJSON(getContext(),Constants.favoriteRecipes),getContext(),Constants.FAVORITES_FILE_NAME);
+*/
+        Constants.currentlyViewedRecipe = null;
+        Constants.currentlyViewedRecipeImage = null;
+
+        getFragmentManager().popBackStack();
     }
 }

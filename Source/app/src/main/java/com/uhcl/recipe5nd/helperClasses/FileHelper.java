@@ -40,6 +40,19 @@ public class FileHelper {
         return false;
     }
 
+    public boolean reWriteFavoritesFile(String favoritesJSON, Context context, String favoritesFileName){
+        try {
+            File file = new File(context.getFilesDir().getAbsolutePath().concat("/" + favoritesFileName));
+            file.delete();
+            createBlankFile(context, favoritesFileName);
+            saveFile(favoritesJSON, context, favoritesFileName);
+            return true;
+        } catch (Exception e) {
+            Log.e(TAG, "Rewriting favorites file failed: ", e);
+        }
+        return false;
+    }
+
     /**
      * Reads a saved file into a string.
      *
