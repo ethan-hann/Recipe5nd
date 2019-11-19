@@ -1,8 +1,10 @@
 package com.uhcl.recipe5nd.backgroundTasks;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.uhcl.recipe5nd.fragments.SearchFragment;
 import com.uhcl.recipe5nd.helperClasses.APIConnector;
 import com.uhcl.recipe5nd.helperClasses.ParseJSON;
 import com.uhcl.recipe5nd.helperClasses.Recipe;
