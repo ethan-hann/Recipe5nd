@@ -20,10 +20,13 @@
     <string name="recipe_details_steps_title">Steps:</string>
     <string name="empty_string"></string>
 
-    <string name="pantryNameHint">Food</string>
+    <string name="pantryTextHint">Ingredient Name</string>
     <string name="pantryOptionalTag">Optional Tag</string>
-    <string name="pantryAddButton">ADD</string>
-    <string name="choose">Choose One</string>
+    <string name="pantryAddButton">Add</string>
+    <string name="pantry_spinner_prompt">Choose One</string>
+    <string name="ingredient_item_name_prefix">Name: </string>
+    <string name="ingredient_item_primary_prefix">Prim. Tag: </string>
+    <string name="ingredient_item_optional_prefix">Opt. Tag: </string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

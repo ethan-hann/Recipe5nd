@@ -3,6 +3,7 @@ package com.uhcl.recipe5nd.helperClasses;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class Helper
 {
+    private static final String TAG = "Helper";
     public static void hideKeyboard(View pView, Activity pActivity) {
         if (pView == null) {
             pView = pActivity.getWindow().getCurrentFocus();
@@ -44,5 +46,31 @@ public class Helper
         }
 
         return (AppCompatActivity) context;
+    }
+
+    public static boolean validateInput(String str)
+    {
+        //checking for illegal chars
+        for (int i = 0; i < Constants.invalidCharacters.length; i++) {
+            for (int j = 0; j < str.length(); j++) {
+                if (str.charAt(j) == Constants.invalidCharacters[i])
+                {
+                    Log.d(TAG, "validateInput: " + str.charAt(j) + "\t" + Constants.invalidCharacters[i]);
+                    return false;
+                }
+            }
+        }
+
+        //checking for numbers
+        for (int i = 0; i < str.length(); i++)
+        {
+            try {
+                int a = Integer.parseInt(String.format("%c", str.charAt(i)));
+            } catch (NumberFormatException e)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

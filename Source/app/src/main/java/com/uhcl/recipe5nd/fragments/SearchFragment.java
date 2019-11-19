@@ -77,14 +77,17 @@ public class SearchFragment extends Fragment
 
         //initialize data and adapter
         getIngredientsFromPantry(context);
-        recyclerAdapter = new SearchIngredientsAdapter(ingredientsList);
-        recyclerAdapter.notifyDataSetChanged();
+        if (ingredientsList != null)
+        {
+            recyclerAdapter = new SearchIngredientsAdapter(ingredientsList);
+            recyclerAdapter.notifyDataSetChanged();
 
-        //set adapter
-        recyclerView.setAdapter(recyclerAdapter);
+            //set adapter
+            recyclerView.setAdapter(recyclerAdapter);
 
-        //set item animator
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+            //set item animator
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+        }
 
         searchButton = rootView.findViewById(R.id.search_button);
 

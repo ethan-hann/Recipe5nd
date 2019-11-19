@@ -4,6 +4,7 @@ public enum PrimaryTag
 {
     HOT,
     COLD,
-    ROOM,
-    NULL
+    ROOM
 }
+
+

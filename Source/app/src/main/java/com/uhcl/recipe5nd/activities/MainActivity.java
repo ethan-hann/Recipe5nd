@@ -53,18 +53,6 @@ public class MainActivity extends AppCompatActivity
         //Initialize files
         Constants.init(this);
 
-////          TODO: TEMPORARY CODE BELOW THIS LINE: REMOVE BEFORE PRODUCTION*/
-//
-//
-//        FileHelper fileHelper = new FileHelper();
-//        ArrayList<Ingredient> testIngredients = new ArrayList<>();
-//        testIngredients.add(new Ingredient("Chicken", PrimaryTag.HOT));
-//        testIngredients.add(new Ingredient("Beef", PrimaryTag.COLD, "Meats"));
-//        String json = CreateJSON.createIngredientsJSON(this, testIngredients);
-//        fileHelper.saveFile(json, this, Constants.INGREDIENTS_FILE_NAME);
-//
-////          TODO: TEMPORARY CODE ABOVE THIS LINE: REMOVE BEFORE PRODUCTION*/
-
         drawer = findViewById(R.id.drawer_layout);
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -102,8 +90,8 @@ public class MainActivity extends AppCompatActivity
         if (savedInstanceState == null)
         {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new SearchFragment()).commit();
-            navView.setCheckedItem(R.id.nav_search);
+                    new EditIngredientsFragment()).commit();
+            navView.setCheckedItem(R.id.nav_pantry);
         }
     }
 

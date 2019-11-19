@@ -90,14 +90,16 @@ public class CreateJSON
      * as a basis for the new JSON string
      * @param context : the application's context
      * @param savedIngredients : an ArrayList containing Ingredient objects
+     * @param overwrite : if this method should take into account existing ingredients or create a
+     *                  whole new string
      * @return string : a string representation of the formatted JSON
      */
-    public static String createIngredientsJSON(Context context, ArrayList<Ingredient> savedIngredients)
+    public static String createIngredientsJSON(Context context, ArrayList<Ingredient> savedIngredients, boolean overwrite)
     {
         try
         {
             FileHelper fileHelper = new FileHelper();
-            if (Constants.doesIngredientsFileExist)
+            if (!overwrite)
             {
                 String fileContents = fileHelper.readFile(context, Constants.INGREDIENTS_FILE_NAME);
                 JSONArray ingredients = new JSONArray(fileContents);
@@ -113,7 +115,6 @@ public class CreateJSON
             }
             else
             {
-                Log.i(TAG, "createIngredientsJSON: " + Constants.INGREDIENTS_FILE_NAME + " does not exist. Creating new JSON string.");
                 JSONArray ingredients = new JSONArray();
                 for (Ingredient i : savedIngredients)
                 {
