@@ -62,8 +62,8 @@ public class EditIngredientsFragment extends Fragment{
                 String ingredientsJSON = fileHelper.readFile(getContext(), Constants.INGREDIENTS_FILE_NAME);
                 arrayListIngredientObjects = ParseJSON.parseIngredients(ingredientsJSON);
 
-                //Custom ListView data adapter
                 if (arrayListIngredientObjects != null) {
+                    //Custom ListView data adapter
                     listViewAdapter = new IngredientAdapter(getContext(), arrayListIngredientObjects);
                     listView.setAdapter(listViewAdapter);
 
@@ -120,6 +120,9 @@ public class EditIngredientsFragment extends Fragment{
             String newItem = pantryTextBox.getText().toString();
             PrimaryTag newItemPrimaryTag = (PrimaryTag) pantrySpinnerField.getSelectedItem();
             String newItemOptionalTag = pantryOptTag.getText().toString();
+            pantryTextBox.setText("");
+            pantrySpinnerField.setSelection(0);
+            pantryOptTag.setText("");
 
             //====================================================================================//
             // Copy data to a new array list to sort the current array list into the proper order //
