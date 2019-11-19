@@ -30,5 +30,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="fetch_recipe_message_text">Fetching recipes...</string>
+    <string name="cancel">Cancel</string>
 
 </resources>
