@@ -71,7 +71,7 @@ public class RecipeDetailsFragment extends Fragment implements View.OnClickListe
         Constants.favoriteRecipes.add(Constants.currentlyViewedRecipe);
         Constants.favoriteRecipeImages.add(Constants.currentlyViewedRecipeImage);
 
-        String json = CreateJSON.createRecipeJSON(context, Constants.favoriteRecipes);
+        String json = CreateJSON.createRecipeJSON(context, Constants.favoriteRecipes, false);
         FileHelper fileHelper = new FileHelper();
         return fileHelper.saveFile(json, context, Constants.FAVORITES_FILE_NAME);
     }

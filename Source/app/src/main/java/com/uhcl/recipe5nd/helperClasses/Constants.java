@@ -33,6 +33,7 @@ public class Constants
     public static ArrayList<Drawable> returnedRecipeImages;
     public static ArrayList<Ingredient> selectedIngredients;
     public static ArrayList<Recipe> returnedRecipesFromSearch;
+    public static ArrayList<ShoppingList> shoppingLists;
 
 
     public static void init(Context context) {

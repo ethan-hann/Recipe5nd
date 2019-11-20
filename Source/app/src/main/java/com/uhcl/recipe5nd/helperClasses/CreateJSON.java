@@ -7,7 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class CreateJSON
@@ -22,11 +21,11 @@ public class CreateJSON
      * @param savedRecipes : an ArrayList containing Recipe objects
      * @return
      */
-    public static String createRecipeJSON(Context context, ArrayList<Recipe> savedRecipes)
+    public static String createRecipeJSON(Context context, ArrayList<Recipe> savedRecipes, boolean overwrite)
     {
         try {
             FileHelper fileHelper = new FileHelper();
-            if (Constants.doesFavoritesExist)
+            if (!overwrite)
             {
                 String fileContents = fileHelper.readFile(context, Constants.FAVORITES_FILE_NAME);
                 JSONArray recipes = new JSONArray(fileContents);
@@ -54,7 +53,6 @@ public class CreateJSON
             }
             else
             {
-                Log.i(TAG, "createRecipeJSON: " + Constants.FAVORITES_FILE_NAME + " does not exist. Creating new JSON string.");
                 JSONArray recipes = new JSONArray();
                 for (Recipe r : savedRecipes)
                 {
@@ -133,28 +131,99 @@ public class CreateJSON
         return "";
     }
 
-    public static String createShoppingListsJSON(ArrayList<ShoppingData> shoppingData)
+    /**
+     * Creates a JSON string representing a list of Ingredient objects
+     * This method will get the existing JSON string from the file if it exists and use that
+     * as a basis for the new JSON string
+     * @param context : the application's context
+     * @param shoppingData : an ArrayList containing ShoppingList objects
+     * @param overwrite : if this method should take into account existing ShoppingLists or create a
+     *      *                  whole new string
+     * @return string : a string representation of the formatted JSON
+     */
+    public static String createShoppingListsJSON(Context context, ArrayList<ShoppingList> shoppingData, boolean overwrite)
     {
-        //TODO: implement creation of Shopping Lists JSON
         try
         {
-            JSONArray shoppingLists = new JSONArray();
-            for (ShoppingData s : shoppingData)
+            FileHelper fileHelper = new FileHelper();
+            if (!overwrite)
             {
-                JSONObject shoppingObject = new JSONObject();
-                shoppingObject.put("title", s.getTitle());
-                shoppingObject.put("date", s.getDate().toString());
+                String fileContents = fileHelper.readFile(context, Constants.SHOPPING_LIST_FILE_NAME);
+                JSONArray shoppingLists = new JSONArray(fileContents);
 
-                JSONArray shoppingItems = new JSONArray();
-                JSONObject itemObject = new JSONObject();
-                itemObject.put("names", s.getItems());
-                itemObject.put("isChecked", s.isChecked());
-                shoppingItems.put(itemObject);
+                for (ShoppingList s : shoppingData)
+                {
+                    JSONObject shoppingObject = new JSONObject();
+                    shoppingObject.put("title", s.getTitle());
+                    shoppingObject.put("date", s.getDate().toString());
 
-                shoppingObject.put("items", shoppingItems);
+                    JSONArray shoppingItems = new JSONArray();
+                    JSONObject itemObject = new JSONObject();
+
+                    //Getting items in the shopping list
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < s.getItems().size() - 1; i++) {
+                        builder.append(s.getItems().get(i));
+                        builder.append(",");
+                    }
+                    builder.append(s.getItems().get(s.getItems().size() - 1));
+                    itemObject.put("names", builder.toString());
+
+                    //Getting checked values in the shopping list
+                    builder = new StringBuilder();
+                    for (int i = 0; i < s.getIsCheckedArray().size() - 1; i++) {
+                        builder.append(s.isChecked(i));
+                        builder.append(",");
+                    }
+                    builder.append(s.getIsCheckedArray().get(s.getIsCheckedArray().size() - 1));
+                    itemObject.put("isChecked", builder.toString());
+
+                    shoppingItems.put(itemObject);
+
+                    shoppingObject.put("items", shoppingItems);
+
+                    shoppingLists.put(shoppingObject);
+                }
+                return shoppingLists.toString();
             }
+            else
+            {
+                JSONArray shoppingLists = new JSONArray();
+                for (ShoppingList s : shoppingData)
+                {
+                    JSONObject shoppingObject = new JSONObject();
+                    shoppingObject.put("title", s.getTitle());
+                    shoppingObject.put("date", s.getDate().toString());
 
-            return shoppingLists.toString();
+                    JSONArray shoppingItems = new JSONArray();
+                    JSONObject itemObject = new JSONObject();
+
+                    //Getting items in the shopping list
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < s.getItems().size() - 1; i++) {
+                        builder.append(s.getItems().get(i));
+                        builder.append(",");
+                    }
+                    builder.append(s.getItems().get(s.getItems().size() - 1));
+                    itemObject.put("names", builder.toString());
+
+                    //Getting checked values in the shopping list
+                    builder = new StringBuilder();
+                    for (int i = 0; i < s.getIsCheckedArray().size() - 1; i++) {
+                        builder.append(s.isChecked(i));
+                        builder.append(",");
+                    }
+                    builder.append(s.getIsCheckedArray().get(s.getIsCheckedArray().size() - 1));
+                    itemObject.put("isChecked", builder.toString());
+
+                    shoppingItems.put(itemObject);
+
+                    shoppingObject.put("items", shoppingItems);
+
+                    shoppingLists.put(shoppingObject);
+                }
+                return shoppingLists.toString();
+            }
         } catch (JSONException e)
         {
             Log.e(TAG, "createShoppingListsJSON: ", e);

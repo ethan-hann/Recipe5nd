@@ -19,14 +19,7 @@ import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.fragments.EditIngredientsFragment;
 import com.uhcl.recipe5nd.fragments.SearchFragment;
 import com.uhcl.recipe5nd.helperClasses.Constants;
-import com.uhcl.recipe5nd.helperClasses.CreateJSON;
-import com.uhcl.recipe5nd.helperClasses.FileHelper;
-import com.uhcl.recipe5nd.fragments.ShoppingFragment;
 import com.uhcl.recipe5nd.helperClasses.Helper;
-import com.uhcl.recipe5nd.helperClasses.Ingredient;
-import com.uhcl.recipe5nd.helperClasses.PrimaryTag;
-
-import java.util.ArrayList;
 
 //TODO: create string references in strings.xml
 public class MainActivity extends AppCompatActivity
@@ -106,9 +99,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_pantry:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new EditIngredientsFragment()).commit();
-            case R.id.nav_shopping:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new ShoppingFragment()).commit();
                 break;
         }
 
