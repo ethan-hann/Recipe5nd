@@ -41,6 +41,21 @@ public class ShoppingData
     public String isChecked()
     {
         return isChecked;
+public class ShoppingData {
+    private String name;
+    private String date;
+
+    public ShoppingData(String name, String date){
+        this.name = name;
+        this.date = date;
+    }
+
+    public String getDate(){
+        return this.date;
+    }
+
+    public String getName(){
+        return this.name;
     }
 
 }
