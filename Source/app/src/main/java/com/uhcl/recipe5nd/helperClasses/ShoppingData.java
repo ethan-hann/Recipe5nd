@@ -1,54 +1,20 @@
 package com.uhcl.recipe5nd.helperClasses;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.util.List;
 
-public class ShoppingData
-{
-    private String title;
-    private Date date;
-    private String items;
-    private String isChecked;
-
-    public ShoppingData(String title, Date date, String items, String isChecked)
-    {
-        this.title = title;
-        this.date = date;
-        this.items = items;
-        this.isChecked = isChecked;
-    }
-
-    public ShoppingData(String title, Date date)
-    {
-        this.title = title;
-        this.date = date;
-    }
-
-    public String getTitle()
-    {
-        return title;
-    }
-
-    public Date getDate()
-    {
-        return date;
-    }
-
-    public String getItems()
-    {
-        return items;
-    }
-
-    public String isChecked()
-    {
-        return isChecked;
-public class ShoppingData {
+public class ShoppingData implements Serializable,Comparable<ShoppingData> {
     private String name;
     private String date;
+    private List<String> items;
+    private int datePos;
 
-    public ShoppingData(String name, String date){
+    public ShoppingData(String name, String date, List<String> items ){
         this.name = name;
         this.date = date;
+        this.items = items;
     }
+
 
     public String getDate(){
         return this.date;
@@ -58,4 +24,28 @@ public class ShoppingData {
         return this.name;
     }
 
+    public void setName(String name){this.name = name;}
+
+    public void setDate(String date){this.date = date;}
+
+    public void setItems(List<String> items){
+        this.items = items;
+    }
+
+    public List<String> getItems(){
+        return this.items;
+    }
+
+    public void setDatePos(int datePos){
+        this.datePos = datePos;
+    }
+
+    public int getDatePos(){
+        return this.datePos;
+    }
+
+    @Override
+    public int compareTo(ShoppingData shoppingData) {
+        return this.getDatePos() - shoppingData.getDatePos();
+    }
 }
