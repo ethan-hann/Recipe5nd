@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
@@ -39,7 +40,6 @@ public class ShoppingFragment extends Fragment implements View.OnClickListener
     private static final String TAG = "ShoppingFragment: ";
     private RecyclerView recyclerView;
     private ShoppingAdapter shoppingAdapter;
-    private ArrayList<ShoppingList> shoppingLists;
     private FloatingActionButton addButton;
     private Context context;
     private FileHelper fileHelper = new FileHelper();
@@ -57,16 +57,15 @@ public class ShoppingFragment extends Fragment implements View.OnClickListener
         recyclerView = rootView.findViewById(R.id.shoppingList_recycler_view);
 
         getShoppingData(context);
-        if (shoppingLists != null) {
-            shoppingAdapter = new ShoppingAdapter(shoppingLists);
+        if (Constants.shoppingLists != null) {
+            shoppingAdapter = new ShoppingAdapter();
             shoppingAdapter.notifyDataSetChanged();
 
             recyclerView.setAdapter(shoppingAdapter);
 
             recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-            RecyclerView.LayoutManager manager = new GridLayoutManager(getActivity(), 2);
-            recyclerView.setLayoutManager(manager);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         }
 
         return rootView;
@@ -77,15 +76,13 @@ public class ShoppingFragment extends Fragment implements View.OnClickListener
         if (Constants.doesShoppingListExist) {
             try {
                 String shoppingJSON = fileHelper.readFile(context, Constants.SHOPPING_LIST_FILE_NAME);
-                shoppingLists = ParseJSON.parseShoppingLists(shoppingJSON);
-                if (shoppingLists != null) {
-                    Collections.sort(shoppingLists, new SortBasedOnDate());
-                    Constants.shoppingLists = shoppingLists;
+                Constants.shoppingLists = ParseJSON.parseShoppingLists(shoppingJSON);
+                if (Constants.shoppingLists != null) {
+                    Collections.sort(Constants.shoppingLists, new SortBasedOnDate());
                 }
                 else
                 {
-                    shoppingLists = new ArrayList<>();
-                    Constants.shoppingLists = shoppingLists;
+                    Constants.shoppingLists = new ArrayList<>();
                 }
             } catch (JSONException e) {
                 Log.e(TAG, "getShoppingData: ", e);
@@ -119,16 +116,16 @@ public class ShoppingFragment extends Fragment implements View.OnClickListener
                     ShoppingList s = new ShoppingList();
                     s.setTitle("New Shopping List");
                     s.setDate(Calendar.getInstance().getTime());
-                    shoppingLists.add(s);
-                    String json = CreateJSON.createShoppingListsJSON(context, shoppingLists, false);
+                    Constants.shoppingLists.add(s);
+                    String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, false);
                     fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
                 } else
                 {
                     ShoppingList s = new ShoppingList();
                     s.setTitle(text.getText().toString());
                     s.setDate(Calendar.getInstance().getTime());
-                    shoppingLists.add(s);
-                    String json = CreateJSON.createShoppingListsJSON(context, shoppingLists, false);
+                    Constants.shoppingLists.add(s);
+                    String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, false);
                     fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
                 }
 

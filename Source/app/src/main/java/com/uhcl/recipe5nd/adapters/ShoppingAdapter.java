@@ -1,6 +1,7 @@
 package com.uhcl.recipe5nd.adapters;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,34 +19,26 @@ import com.google.android.material.card.MaterialCardView;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.fragments.ShoppingItemsFragment;
 import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.CreateJSON;
+import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Helper;
 import com.uhcl.recipe5nd.helperClasses.ShoppingList;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ShoppingViewHolder>
 {
     private static final String TAG = "ShoppingAdapter: ";
-    private ArrayList<ShoppingList> shoppingList;
-
-    public ShoppingAdapter(ArrayList<ShoppingList> shoppingList)
-    {
-        if (shoppingList == null) {
-            this.shoppingList = new ArrayList<>();
-            Constants.shoppingLists = this.shoppingList;
-        }
-        else
-        {
-            this.shoppingList = shoppingList;
-            Constants.shoppingLists = this.shoppingList;
-        }
-    }
+    private Context context;
+    private FileHelper fileHelper = new FileHelper();
 
     @NonNull
     @Override
     public ShoppingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i){
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.shopping_list_row, parent, false);
+        context = parent.getContext();
 
         return new ShoppingViewHolder(itemView);
     }
@@ -61,7 +54,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
     }
 
     @Override
-    public int getItemCount(){return shoppingList.size();}
+    public int getItemCount(){return Constants.shoppingLists.size();}
 
     class ShoppingViewHolder extends RecyclerView.ViewHolder
     {
@@ -79,7 +72,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
 
         void bind(int position)
         {
-            ShoppingList s = shoppingList.get(position);
+            ShoppingList s = Constants.shoppingLists.get(position);
             shoppingName.setText(s.getTitle());
             shoppingDate.setText(s.getDate().toString());
 
@@ -117,7 +110,9 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
                     okButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            shoppingList.remove(position);
+                            Constants.shoppingLists.remove(position);
+                            String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
+                            fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
                             notifyDataSetChanged();
                             alert.dismiss();
                         }
@@ -159,6 +154,8 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
                         @Override
                         public void onClick(View view) {
                             s.setTitle(dialogEditText.getText().toString());
+                            String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
+                            fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
                             notifyDataSetChanged();
                             alert.dismiss();
                         }

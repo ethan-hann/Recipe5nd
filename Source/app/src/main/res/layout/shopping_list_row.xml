@@ -25,15 +25,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:textSize="@dimen/h3" />
+                android:textSize="@dimen/h4" />
 
             <TextView
                 android:id="@+id/shoppingDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:layout_below="@id/shoppingTitle"
-                android:textSize="@dimen/h5" />
+                android:layout_centerInParent="true"
+                android:textSize="@dimen/subtitle1" />
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>
 

@@ -1,6 +1,7 @@
 package com.uhcl.recipe5nd.adapters;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,12 +16,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.uhcl.recipe5nd.R;
+import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.CreateJSON;
+import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.ShoppingList;
 
 public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdapter.ShoppingItemViewHolder>
 {
     private static final String TAG = "ShoppingItemsAdapter: ";
     private ShoppingList shoppingList;
+    private Context context;
+    private FileHelper fileHelper = new FileHelper();
 
     public ShoppingItemsAdapter(ShoppingList shoppingList)
     {
@@ -32,6 +38,8 @@ public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdap
     public ShoppingItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i){
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.shopping_list_row_items, parent, false);
+
+        context = parent.getContext();
 
         return new ShoppingItemViewHolder(itemView);
     }
@@ -78,12 +86,16 @@ public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdap
                     {
                         shoppingList.setChecked(position, true);
                         itemTextView.setPaintFlags(itemTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
+                        fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
                         notifyDataSetChanged();
                     }
                     else
                     {
                         shoppingList.setChecked(position, false);
                         itemTextView.setPaintFlags(0);
+                        String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
+                        fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
                         notifyDataSetChanged();
                     }
                 }
@@ -115,6 +127,8 @@ public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdap
                         public void onClick(View view) {
                             shoppingList.getItems().remove(position);
                             shoppingList.getItems().add(position, dialogEditText.getText().toString());
+                            String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
+                            fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
                             notifyDataSetChanged();
                             alert.dismiss();
                         }

@@ -213,21 +213,33 @@ public class CreateJSON
 
                     //Getting items in the shopping list
                     StringBuilder builder = new StringBuilder();
-                    for (int i = 0; i < s.getItems().size() - 1; i++) {
-                        builder.append(s.getItems().get(i));
-                        builder.append(",");
+                    if (s.getItems().size() != 0) {
+                        for (int i = 0; i < s.getItems().size() - 1; i++) {
+                            builder.append(s.getItems().get(i));
+                            builder.append(",");
+                        }
+                        builder.append(s.getItems().get(s.getItems().size() - 1));
+                        itemObject.put("names", builder.toString());
                     }
-                    builder.append(s.getItems().get(s.getItems().size() - 1));
-                    itemObject.put("names", builder.toString());
+                    else
+                    {
+                        itemObject.put("names", "");
+                    }
 
                     //Getting checked values in the shopping list
                     builder = new StringBuilder();
-                    for (int i = 0; i < s.getIsCheckedArray().size() - 1; i++) {
-                        builder.append(s.isChecked(i));
-                        builder.append(",");
+                    if (s.getIsCheckedArray().size() != 0) {
+                        for (int i = 0; i < s.getIsCheckedArray().size() - 1; i++) {
+                            builder.append(s.isChecked(i));
+                            builder.append(",");
+                        }
+                        builder.append(s.getIsCheckedArray().get(s.getIsCheckedArray().size() - 1));
+                        itemObject.put("isChecked", builder.toString());
                     }
-                    builder.append(s.getIsCheckedArray().get(s.getIsCheckedArray().size() - 1));
-                    itemObject.put("isChecked", builder.toString());
+                    else
+                    {
+                        itemObject.put("isChecked", "");
+                    }
 
                     shoppingItems.put(itemObject);
 

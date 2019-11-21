@@ -3,6 +3,7 @@ package com.uhcl.recipe5nd.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,9 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.adapters.ShoppingItemsAdapter;
+import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.CreateJSON;
+import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.ShoppingList;
 
 public class ShoppingItemsFragment extends Fragment implements View.OnClickListener
@@ -31,6 +35,7 @@ public class ShoppingItemsFragment extends Fragment implements View.OnClickListe
     private ShoppingItemsAdapter shoppingItemsAdapter;
     private ShoppingList shoppingList;
     private Context context;
+    private FileHelper fileHelper = new FileHelper();
 
     public ShoppingItemsFragment(ShoppingList shoppingList) {
         this.shoppingList = shoppingList;
@@ -70,6 +75,8 @@ public class ShoppingItemsFragment extends Fragment implements View.OnClickListe
                 int position = viewHolder.getAdapterPosition();
                 shoppingList.getItems().remove(position);
                 shoppingList.getIsCheckedArray().put(position, false);
+                String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
+                fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
                 shoppingItemsAdapter.notifyDataSetChanged();
             }
         };
@@ -98,10 +105,12 @@ public class ShoppingItemsFragment extends Fragment implements View.OnClickListe
         okButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                if (dialogTextView.getText().toString().isEmpty()) {
+                if (TextUtils.isEmpty(dialogEditText.getText())) {
                     Toast.makeText(context, "Item cannot be empty.", Toast.LENGTH_SHORT).show();
                 }else {
                     shoppingList.addItem(dialogEditText.getText().toString());
+                    String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
+                    fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
                 }
                 shoppingItemsAdapter.notifyDataSetChanged();
 
