@@ -120,7 +120,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
                             PrimaryTag primaryTag = (PrimaryTag) primaryTagSpinner.getSelectedItem();
                             boolean validInput = Helper.validateInput(ingredientName);
 
-                            if (validInput) {
+                            if (validInput && !ingredientName.isEmpty()) {
                                 Constants.usersIngredients.remove(pos);
                                 i.setName(ingredientName);
                                 i.setOptionalTag(optionalTag);
