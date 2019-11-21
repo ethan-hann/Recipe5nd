@@ -34,6 +34,7 @@ import java.util.concurrent.ExecutionException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -55,6 +56,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener
     private TextView helpText;
     private RecyclerView recyclerView;
     private MaterialButton searchButton;
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Search for Recipes");
+    }
 
     @Nullable
     @Override

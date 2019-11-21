@@ -15,7 +15,6 @@ import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
-import com.uhcl.recipe5nd.helperClasses.Helper;
 import com.uhcl.recipe5nd.helperClasses.Recipe;
 import com.uhcl.recipe5nd.helperClasses.StringFormatter;
 
@@ -23,7 +22,7 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 public class RecipeDetailsFragment extends Fragment implements View.OnClickListener
@@ -34,6 +33,12 @@ public class RecipeDetailsFragment extends Fragment implements View.OnClickListe
     private TextView recipeStepsText;
     private FloatingActionButton fab;
     private Context context;
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(Constants.currentlyViewedRecipe.getStrMeal());
+    }
 
     @Nullable
     @Override

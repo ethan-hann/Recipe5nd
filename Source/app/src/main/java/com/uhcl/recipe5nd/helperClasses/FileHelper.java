@@ -35,13 +35,13 @@ public class FileHelper {
 
     /**
      * Saves a file to the private file directory of the application
-     *
      * @param s        : the string to save
      * @param context  : the context of the application
      * @param fileName : the fileName the file should be saved as
      * @return boolean : true if saving was successful, false if not
      */
     public boolean saveFile(String s, Context context, String fileName) {
+        System.out.println("Saving to : "+fileName+" : "+s);
         try {
             FileOutputStream fos = new FileOutputStream(new File(context.getFilesDir().getAbsolutePath().concat("/" + fileName)), false);
             OutputStreamWriter osw = new OutputStreamWriter(fos);
@@ -58,9 +58,9 @@ public class FileHelper {
         return false;
     }
 
+
     /**
-     * Reads a saved file into a string.
-     *
+     * Reads a saved file into a string
      * @param context  : the context of the application
      * @param fileName : the fileName to read from
      * @return String : contents of the file or an exception if the file is not found
@@ -119,7 +119,7 @@ public class FileHelper {
     }
 
     /**
-     * Checks in the supplied context for the file.
+     * Checks in the supplied context for the file
      * @param context : the application's context
      * @param fileName : the file to search for
      * @return true if file exists; false if not
@@ -164,7 +164,7 @@ public class FileHelper {
      * @param context : the application's context
      * @param fileName : the file to search for
      */
-    public void createIfNotExists(Context context, String fileName)
+    void createIfNotExists(Context context, String fileName)
     {
         if (!exists(context, fileName))
         {

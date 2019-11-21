@@ -24,13 +24,13 @@ import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.fragments.EditIngredientsFragment;
 import com.uhcl.recipe5nd.fragments.SearchFragment;
 import com.uhcl.recipe5nd.fragments.ShoppingFragment;
+import com.uhcl.recipe5nd.fragments.ViewRecipesFragment;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Helper;
 
 import java.util.ArrayList;
 
-//TODO: create string references in strings.xml
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch (menuItem.getItemId()) { //TODO: add everyone's fragments
+        switch (menuItem.getItemId()) {
             case R.id.nav_search:
             {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -120,6 +120,12 @@ public class MainActivity extends AppCompatActivity
             {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new ShoppingFragment()).commit();
+                break;
+            }
+            case R.id.nav_favorites:
+            {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new ViewRecipesFragment()).commit();
                 break;
             }
             case R.id.nav_deleteData:

@@ -1,6 +1,5 @@
 package com.uhcl.recipe5nd.helperClasses;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
@@ -28,7 +27,6 @@ public class Constants
     public static Drawable currentlyViewedRecipeImage;
     public static ArrayList<Recipe> favoriteRecipes;
     public static ArrayList<Drawable> favoriteRecipeImages;
-
 
     public static ArrayList<Drawable> returnedRecipeImages;
     public static ArrayList<Ingredient> selectedIngredients;

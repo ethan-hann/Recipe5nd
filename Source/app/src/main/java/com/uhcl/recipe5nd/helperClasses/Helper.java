@@ -62,29 +62,4 @@ public class Helper
     {
         return !Constants.validator.matcher(str).find();
     }
-
-    public static ArrayList<Recipe> removeDuplicateRecipes(ArrayList<Recipe> list){
-        LinkedHashMap<String, Recipe> tempMap = new LinkedHashMap<String, Recipe>();
-        ArrayList<Recipe> uniqueList = new ArrayList<Recipe>();
-        try {
-            Recipe oldKey;
-
-            for(int i=0; i<list.size(); i++){
-                oldKey = tempMap.put(list.get(i).getId(), list.get(i));
-                if(oldKey != null) System.out.println("Recipe: "+oldKey.getId()+" : "+oldKey.getStrMeal()+" is already in the list!");
-            }
-
-            Iterator itr = tempMap.entrySet().iterator();
-            while(itr.hasNext()){
-                Map.Entry entry = (Map.Entry)itr.next();
-                Recipe recipe = (Recipe)entry.getValue();
-                uniqueList.add(recipe);
-            }
-
-        } catch (Exception e) {
-            //TODO: handle exception
-            System.out.println("Error removing duplicates");
-        }
-        return uniqueList;
-    }
 }

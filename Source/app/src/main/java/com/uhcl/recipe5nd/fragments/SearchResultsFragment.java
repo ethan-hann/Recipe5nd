@@ -11,6 +11,7 @@ import com.uhcl.recipe5nd.helperClasses.Constants;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -21,6 +22,13 @@ public class SearchResultsFragment extends Fragment
 {
     private RecyclerView recyclerView;
     private RecipeAdapter recyclerAdapter;
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Search Results: "
+                + Constants.returnedRecipesFromSearch.size() + " Recipes");
+    }
 
     @Nullable
     @Override

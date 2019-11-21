@@ -15,11 +15,13 @@ public class CreateJSON
 
     /**
      * Creates a JSON string representing a list of Recipe objects
-     * This method will get the existing JSON string from the file if it exists and use that
+     * This method can get the existing JSON string from the file if it exists and use that
      * as a basis for the new JSON string
      * @param context : the application's context
      * @param savedRecipes : an ArrayList containing Recipe objects
-     * @return
+     * @param overwrite : if this method should take into account existing ingredients or create a
+     *                    whole new string
+     * @return string : a string representation of the formatted JSON
      */
     public static String createRecipeJSON(Context context, ArrayList<Recipe> savedRecipes, boolean overwrite)
     {
@@ -84,7 +86,7 @@ public class CreateJSON
 
     /**
      * Creates a JSON string representing a list of Ingredient objects
-     * This method will get the existing JSON string from the file if it exists and use that
+     * This method can get the existing JSON string from the file if it exists and use that
      * as a basis for the new JSON string
      * @param context : the application's context
      * @param savedIngredients : an ArrayList containing Ingredient objects
@@ -133,7 +135,7 @@ public class CreateJSON
 
     /**
      * Creates a JSON string representing a list of Ingredient objects
-     * This method will get the existing JSON string from the file if it exists and use that
+     * This method can get the existing JSON string from the file if it exists and use that
      * as a basis for the new JSON string
      * @param context : the application's context
      * @param shoppingData : an ArrayList containing ShoppingList objects
