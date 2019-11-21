@@ -25,6 +25,7 @@ import com.uhcl.recipe5nd.adapters.ShoppingAdapter;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
+import com.uhcl.recipe5nd.helperClasses.Helper;
 import com.uhcl.recipe5nd.helperClasses.ParseJSON;
 import com.uhcl.recipe5nd.helperClasses.ShoppingList;
 import com.uhcl.recipe5nd.helperClasses.SortBasedOnDate;
@@ -101,6 +102,7 @@ public class ShoppingFragment extends Fragment implements View.OnClickListener
 
         EditText text = dialogView.findViewById(R.id.shoppingDialogEditText);
         text.setVisibility(View.VISIBLE);
+        Helper.showKeyboard(text);
 
         TextView textView = dialogView.findViewById(R.id.shoppingDialogTextView);
         textView.setText(R.string.shopping_dialog_title_input);

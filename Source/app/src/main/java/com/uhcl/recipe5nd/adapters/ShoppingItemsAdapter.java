@@ -19,6 +19,7 @@ import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
+import com.uhcl.recipe5nd.helperClasses.Helper;
 import com.uhcl.recipe5nd.helperClasses.ShoppingList;
 
 public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdapter.ShoppingItemViewHolder>
@@ -115,6 +116,7 @@ public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdap
                     dialogEditText.setText(shoppingList.getItems().get(position));
                     dialogEditText.setSelection(shoppingList.getItems().get(position).length());
                     dialogEditText.setVisibility(View.VISIBLE);
+                    Helper.showKeyboard(dialogEditText);
 
                     TextView dialogTextView = dialogView.findViewById(R.id.shoppingDialogTextView);
                     dialogTextView.setText(R.string.shopping_dialog_item_edit);

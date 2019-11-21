@@ -25,6 +25,7 @@ import com.uhcl.recipe5nd.adapters.ShoppingItemsAdapter;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
+import com.uhcl.recipe5nd.helperClasses.Helper;
 import com.uhcl.recipe5nd.helperClasses.ShoppingList;
 
 public class ShoppingItemsFragment extends Fragment implements View.OnClickListener
@@ -95,6 +96,7 @@ public class ShoppingItemsFragment extends Fragment implements View.OnClickListe
 
         EditText dialogEditText = dialogView.findViewById(R.id.shoppingDialogEditText);
         dialogEditText.setVisibility(View.VISIBLE);
+        Helper.showKeyboard(dialogEditText);
 
         TextView dialogTextView = dialogView.findViewById(R.id.shoppingDialogTextView);
         dialogTextView.setText(R.string.shopping_item_add);

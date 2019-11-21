@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.uhcl.recipe5nd.R;
+import com.uhcl.recipe5nd.activities.MainActivity;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
@@ -94,6 +95,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
                     EditText ingNameTextBox = dialogView.findViewById(R.id.ingredient_dialog_edit_name);
                     ingNameTextBox.setText(Constants.usersIngredients.get(pos).getName());
+                    Helper.showKeyboard(ingNameTextBox);
 
                     EditText ingOptionalTagBox = dialogView.findViewById(R.id.ingredient_dialog_edit_opt_tag);
                     ingOptionalTagBox.setText(Constants.usersIngredients.get(pos).getOptionalTag());

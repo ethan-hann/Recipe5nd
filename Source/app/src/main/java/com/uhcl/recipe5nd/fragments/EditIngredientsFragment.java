@@ -3,10 +3,15 @@ package com.uhcl.recipe5nd.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -14,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -107,6 +113,9 @@ public class EditIngredientsFragment extends Fragment implements View.OnClickLis
         textView.setText(getString(R.string.add_a_new_ingredient));
 
         EditText ingNameTextBox = dialogView.findViewById(R.id.ingredient_dialog_edit_name);
+        Helper.showKeyboard(ingNameTextBox);
+
+
         EditText ingOptionalTagBox = dialogView.findViewById(R.id.ingredient_dialog_edit_opt_tag);
         Spinner primaryTagSpinner = dialogView.findViewById(R.id.ingredient_dialog_spinner);
         ArrayAdapter<PrimaryTag> spinnerAdapter = new ArrayAdapter<>(context,

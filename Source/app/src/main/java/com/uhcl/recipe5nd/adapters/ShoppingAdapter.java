@@ -143,6 +143,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
                     dialogEditText.setText(s.getTitle());
                     dialogEditText.setSelection(s.getTitle().length());
                     dialogEditText.setVisibility(View.VISIBLE);
+                    Helper.showKeyboard(dialogEditText);
 
                     TextView dialogTextView = dialogView.findViewById(R.id.shoppingDialogTextView);
                     dialogTextView.setText(R.string.shopping_list_title_edit);

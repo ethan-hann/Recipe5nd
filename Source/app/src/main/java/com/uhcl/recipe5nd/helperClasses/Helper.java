@@ -3,21 +3,12 @@ package com.uhcl.recipe5nd.helperClasses;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
-import android.util.Log;
+import android.os.Handler;
+import android.os.SystemClock;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
-
-import com.uhcl.recipe5nd.R;
-
-import java.util.regex.Pattern;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -37,18 +28,20 @@ public class Helper
         }
     }
 
-    public static void hideKeyboard(Activity activity) {
-        try{
-            InputMethodManager inputManager = (InputMethodManager) activity
-                    .getSystemService(Context.INPUT_METHOD_SERVICE);
-            View currentFocusedView = activity.getCurrentFocus();
-            if (currentFocusedView != null) {
-                inputManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(),
-                        InputMethodManager.HIDE_NOT_ALWAYS);
+    public static void showKeyboard(final EditText editText)
+    {
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                editText.dispatchTouchEvent(
+                        MotionEvent.obtain(SystemClock.uptimeMillis(),
+                                SystemClock.uptimeMillis(),
+                                MotionEvent.ACTION_DOWN , 0, 0, 0));
+                editText.dispatchTouchEvent(
+                        MotionEvent.obtain(SystemClock.uptimeMillis(),
+                                SystemClock.uptimeMillis(),
+                                MotionEvent.ACTION_UP , 0, 0, 0));
             }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        }, 200);
     }
 
     public static AppCompatActivity unwrap(Context context)
