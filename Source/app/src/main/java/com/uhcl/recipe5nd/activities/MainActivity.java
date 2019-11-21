@@ -7,31 +7,42 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.fragments.EditIngredientsFragment;
 import com.uhcl.recipe5nd.fragments.SearchFragment;
 import com.uhcl.recipe5nd.fragments.ShoppingFragment;
 import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Helper;
+
+import java.util.ArrayList;
 
 //TODO: create string references in strings.xml
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
     private DrawerLayout drawer;
+    private NavigationView navView;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = getApplicationContext();
 
         //Using a Toolbar instead of an Action bar to adhere to Material Design
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -74,7 +85,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        NavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
         navView.setNavigationItemSelectedListener(this);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
@@ -94,17 +105,82 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) { //TODO: add everyone's fragments
             case R.id.nav_search:
+            {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new SearchFragment()).commit();
                 break;
+            }
             case R.id.nav_pantry:
+            {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new EditIngredientsFragment()).commit();
                 break;
+            }
             case R.id.nav_shopping:
+            {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new ShoppingFragment()).commit();
                 break;
+            }
+            case R.id.nav_deleteData:
+            {
+                View dialogView = LayoutInflater.from(this).inflate(R.layout.delete_confirm_dialog, null);
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+                dialogBuilder.setCancelable(true);
+                dialogBuilder.setView(dialogView);
+                AlertDialog dialog = dialogBuilder.create();
+
+                TextView alertText = dialogView.findViewById(R.id.delete_confirm_text_view);
+                alertText.setText(R.string.delete_confirmation);
+
+                MaterialButton okButton = dialogView.findViewById(R.id.delete_dialog_ok);
+                MaterialButton cancelButton = dialogView.findViewById(R.id.delete_dialog_cancel);
+
+                okButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        FileHelper fileHelper = new FileHelper();
+                        fileHelper.clearAllData(context);
+                        Constants.usersIngredients = new ArrayList<>();
+                        Constants.shoppingLists = new ArrayList<>();
+                        Constants.favoriteRecipes = new ArrayList<>();
+                        dialog.dismiss();
+                        navView.setCheckedItem(R.id.nav_pantry);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                new EditIngredientsFragment()).commit();
+                    }
+                });
+
+                cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+                break;
+            }
+            case R.id.nav_about:
+            {
+                View dialogView = LayoutInflater.from(this).inflate(R.layout.about_dialog, null);
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+                dialogBuilder.setCancelable(true);
+                dialogBuilder.setView(dialogView);
+                AlertDialog dialog = dialogBuilder.create();
+
+                TextView alertText = dialogView.findViewById(R.id.about_dialog_text_view);
+                alertText.setText(R.string.about_text);
+
+                MaterialButton okButton = dialogView.findViewById(R.id.about_dialog_ok);
+                okButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+                break;
+            }
         }
 
         drawer.closeDrawer(GravityCompat.START);

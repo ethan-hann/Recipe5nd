@@ -2,7 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/nav_menu_top"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_pantry"
             android:icon="@drawable/ic_edit_ingredients_24px"
@@ -19,5 +21,18 @@
             android:id="@+id/nav_shopping"
             android:icon="@drawable/ic_shopping_basket_24px"
             android:title="@string/nav_drawer_shopping" />
+    </group>
+
+    <group
+        android:id="@+id/nav_menu_bottom"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_deleteData"
+            android:icon="@drawable/ic_delete_forever_black_24dp"
+            android:title="@string/delete_saved_data" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_help_black_24dp"
+            android:title="@string/about_the_app" />
     </group>
 </menu>
