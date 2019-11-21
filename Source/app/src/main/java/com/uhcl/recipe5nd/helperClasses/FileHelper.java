@@ -16,6 +16,24 @@ public class FileHelper {
     private static final String TAG = "FileHelper";
 
     /**
+     * Clears data from all files in the supplied context's files directory
+     * @param context : the application's context
+     * @return true if file deletion was successful; false if not
+     */
+    public boolean clearAllData(Context context)
+    {
+        try {
+            createBlankFile(context, Constants.INGREDIENTS_FILE_NAME);
+            createBlankFile(context, Constants.SHOPPING_LIST_FILE_NAME);
+            createBlankFile(context, Constants.FAVORITES_FILE_NAME);
+            return true;
+        } catch (NullPointerException e) {
+            Log.e(TAG, "deleteAllFiles: ", e);
+            return false;
+        }
+    }
+
+    /**
      * Saves a file to the private file directory of the application
      *
      * @param s        : the string to save
