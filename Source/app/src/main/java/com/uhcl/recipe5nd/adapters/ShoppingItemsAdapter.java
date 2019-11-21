@@ -2,10 +2,10 @@ package com.uhcl.recipe5nd.adapters;
 
 import android.app.AlertDialog;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,139 +13,125 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.uhcl.recipe5nd.R;
-import com.uhcl.recipe5nd.helperClasses.ShoppingFile;
+import com.uhcl.recipe5nd.helperClasses.ShoppingList;
 
-import java.util.List;
+public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdapter.ShoppingItemViewHolder>
+{
+    private static final String TAG = "ShoppingItemsAdapter: ";
+    private ShoppingList shoppingList;
 
-public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdapter.ShoppingItemViewHolder>{
-    private List<String> items;
-    private int x;
-    private ShoppingFile file;
-
-    public ShoppingItemsAdapter(List<String> items, int x, ShoppingFile file){
-        this.items = items;
-        this.x = x;
-        this.file = file;
+    public ShoppingItemsAdapter(ShoppingList shoppingList)
+    {
+        this.shoppingList = shoppingList;
     }
-
 
     @NonNull
     @Override
-    public  ShoppingItemViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i){
-        View itemView = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.shopping_list_row_items, viewGroup, false);
+    public ShoppingItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i){
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.shopping_list_row_items, parent, false);
+
         return new ShoppingItemViewHolder(itemView);
     }
 
 
     @Override
-    public void onBindViewHolder(ShoppingItemViewHolder viewHolder, int i) {
-
-        viewHolder.item.setText(items.get(i));
-        viewHolder.item.setPaintFlags(0);
-
-        if(file.getCrossed(x,i).equals("true")){
-            viewHolder.item.setPaintFlags(viewHolder.item.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+    public void onBindViewHolder(ShoppingItemViewHolder holder, int position)
+    {
+        try {
+            holder.bind(position);
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, "onBindViewHolder: ", e);
         }
-
-        viewHolder.item.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view) {
-                if(file.getCrossed(x,i).equals("false")){
-                    file.crossed(x,i,"true");
-                    viewHolder.item.setPaintFlags(viewHolder.item.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    notifyDataSetChanged();
-
-                }else{
-                    file.crossed(x,i, "false");
-                    viewHolder.item.setPaintFlags(0);
-                    notifyDataSetChanged();
-
-                }
-            }
-        });
-
-        viewHolder.item.setOnLongClickListener(new View.OnLongClickListener(){
-
-            @Override
-            public boolean onLongClick(View v) {
-
-                View dailogView =  LayoutInflater.from(v.getContext()).inflate(R.layout.shopping_dialog, null);
-
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
-                builder1.setCancelable(true);
-
-                builder1.setView(dailogView);
-                AlertDialog alert = builder1.create();
-
-
-                EditText text = dailogView.findViewById(R.id.shoppingDialogEditText);
-                text.setText(file.getItems(x).get(i));
-                text.setSelection(file.getItems(x).get(i).length());
-                text.setVisibility(View.VISIBLE);
-
-                TextView textView = dailogView.findViewById(R.id.shoppingDialogTextView);
-                textView.setText("Edit Shopping List Item");
-
-                Button ok = dailogView.findViewById(R.id.shoppingDialogOk);
-                Button cancel = dailogView.findViewById(R.id.shoppingDialogCancel);
-
-                ok.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        file.editItem(x,i,text.getText().toString());
-                        items.set(i,file.getItems(x).get(i));
-                        notifyDataSetChanged();
-                        alert.dismiss();
-                    }
-
-                });
-
-                cancel.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-
-                        alert.dismiss();
-
-                    }
-
-                });
-
-                alert.show();
-
-
-                return true;
-            }
-
-        });
-
     }
-
-
 
     @Override
-    public int getItemCount(){return items.size();}
+    public int getItemCount(){return shoppingList.getItems().size();}
 
-    public void setItems(List<String> items) {
-        this.items = items;
-    }
+    class ShoppingItemViewHolder extends RecyclerView.ViewHolder
+    {
+        TextView itemTextView;
+        LinearLayout parent;
 
-
-    public class ShoppingItemViewHolder extends RecyclerView.ViewHolder{
-        private TextView item;
-        private LinearLayout parent;
-
-
-        public ShoppingItemViewHolder(View itemView){
+        ShoppingItemViewHolder(View itemView)
+        {
             super(itemView);
             parent = itemView.findViewById(R.id.shoppingListParent);
-            item = itemView.findViewById(R.id.shoppingItem);
-
+            itemTextView = itemView.findViewById(R.id.shopping_list_item);
         }
 
+        void bind(int position)
+        {
+            itemTextView.setText(shoppingList.getItems().get(position));
+            itemTextView.setPaintFlags(0);
 
+            if (shoppingList.isChecked(position)) {
+                itemTextView.setPaintFlags(itemTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
+
+            itemTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!shoppingList.isChecked(position))
+                    {
+                        shoppingList.setChecked(position, true);
+                        itemTextView.setPaintFlags(itemTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        notifyDataSetChanged();
+                    }
+                    else
+                    {
+                        shoppingList.setChecked(position, false);
+                        itemTextView.setPaintFlags(0);
+                        notifyDataSetChanged();
+                    }
+                }
+            });
+
+            itemTextView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    View dialogView = LayoutInflater.from(view.getContext()).inflate(R.layout.shopping_dialog, null);
+
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(view.getContext());
+                    dialogBuilder.setCancelable(true);
+                    dialogBuilder.setView(dialogView);
+                    AlertDialog alert = dialogBuilder.create();
+
+                    EditText dialogEditText = dialogView.findViewById(R.id.shoppingDialogEditText);
+                    dialogEditText.setText(shoppingList.getItems().get(position));
+                    dialogEditText.setSelection(shoppingList.getItems().get(position).length());
+                    dialogEditText.setVisibility(View.VISIBLE);
+
+                    TextView dialogTextView = dialogView.findViewById(R.id.shoppingDialogTextView);
+                    dialogTextView.setText(R.string.shopping_dialog_item_edit);
+
+                    MaterialButton okButton = dialogView.findViewById(R.id.shoppingDialogOk);
+                    MaterialButton cancelButton = dialogView.findViewById(R.id.shoppingDialogCancel);
+
+                    okButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            shoppingList.getItems().remove(position);
+                            shoppingList.getItems().add(position, dialogEditText.getText().toString());
+                            notifyDataSetChanged();
+                            alert.dismiss();
+                        }
+                    });
+
+                    cancelButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            alert.dismiss();
+                        }
+                    });
+
+                    alert.show();
+                    return true;
+                }
+            });
+        }
     }
 
 }
