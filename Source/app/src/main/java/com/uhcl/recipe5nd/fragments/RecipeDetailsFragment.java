@@ -1,6 +1,7 @@
 package com.uhcl.recipe5nd.fragments;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 public class RecipeDetailsFragment extends Fragment implements View.OnClickListener
@@ -42,6 +44,9 @@ public class RecipeDetailsFragment extends Fragment implements View.OnClickListe
 
         imageView = rootView.findViewById(R.id.recipe_details_image);
         imageView.setImageDrawable(Constants.currentlyViewedRecipeImage);
+        imageView.setBackgroundColor(Color.argb(150,247, 236, 205));
+        //ConstraintLayout recipeImageContainer = rootView.findViewById(R.id.recipe_imageView_container);
+        //recipeImageContainer.setBackground(Constants.currentlyViewedRecipeImage);
 
         fab = rootView.findViewById(R.id.favorite_recipe_fab);
         fab.setOnClickListener(this);

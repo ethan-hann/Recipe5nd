@@ -141,7 +141,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             } catch (IndexOutOfBoundsException e) {
                 Log.e(TAG, "bind: ", e);
             }
-
         }
     }
 }
