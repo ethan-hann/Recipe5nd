@@ -1,5 +1,6 @@
 package com.uhcl.recipe5nd.helperClasses;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
@@ -41,5 +42,6 @@ public class Constants
         fileHelper.createIfNotExists(context, Constants.INGREDIENTS_FILE_NAME);
         fileHelper.createIfNotExists(context, Constants.FAVORITES_FILE_NAME);
         fileHelper.createIfNotExists(context, Constants.SHOPPING_LIST_FILE_NAME);
+
     }
 }
