@@ -24,6 +24,7 @@ public class FileHelper {
      * @return boolean : true if saving was successful, false if not
      */
     public boolean saveFile(String s, Context context, String fileName) {
+        System.out.println("Saving to : "+fileName+" : "+s);
         try {
             FileOutputStream fos = new FileOutputStream(new File(context.getFilesDir().getAbsolutePath().concat("/" + fileName)), false);
             OutputStreamWriter osw = new OutputStreamWriter(fos);
@@ -40,18 +41,6 @@ public class FileHelper {
         return false;
     }
 
-    public boolean reWriteFavoritesFile(String favoritesJSON, Context context, String favoritesFileName){
-        try {
-            File file = new File(context.getFilesDir().getAbsolutePath().concat("/" + favoritesFileName));
-            file.delete();
-            createBlankFile(context, favoritesFileName);
-            saveFile(favoritesJSON, context, favoritesFileName);
-            return true;
-        } catch (Exception e) {
-            Log.e(TAG, "Rewriting favorites file failed: ", e);
-        }
-        return false;
-    }
 
     /**
      * Reads a saved file into a string.

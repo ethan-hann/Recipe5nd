@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_favorites:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new ViewRecipesFragment()).commit();
+                break;
             case R.id.nav_pantry:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new EditIngredientsFragment()).commit();

@@ -96,6 +96,8 @@ public class ParseJSON
 
         recipeArrayList.add(r);
 
+        recipeArrayList = Helper.removeDuplicateRecipes(recipeArrayList);
+
         }
         return recipeArrayList;
     }

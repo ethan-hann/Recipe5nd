@@ -1,6 +1,7 @@
 package com.uhcl.recipe5nd.fragments;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,9 +43,10 @@ public class FavoriteRecipeDetailsFragment extends RecipeDetailsFragment impleme
     public void onClick(View view)
     {
         Context context = view.getContext();
-/*
-        //Delete all recipes that match favorited ID just in case there's more than one
+
+        //Delete all recipes that match fav ID just in case there's more than one
         ArrayList<Recipe> recipesToKeep = new ArrayList<Recipe>();
+        ArrayList<Drawable> imagesToKeep = new ArrayList<Drawable>();
         int count = 0;
         String currentId = Constants.currentlyViewedRecipe.getId();
         for(int i=0; i<Constants.favoriteRecipes.size(); i++){
@@ -55,14 +57,26 @@ public class FavoriteRecipeDetailsFragment extends RecipeDetailsFragment impleme
             }
         }
 
+
+        int currentImageID = Constants.currentlyViewedRecipeImage.hashCode();
+        for(int i=0; i<Constants.favoriteRecipeImages.size(); i++){
+            Drawable tempImage = Constants.favoriteRecipeImages.get(i);
+            if(currentImageID == tempImage.hashCode()){
+                System.out.println("Found this image: "+tempImage.toString());
+            }else{
+                imagesToKeep.add(Constants.favoriteRecipeImages.get(i));
+            }
+        }
+
         Constants.favoriteRecipes = recipesToKeep;
+        Constants.favoriteRecipeImages = imagesToKeep;
 
         for(int i=0; i<Constants.favoriteRecipes.size(); i++){
             Log.d(TAG,"pos#"+i+" | Still in favorite recipes: "+Constants.favoriteRecipes.get(i).getStrMeal());
         }
 
-        new FileHelper().reWriteFavoritesFile(CreateJSON.createRecipeJSON(getContext(),Constants.favoriteRecipes),getContext(),Constants.FAVORITES_FILE_NAME);
-*/
+        new FileHelper().saveFile(CreateJSON.createRecipeJSON(getContext(),Constants.favoriteRecipes,true),getContext(),Constants.FAVORITES_FILE_NAME);
+
         Constants.currentlyViewedRecipe = null;
         Constants.currentlyViewedRecipeImage = null;
 
