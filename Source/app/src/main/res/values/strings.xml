@@ -20,4 +20,20 @@
     <string name="recipe_details_steps_title">Steps:</string>
     <string name="empty_string"></string>
 
+    <string name="pantryTextHint">Ingredient Name</string>
+    <string name="pantryOptionalTag">Optional Tag</string>
+    <string name="pantryAddButton">Add</string>
+    <string name="pantry_spinner_prompt">Choose One</string>
+    <string name="ingredient_item_name_prefix">Name: </string>
+    <string name="ingredient_item_primary_prefix">Prim. Tag: </string>
+    <string name="ingredient_item_optional_prefix">Opt. Tag: </string>
+
+    <string name="fetch_recipe_message_text">Fetching recipes...</string>
+    <string name="cancel">Cancel</string>
+    <string name="shopping_dialog_delete_confirm">Are you sure you want to delete this list?</string>
+    <string name="shopping_list_title_edit">Editing Shopping List Title</string>
+    <string name="shopping_dialog_title_input">Enter Shopping List Title</string>
+    <string name="shopping_dialog_item_edit">Editing Item</string>
+    <string name="shopping_item_add">Add New Item</string>
+
 </resources>

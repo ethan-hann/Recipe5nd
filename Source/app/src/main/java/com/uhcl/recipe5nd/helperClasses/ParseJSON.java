@@ -7,7 +7,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 public class ParseJSON
@@ -17,14 +20,14 @@ public class ParseJSON
 
     /**
      * Parses recipe ids from API based on a supplied HTTP response string
-     * @param response the HTTP response
+     * @param idJSON the HTTP response
      * @return ArrayList of ID strings
      * @throws JSONException if the JSON is invalid or null and cannot be parsed successfully
      */
-    public static ArrayList<String> parseIDS(String response) throws JSONException
+    public static ArrayList<String> parseIDS(String idJSON) throws JSONException
     {
         ArrayList<String> ids = new ArrayList<>();
-        JSONObject obj = new JSONObject(response);
+        JSONObject obj = new JSONObject(idJSON);
         JSONArray objArray = obj.getJSONArray("meals");
 
         if (objArray.isNull(0)) {
@@ -100,14 +103,14 @@ public class ParseJSON
 
     /**
      * Parses recipe details from API based on a supplied HTTP response string
-     * @param response the HTTP response
+     * @param recipeJSON the HTTP response
      * @return Recipe a single recipe
      * @throws JSONException if the JSON is invalid or null and cannot be parsed successfully
      */
-    public static Recipe parseRecipe(String response) throws JSONException
+    public static Recipe parseRecipe(String recipeJSON) throws JSONException
     {
         Recipe r = new Recipe();
-        JSONObject obj = new JSONObject(response);
+        JSONObject obj = new JSONObject(recipeJSON);
         JSONArray objArray = obj.getJSONArray("meals");
 
         if (objArray.isNull(0)) {
@@ -138,13 +141,13 @@ public class ParseJSON
 
     /**
      * Parses ingredients from a local saved JSON file
-     * @param ingredientsString the string to parse from
+     * @param ingredientsJSON the string to parse from
      * @return ArrayList of Ingredients representing the parsed data
      */
-    public static ArrayList<Ingredient> parseIngredients(String ingredientsString) throws JSONException
+    public static ArrayList<Ingredient> parseIngredients(String ingredientsJSON) throws JSONException
     {
         ArrayList<Ingredient> ingredients = new ArrayList<>();
-        JSONArray objArray = new JSONArray(ingredientsString);
+        JSONArray objArray = new JSONArray(ingredientsJSON);
 
         if (objArray.isNull(0)) {
             return null;
@@ -168,5 +171,51 @@ public class ParseJSON
         }
 
         return ingredients;
+    }
+
+    public static ArrayList<ShoppingList> parseShoppingLists(String shoppingJSON) throws JSONException
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.US);
+        ArrayList<ShoppingList> shoppingLists = new ArrayList<>();
+        JSONArray objArray = new JSONArray(shoppingJSON);
+
+        if (objArray.isNull(0)) {
+            return null;
+        }
+
+        for (int i = 0; i < objArray.length(); i++)
+        {
+            ShoppingList s = new ShoppingList();
+            JSONObject object = objArray.getJSONObject(i);
+            s.setTitle(object.get("title").toString());
+            try {
+                s.setDate(sdf.parse(object.get("date").toString()));
+            } catch (ParseException e)
+            {
+                Log.e(TAG, "parseShoppingLists: ", e);
+                s.setDate(new Date());
+            }
+
+            JSONArray itemArray = object.getJSONArray("items");
+            JSONObject itemObject = itemArray.getJSONObject(0);
+
+            String itemString = itemObject.get("names").toString();
+            String itemStatesString = itemObject.get("isChecked").toString();
+            String[] items = itemString.split(",");
+            String[] itemStates = itemStatesString.split(",");
+
+            for (String str : items)
+            {
+                s.addItem(str);
+            }
+
+            for (int j = 0; j < itemStates.length; j++) {
+                s.setChecked(j, Boolean.parseBoolean(itemStates[j]));
+            }
+
+            shoppingLists.add(s);
+        }
+
+        return shoppingLists;
     }
 }

@@ -86,7 +86,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                 @Override
                 public void onClick(View view) {
                     Constants.currentlyViewedRecipe = Constants.returnedRecipesFromSearch.get(position);
-                    Constants.currentlyViewedRecipeImage = Constants.returnedRecipeImages.get(position);
+                    try
+                    {
+                        Constants.currentlyViewedRecipeImage = Constants.returnedRecipeImages.get(position);
+                    } catch (IndexOutOfBoundsException e)
+                    {
+                        Log.e(TAG, "onClick: ", e);
+                    }
+
 
                     AppCompatActivity activity = Helper.unwrap(view.getContext());
                     activity

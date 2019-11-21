@@ -1,5 +1,4 @@
-# Recipe5nd
-This branch of the project is for tracking the development of FR-05_1: view details about a favorite recipe. For a list of features, see **README.md** in the master branch.
+
 *An easy to use reverse recipe lookup application for Android smartphones*
 
 ## List of Features
@@ -9,3 +8,4 @@ This branch of the project is for tracking the development of FR-05_1: view deta
 * Shopping List: allows you to keep multiple shopping lists to track ingredients you may need later
 
 This application is being developed as an Android app targeting Android OS 5.0 and up. It makes use of Google's [Material Design](https://material.io/) to provide a clear and clean user interface and experience.
+This branch of the project is for tracking the development of FR-04: shopping lists. For a list of features, see 

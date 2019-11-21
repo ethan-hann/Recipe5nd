@@ -19,14 +19,11 @@ import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.fragments.FavoriteDetialsFragment;
 import com.uhcl.recipe5nd.fragments.SearchFragment;
 import com.uhcl.recipe5nd.fragments.ViewRecipesFragment;
+import com.uhcl.recipe5nd.fragments.EditIngredientsFragment;
+import com.uhcl.recipe5nd.fragments.SearchFragment;
+import com.uhcl.recipe5nd.fragments.ShoppingFragment;
 import com.uhcl.recipe5nd.helperClasses.Constants;
-import com.uhcl.recipe5nd.helperClasses.CreateJSON;
-import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Helper;
-import com.uhcl.recipe5nd.helperClasses.Ingredient;
-import com.uhcl.recipe5nd.helperClasses.PrimaryTag;
-
-import java.util.ArrayList;
 
 //TODO: create string references in strings.xml
 public class MainActivity extends AppCompatActivity
@@ -53,18 +50,6 @@ public class MainActivity extends AppCompatActivity
 
         //Initialize files
         Constants.init(this);
-
-         /* TODO: TEMPORARY CODE BELOW THIS LINE: REMOVE BEFORE PRODUCTION*/
-
-        FileHelper fileHelper = new FileHelper();
-        ArrayList<Ingredient> testIngredients = new ArrayList<>();
-        testIngredients.add(new Ingredient("Chicken", PrimaryTag.HOT));
-        testIngredients.add(new Ingredient("Beef", PrimaryTag.COLD, "Meats"));
-
-        String json = CreateJSON.createIngredientsJSON(this, testIngredients);
-        fileHelper.saveFile(json, this, Constants.INGREDIENTS_FILE_NAME);
-
-         /* TODO: TEMPORARY CODE ABOVE THIS LINE: REMOVE BEFORE PRODUCTION*/
 
         drawer = findViewById(R.id.drawer_layout);
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -103,8 +88,8 @@ public class MainActivity extends AppCompatActivity
         if (savedInstanceState == null)
         {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new SearchFragment()).commit();
-            navView.setCheckedItem(R.id.nav_search);
+                    new EditIngredientsFragment()).commit();
+            navView.setCheckedItem(R.id.nav_pantry);
         }
     }
 
@@ -118,6 +103,13 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_favorites:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new ViewRecipesFragment()).commit();
+            case R.id.nav_pantry:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new EditIngredientsFragment()).commit();
+                break;
+            case R.id.nav_shopping:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new ShoppingFragment()).commit();
                 break;
         }
 

@@ -16,6 +16,10 @@ public class Constants
     public static final String FAVORITES_FILE_NAME = "favorites.json";
     public static final String SHOPPING_LIST_FILE_NAME = "shopping.json";
 
+    public static final char[] invalidCharacters = {'!', '@', '#', '$', '%', '^', '&', '*',
+            '(', ')', '-', '_', '+', '=', '+', '/', '\\', '[', ']', '{', '}', '|', ';', ':',
+            '\'', '"', ',', '<', '.', '>', '?', '`', '~'};
+
     public static boolean doesIngredientsFileExist;
     public static boolean doesFavoritesExist;
     public static boolean doesShoppingListExist;
@@ -29,6 +33,8 @@ public class Constants
     public static ArrayList<Drawable> returnedRecipeImages;
     public static ArrayList<Ingredient> selectedIngredients;
     public static ArrayList<Recipe> returnedRecipesFromSearch;
+    public static ArrayList<ShoppingList> shoppingLists;
+
 
     public static void init(Context context) {
         FileHelper fileHelper = new FileHelper();

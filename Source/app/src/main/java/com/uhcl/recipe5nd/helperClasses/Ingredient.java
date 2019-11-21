@@ -5,7 +5,7 @@ package com.uhcl.recipe5nd.helperClasses;
  */
 public class Ingredient
 {
-    private String name;
+    private String name = "";
     private PrimaryTag primaryTag;
     private String optionalTag = "";
 
