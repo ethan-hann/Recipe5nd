@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public class Constants
 {
@@ -12,13 +13,11 @@ public class Constants
     public static final String ID_SUFFIX = "/lookup.php?i="; //can lookup meals by their id
     public static final String INGREDIENT_SEARCH_SUFFIX = "/filter.php?i="; //can search by ingredient(s)
 
+    public static final Pattern validator = Pattern.compile("[^a-zA-Z ]");
+
     public static final String INGREDIENTS_FILE_NAME = "ingredients.json";
     public static final String FAVORITES_FILE_NAME = "favorites.json";
     public static final String SHOPPING_LIST_FILE_NAME = "shopping.json";
-
-    public static final char[] invalidCharacters = {'!', '@', '#', '$', '%', '^', '&', '*',
-            '(', ')', '-', '_', '+', '=', '+', '/', '\\', '[', ']', '{', '}', '|', ';', ':',
-            '\'', '"', ',', '<', '.', '>', '?', '`', '~'};
 
     public static boolean doesIngredientsFileExist;
     public static boolean doesFavoritesExist;
@@ -32,6 +31,7 @@ public class Constants
 
     public static ArrayList<Drawable> returnedRecipeImages;
     public static ArrayList<Ingredient> selectedIngredients;
+    public static ArrayList<Ingredient> usersIngredients;
     public static ArrayList<Recipe> returnedRecipesFromSearch;
     public static ArrayList<ShoppingList> shoppingLists;
 

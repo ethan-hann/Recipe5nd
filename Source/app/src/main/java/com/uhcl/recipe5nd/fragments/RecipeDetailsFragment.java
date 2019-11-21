@@ -14,6 +14,7 @@ import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
+import com.uhcl.recipe5nd.helperClasses.Helper;
 import com.uhcl.recipe5nd.helperClasses.Recipe;
 import com.uhcl.recipe5nd.helperClasses.StringFormatter;
 
@@ -30,12 +31,14 @@ public class RecipeDetailsFragment extends Fragment implements View.OnClickListe
     private TextView recipeIngredientsAndMeasuresText;
     private TextView recipeStepsText;
     private FloatingActionButton fab;
+    private Context context;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recipe_details, container, false);
+        context = rootView.getContext();
 
         imageView = rootView.findViewById(R.id.recipe_details_image);
         imageView.setImageDrawable(Constants.currentlyViewedRecipeImage);
@@ -48,7 +51,8 @@ public class RecipeDetailsFragment extends Fragment implements View.OnClickListe
         recipeNameText.setText(r.getStrMeal());
 
         recipeIngredientsAndMeasuresText = rootView.findViewById(R.id.recipe_ingredients_and_measures_text);
-        recipeIngredientsAndMeasuresText.setText(StringFormatter.formatRecipeIngredientsAndMeasures(r));
+        String stepsAndMeasures = StringFormatter.formatRecipeIngredientsAndMeasures(r);
+        recipeIngredientsAndMeasuresText.setText(stepsAndMeasures);
 
         recipeStepsText = rootView.findViewById(R.id.recipe_steps_text);
         recipeStepsText.setText(StringFormatter.formatRecipeSteps(r));

@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButton;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.adapters.SearchIngredientsAdapter;
 import com.uhcl.recipe5nd.backgroundTasks.FetchIds;
@@ -53,7 +54,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener
     private Context context;
     private TextView helpText;
     private RecyclerView recyclerView;
-    private Button searchButton;
+    private MaterialButton searchButton;
 
     @Nullable
     @Override

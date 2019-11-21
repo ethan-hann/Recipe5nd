@@ -72,8 +72,15 @@ public class ParseJSON
             String jString = String.format(Locale.US, "%d", j);
             String getIngParam = "strIngredient" + jString;
             String getMeaParam = "strMeasure" + jString;
-            r.addIngredient(objArray.getJSONObject(0).get(getIngParam).toString());
-            r.addMeasurement(objArray.getJSONObject(0).get(getMeaParam).toString());
+
+            if (objArray.getJSONObject(0).get(getIngParam).toString().equals("null")) {
+                break;
+            }
+            else
+            {
+                r.addIngredient(objArray.getJSONObject(0).get(getIngParam).toString());
+                r.addMeasurement(objArray.getJSONObject(0).get(getMeaParam).toString());
+            }
         }
 
         return r;

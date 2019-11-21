@@ -3,9 +3,21 @@ package com.uhcl.recipe5nd.helperClasses;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
+
+import com.uhcl.recipe5nd.R;
+
+import java.util.regex.Pattern;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -50,27 +62,6 @@ public class Helper
 
     public static boolean validateInput(String str)
     {
-        //checking for illegal chars
-        for (int i = 0; i < Constants.invalidCharacters.length; i++) {
-            for (int j = 0; j < str.length(); j++) {
-                if (str.charAt(j) == Constants.invalidCharacters[i])
-                {
-                    Log.d(TAG, "validateInput: " + str.charAt(j) + "\t" + Constants.invalidCharacters[i]);
-                    return false;
-                }
-            }
-        }
-
-        //checking for numbers
-        for (int i = 0; i < str.length(); i++)
-        {
-            try {
-                int a = Integer.parseInt(String.format("%c", str.charAt(i)));
-            } catch (NumberFormatException e)
-            {
-                return false;
-            }
-        }
-        return true;
+        return !Constants.validator.matcher(str).find();
     }
 }

@@ -35,5 +35,8 @@
     <string name="shopping_dialog_title_input">Enter Shopping List Title</string>
     <string name="shopping_dialog_item_edit">Editing Item</string>
     <string name="shopping_item_add">Add New Item</string>
+    <string name="ingredient_add_help">Add ingredients to your pantry below.</string>
+    <string name="add_a_new_ingredient">Add a new ingredient</string>
+    <string name="edit_ingredient">Edit ingredient</string>
 
 </resources>

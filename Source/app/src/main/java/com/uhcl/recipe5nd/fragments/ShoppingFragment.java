@@ -94,7 +94,7 @@ public class ShoppingFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         View dialogView =  LayoutInflater.from(context).inflate(R.layout.shopping_dialog, null);
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
         dialogBuilder.setCancelable(true);
         dialogBuilder.setView(dialogView);
         AlertDialog alert = dialogBuilder.create();
