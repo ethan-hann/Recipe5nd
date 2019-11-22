@@ -25,13 +25,16 @@ public class Constants
 
     public static Recipe currentlyViewedRecipe;
     public static Drawable currentlyViewedRecipeImage;
+
     public static ArrayList<Recipe> favoriteRecipes;
     public static ArrayList<Drawable> favoriteRecipeImages;
 
+    public static ArrayList<Recipe> returnedRecipesFromSearch;
     public static ArrayList<Drawable> returnedRecipeImages;
+
     public static ArrayList<Ingredient> selectedIngredients;
     public static ArrayList<Ingredient> usersIngredients;
-    public static ArrayList<Recipe> returnedRecipesFromSearch;
+
     public static ArrayList<ShoppingList> shoppingLists;
 
 
