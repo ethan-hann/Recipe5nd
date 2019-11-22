@@ -30,20 +30,20 @@ import androidx.recyclerview.widget.RecyclerView;
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder>
 {
     private static final String TAG = "RecipeAdapter: ";
-    private ArrayList<Recipe> returnedRecipes;
     private ArrayList<String> imageURLS;
-    private ImageView cardImage;
-    private TextView cardText;
-    private View rootView;
 
 
-    public RecipeAdapter(ArrayList<Recipe> recipes) {
-        if (recipes == null) {
-            returnedRecipes = new ArrayList<>();
+    public RecipeAdapter() {
+        if (Constants.returnedRecipesFromSearch == null)
+        {
+            Constants.returnedRecipesFromSearch = new ArrayList<>();
         }
-        this.returnedRecipes = recipes;
 
-        Constants.returnedRecipeImages = new ArrayList<>();
+        if (Constants.returnedRecipeImages == null)
+        {
+            Constants.returnedRecipeImages = new ArrayList<>();
+        }
+
 
         getRecipeImageURLS();
         if (!imageURLS.isEmpty()) 
@@ -60,7 +60,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     private void getRecipeImageURLS()
     {
         imageURLS = new ArrayList<>();
-        for (Recipe r : returnedRecipes)
+        for (Recipe r : Constants.returnedRecipesFromSearch)
         {
             imageURLS.add(r.getStrMealThumb());
         }
@@ -69,7 +69,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     @NonNull
     @Override
     public RecipeAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        rootView = LayoutInflater.from(parent.getContext())
+        View rootView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.returned_recipe_card, parent, false);
 
         return new ViewHolder(rootView);
@@ -77,53 +77,24 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RecipeAdapter.ViewHolder holder, int position) {
-        holder.bind(position);
         try {
-            //cardImage.setImageDrawable(Constants.returnedRecipeImages.get(position));
-            holder.cardView.setOnClickListener(new View.OnClickListener() {
-
-                //Switch to the recipe results fragment when a card view is clicked on
-                @Override
-                public void onClick(View view) {
-                    Constants.currentlyViewedRecipe = Constants.returnedRecipesFromSearch.get(position);
-                    try
-                    {
-                        Constants.currentlyViewedRecipeImage = Constants.returnedRecipeImages.get(position);
-                    } catch (IndexOutOfBoundsException e)
-                    {
-                        Log.e(TAG, "onClick: ", e);
-                    }
-
-
-                    AppCompatActivity activity = Helper.unwrap(view.getContext());
-                    activity
-                            .getSupportFragmentManager()
-                            .beginTransaction()
-                            .addToBackStack("recipe_results")
-                            .replace(R.id.fragment_container, new RecipeDetailsFragment())
-                            .commit();
-                }
-            });
-            Log.i(TAG, "onBindViewHolder: size of image array:" + Constants.returnedRecipeImages.size());
-
+            holder.bind(position);
         } catch (IndexOutOfBoundsException e) {
             Log.e(TAG, "onBindViewHolder: ", e);
         }
-
     }
 
     @Override
     public int getItemCount() {
-        if (returnedRecipes == null)
-        {
-            return 0;
-        }
-        return returnedRecipes.size();
+        return Constants.returnedRecipesFromSearch == null
+                ? 0 : Constants.returnedRecipesFromSearch.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder
     {
         MaterialCardView cardView;
+        ImageView cardImage;
+        TextView cardText;
 
         ViewHolder(View view)
         {
@@ -131,11 +102,33 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             cardView = view.findViewById(R.id.search_results_cardView);
         }
 
-        void bind(int pos) {
+        void bind(int pos)
+        {
             cardImage = cardView.findViewById(R.id.search_results_card_image);
             cardText = cardView.findViewById(R.id.search_results_card_text);
 
-            cardText.setText(returnedRecipes.get(pos).getStrMeal());
+            cardText.setText(Constants.returnedRecipesFromSearch.get(pos).getStrMeal());
+            
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Constants.currentlyViewedRecipe = Constants.returnedRecipesFromSearch.get(pos);
+                    try {
+                        Constants.currentlyViewedRecipeImage = Constants.returnedRecipeImages.get(pos);
+                    } catch (IndexOutOfBoundsException e) {
+                        Log.e(TAG, "onClick: ", e);
+                    }
+
+                    AppCompatActivity activity = Helper.unwrap(view.getContext());
+                    activity
+                            .getSupportFragmentManager()
+                            .beginTransaction()
+                            .addToBackStack("recipe_details")
+                            .replace(R.id.fragment_container, new RecipeDetailsFragment())
+                            .commit();
+                }
+            });
+
             try {
                 cardImage.setImageDrawable(Constants.returnedRecipeImages.get(pos));
             } catch (IndexOutOfBoundsException e) {
