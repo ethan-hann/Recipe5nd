@@ -126,7 +126,7 @@ public class ShoppingFragment extends Fragment implements View.OnClickListener
                     s.setTitle("New Shopping List");
                     s.setDate(Calendar.getInstance().getTime());
                     Constants.shoppingLists.add(s);
-                    String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, false);
+                    String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
                     fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
                 } else
                 {
