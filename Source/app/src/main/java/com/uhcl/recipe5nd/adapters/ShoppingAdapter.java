@@ -26,6 +26,7 @@ import com.uhcl.recipe5nd.helperClasses.ShoppingList;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ShoppingViewHolder>
 {
@@ -73,7 +74,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
         void bind(int position)
         {
             ShoppingList s = Constants.shoppingLists.get(position);
-            shoppingName.setText(s.getTitle());
+            shoppingName.setText(String.format(Locale.US, "%s:\n%d items", s.getTitle(), s.getItems().size()));
             shoppingDate.setText(s.getDate().toString());
 
             parent.setOnClickListener(new View.OnClickListener() {
