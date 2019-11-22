@@ -24,7 +24,7 @@ import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.fragments.EditIngredientsFragment;
 import com.uhcl.recipe5nd.fragments.SearchFragment;
 import com.uhcl.recipe5nd.fragments.ShoppingFragment;
-import com.uhcl.recipe5nd.fragments.ViewRecipesFragment;
+import com.uhcl.recipe5nd.fragments.FavoriteRecipesFragment;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Helper;
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_favorites:
             {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new ViewRecipesFragment()).commit();
+                        new FavoriteRecipesFragment()).commit();
                 break;
             }
             case R.id.nav_deleteData:
