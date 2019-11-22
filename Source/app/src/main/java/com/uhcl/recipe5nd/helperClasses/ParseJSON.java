@@ -46,7 +46,7 @@ public class ParseJSON
      * @return ArrayList of Recipes representing the parsed data
      * @throws JSONException : if the JSON is invalid or null and cannot be parsed successfully
      */
-    public static ArrayList<Recipe> parseFavoriteRecipes(String recipeJSON) throws JSONException
+    public static ArrayList<Recipe> parseLocalRecipes(String recipeJSON) throws JSONException
     {
         ArrayList<Recipe> recipes = new ArrayList<>();
         JSONArray objArray = new JSONArray(recipeJSON);
@@ -59,32 +59,29 @@ public class ParseJSON
         {
             Recipe r = new Recipe();
             JSONObject object = objArray.getJSONObject(i);
-            r.setId(object.get("idMeal").toString());
-            r.setStrMeal(object.get("strMeal").toString());
-            r.setStrDrinkAlternative(object.get("strDrinkAlternate").toString());
-            r.setStrCategory(object.get("strCategory").toString());
-            r.setStrArea(object.get("strArea").toString());
-            r.setStrInstructions(object.get("strInstructions").toString());
-            r.setStrMealThumb(object.get("strMealThumb").toString());
-            r.setStrTags(object.get("strTags").toString());
+            r.setId(object.get("id").toString());
+            r.setStrMeal(object.get("name").toString());
+            r.setStrMealThumb(object.get("strThumbnail").toString());
             r.setStrYoutube(object.get("strYoutube").toString());
-            r.setStrSource(object.get("strSource").toString());
 
-            for (int j = 1; j <= 20; j++) {
-                String jString = String.format(Locale.US, "%d", j);
-                String getIngParam = "strIngredient" + jString;
-                String getMeaParam = "strMeasure" + jString;
+            JSONArray ingredients = object.getJSONArray("ingredients");
+            for (int j = 0; j <= 20; j++)
+            {
+                try {
+                    JSONObject ingObject = ingredients.getJSONObject(j);
+                    if (ingObject.get("name").toString().equals("null") || ingObject.get("name").equals("")) {
+                        break;
+                    } else {
+                        r.addIngredient(ingObject.get("name").toString(), ingObject.get("measure").toString());
 
-                if (objArray.getJSONObject(0).get(getIngParam).toString().equals("null")) {
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "parseLocalRecipes: ", e);
                     break;
-                }
-                else
-                {
-                    r.addIngredient(object.get(getIngParam).toString());
-                    r.addMeasurement(object.get(getMeaParam).toString());
                 }
             }
 
+            r.setStrInstructions(object.get("instructions").toString());
             recipes.add(r);
         }
 
@@ -129,8 +126,9 @@ public class ParseJSON
             }
             else
             {
-                r.addIngredient(objArray.getJSONObject(0).get(getIngParam).toString());
-                r.addMeasurement(objArray.getJSONObject(0).get(getMeaParam).toString());
+                String name = objArray.getJSONObject(0).get(getIngParam).toString();
+                String measurement = objArray.getJSONObject(0).get(getMeaParam).toString();
+                r.addIngredient(name, measurement);
             }
         }
 
