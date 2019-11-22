@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.uhcl.recipe5nd.R;
-import com.uhcl.recipe5nd.activities.MainActivity;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
@@ -34,7 +33,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return Constants.usersIngredients.size();
+        return Constants.usersIngredients == null ? 0 : Constants.usersIngredients.size();
     }
 
     @Override
