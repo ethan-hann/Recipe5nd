@@ -15,7 +15,6 @@ import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
-import com.uhcl.recipe5nd.helperClasses.Recipe;
 import com.uhcl.recipe5nd.helperClasses.StringFormatter;
 
 import java.util.ArrayList;
@@ -27,11 +26,6 @@ import androidx.fragment.app.Fragment;
 
 public class RecipeDetailsFragment extends Fragment implements View.OnClickListener
 {
-    private ImageView imageView;
-    private TextView recipeNameText;
-    private TextView recipeIngredientsAndMeasuresText;
-    private TextView recipeStepsText;
-    private FloatingActionButton fab;
     private Context context;
 
     @Override
@@ -47,30 +41,23 @@ public class RecipeDetailsFragment extends Fragment implements View.OnClickListe
         View rootView = inflater.inflate(R.layout.fragment_recipe_details, container, false);
         context = rootView.getContext();
 
-        imageView = rootView.findViewById(R.id.recipe_details_image);
+        ImageView imageView = rootView.findViewById(R.id.recipe_details_image);
         imageView.setImageDrawable(Constants.currentlyViewedRecipeImage);
-        imageView.setBackgroundColor(Color.argb(150,247, 236, 205));
-        //ConstraintLayout recipeImageContainer = rootView.findViewById(R.id.recipe_imageView_container);
-        //recipeImageContainer.setBackground(Constants.currentlyViewedRecipeImage);
 
-        fab = rootView.findViewById(R.id.favorite_recipe_fab);
+        FloatingActionButton fab = rootView.findViewById(R.id.favorite_recipe_fab);
         fab.setOnClickListener(this);
 
-        Recipe r = Constants.currentlyViewedRecipe;
-        recipeNameText = rootView.findViewById(R.id.recipe_name_text);
-        recipeNameText.setText(r.getStrMeal());
-
-        recipeIngredientsAndMeasuresText = rootView.findViewById(R.id.recipe_ingredients_and_measures_text);
-        String stepsAndMeasures = StringFormatter.formatRecipeIngredientsAndMeasures(r);
+        TextView recipeIngredientsAndMeasuresText = rootView.findViewById(R.id.recipe_ingredients_and_measures_text);
+        String stepsAndMeasures = StringFormatter.formatRecipeIngredientsAndMeasures(Constants.currentlyViewedRecipe);
         recipeIngredientsAndMeasuresText.setText(stepsAndMeasures);
 
-        recipeStepsText = rootView.findViewById(R.id.recipe_steps_text);
-        recipeStepsText.setText(StringFormatter.formatRecipeSteps(r));
+        TextView recipeStepsText = rootView.findViewById(R.id.recipe_steps_text);
+        recipeStepsText.setText(StringFormatter.formatRecipeSteps(Constants.currentlyViewedRecipe));
 
         return rootView;
     }
 
-    private boolean addRecipeToFavorites(Context context)
+    private boolean addRecipeToFavorites()
     {
         if (Constants.favoriteRecipes == null)
         {
@@ -85,7 +72,7 @@ public class RecipeDetailsFragment extends Fragment implements View.OnClickListe
         Constants.favoriteRecipes.add(Constants.currentlyViewedRecipe);
         Constants.favoriteRecipeImages.add(Constants.currentlyViewedRecipeImage);
 
-        String json = CreateJSON.createRecipeJSON(context, Constants.favoriteRecipes, false);
+        String json = CreateJSON.createRecipeJSON(context, Constants.favoriteRecipes, true);
         FileHelper fileHelper = new FileHelper();
         return fileHelper.saveFile(json, context, Constants.FAVORITES_FILE_NAME);
     }
@@ -93,18 +80,17 @@ public class RecipeDetailsFragment extends Fragment implements View.OnClickListe
     @Override
     public void onClick(View view)
     {
-        Context context = view.getContext();
-        boolean success = addRecipeToFavorites(context);
+        boolean success = addRecipeToFavorites();
 
         if (!success)
         {
-            Toast t = Toast.makeText(context, "Could not save recipe to favorites.", Toast.LENGTH_LONG);
-            t.show();
+            String toastText = "Could not save recipe to favorites.";
+            Toast.makeText(context, toastText, Toast.LENGTH_LONG).show();
         }
         else
         {
-            Toast t = Toast.makeText(context, "Recipe Saved!", Toast.LENGTH_LONG);
-            t.show();
+            String toastText = "Recipe saved!";
+            Toast.makeText(context, toastText, Toast.LENGTH_LONG).show();
         }
     }
 }
