@@ -17,13 +17,11 @@ public class Recipe
     private String strYoutube = "";
     private String strSource = "";
 
-    private ArrayList<String> ingredients;
-    private ArrayList<String> measurements;
+    private ArrayList<RecipeIngredient> ingredientsAndMeasurements;
     private ArrayList<String> instructions; //tokenized instructions from 'strInstructions'
 
     public Recipe() {
-        ingredients = new ArrayList<>();
-        measurements = new ArrayList<>();
+        ingredientsAndMeasurements = new ArrayList<>();
         instructions = new ArrayList<>();
     }
 
@@ -35,12 +33,12 @@ public class Recipe
         return instructions;
     }
 
-    public void addIngredient(String ingredient) {
-        ingredients.add(ingredient);
+    public void addIngredient(RecipeIngredient i) {
+        ingredientsAndMeasurements.add(i);
     }
 
-    public void addMeasurement(String measurement) {
-        measurements.add(measurement);
+    public void addIngredient(String name, String measurement) {
+        ingredientsAndMeasurements.add(new RecipeIngredient(name, measurement));
     }
 
     public void setId(String id) {
@@ -123,12 +121,8 @@ public class Recipe
         return strSource;
     }
 
-    public ArrayList<String> getIngredients() {
-        return ingredients;
-    }
-
-    public ArrayList<String> getMeasurements() {
-        return measurements;
+    public ArrayList<RecipeIngredient> getIngredientsAndMeasurements() {
+        return ingredientsAndMeasurements;
     }
 
     public ArrayList<String> getInstructions() {
