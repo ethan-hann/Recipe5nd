@@ -40,7 +40,7 @@ public class SearchResultsFragment extends Fragment
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        recyclerAdapter = new RecipeAdapter(Constants.returnedRecipesFromSearch);
+        recyclerAdapter = new RecipeAdapter();
 
         recyclerView.setAdapter(recyclerAdapter);
 
