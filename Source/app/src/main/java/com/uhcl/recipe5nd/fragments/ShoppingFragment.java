@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -126,6 +125,7 @@ public class ShoppingFragment extends Fragment implements View.OnClickListener
                     s.setTitle("New Shopping List");
                     s.setDate(Calendar.getInstance().getTime());
                     Constants.shoppingLists.add(s);
+                    Collections.sort(Constants.shoppingLists, new SortBasedOnDate());
                     String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
                     fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
                 } else
@@ -134,6 +134,7 @@ public class ShoppingFragment extends Fragment implements View.OnClickListener
                     s.setTitle(text.getText().toString());
                     s.setDate(Calendar.getInstance().getTime());
                     Constants.shoppingLists.add(s);
+                    Collections.sort(Constants.shoppingLists, new SortBasedOnDate());
                     String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, false);
                     fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
                 }

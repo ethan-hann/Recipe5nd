@@ -24,10 +24,8 @@ public class Constants
     public static boolean doesShoppingListExist;
 
     public static Recipe currentlyViewedRecipe;
-    public static Drawable currentlyViewedRecipeImage;
 
     public static ArrayList<Recipe> favoriteRecipes;
-    public static ArrayList<Drawable> favoriteRecipeImages;
 
     public static ArrayList<Recipe> returnedRecipesFromSearch;
     public static ArrayList<Drawable> returnedRecipeImages;

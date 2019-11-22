@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,9 +22,9 @@ import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Helper;
 import com.uhcl.recipe5nd.helperClasses.ShoppingList;
+import com.uhcl.recipe5nd.helperClasses.SortBasedOnDate;
 
-import java.io.File;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 
 public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ShoppingViewHolder>
@@ -74,7 +73,8 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
         void bind(int position)
         {
             ShoppingList s = Constants.shoppingLists.get(position);
-            shoppingName.setText(String.format(Locale.US, "%s:\n%d items", s.getTitle(), s.getItems().size()));
+            shoppingName.setText(String.format(Locale.US, "%s\n%d items", s.getTitle(), s.getItems().size()));
+            shoppingName.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             shoppingDate.setText(s.getDate().toString());
 
             parent.setOnClickListener(new View.OnClickListener() {
@@ -114,6 +114,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
                             Constants.shoppingLists.remove(position);
                             String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
                             fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
+                            Collections.sort(Constants.shoppingLists, new SortBasedOnDate());
                             notifyDataSetChanged();
                             alert.dismiss();
                         }
@@ -158,6 +159,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
                             s.setTitle(dialogEditText.getText().toString());
                             String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
                             fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
+                            Collections.sort(Constants.shoppingLists, new SortBasedOnDate());
                             notifyDataSetChanged();
                             alert.dismiss();
                         }

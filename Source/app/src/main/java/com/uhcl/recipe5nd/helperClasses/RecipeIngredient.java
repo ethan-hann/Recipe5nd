@@ -2,20 +2,19 @@ package com.uhcl.recipe5nd.helperClasses;
 
 import androidx.annotation.NonNull;
 
+/**
+ * A local recipe ingredient is defined by this class. This is used in the searching and the
+ * saving of recipes
+ */
 public class RecipeIngredient
 {
     private String name;
     private String measurement;
 
-    public RecipeIngredient(String name, String measurement)
+    RecipeIngredient(String name, String measurement)
     {
         this.name = name;
         this.measurement = measurement;
-    }
-
-    public RecipeIngredient()
-    {
-
     }
 
     public String getName() {

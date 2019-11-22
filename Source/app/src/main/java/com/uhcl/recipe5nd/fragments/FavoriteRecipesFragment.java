@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.adapters.FavoriteRecipeAdapter;
-import com.uhcl.recipe5nd.backgroundTasks.FetchFavoriteImages;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.ParseJSON;
@@ -71,20 +70,10 @@ public class FavoriteRecipesFragment extends Fragment {
         if (Constants.doesFavoritesExist) {
             try {
                 String jsonResponse = fileHelper.readFile(context, Constants.FAVORITES_FILE_NAME);
-                Log.d(TAG, "getFavoriteRecipes: " + jsonResponse);
                 Constants.favoriteRecipes = ParseJSON.parseLocalRecipes(jsonResponse);
-                if (Constants.favoriteRecipes != null)
-                {
-                    String[] urls = new String[Constants.favoriteRecipes.size()];
-                    for (int i = 0; i < urls.length; i++) {
-                        urls[i] = Constants.favoriteRecipes.get(i).getStrMealThumb();
-                    }
-                    new FetchFavoriteImages().execute(urls);
-                }
-                else
+                if (Constants.favoriteRecipes == null)
                 {
                     Constants.favoriteRecipes = new ArrayList<>();
-                    Constants.favoriteRecipeImages = new ArrayList<>();
                 }
 
             } catch (JSONException e) {

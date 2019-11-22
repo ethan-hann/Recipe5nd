@@ -22,6 +22,9 @@ import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Helper;
 import com.uhcl.recipe5nd.helperClasses.ShoppingList;
 
+//TODO: change this class to use a global Constants.currentlyViewedShoppingList
+//      to match the other classes.
+
 public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdapter.ShoppingItemViewHolder>
 {
     private static final String TAG = "ShoppingItemsAdapter: ";

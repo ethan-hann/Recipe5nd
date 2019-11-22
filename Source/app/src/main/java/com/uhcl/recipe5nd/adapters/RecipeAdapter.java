@@ -8,8 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
+import com.squareup.picasso.Picasso;
 import com.uhcl.recipe5nd.R;
-import com.uhcl.recipe5nd.backgroundTasks.FetchImages;
 import com.uhcl.recipe5nd.fragments.RecipeDetailsFragment;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.Helper;
@@ -44,14 +44,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             Constants.returnedRecipeImages = new ArrayList<>();
         }
 
-
         getRecipeImageURLS();
-        if (!imageURLS.isEmpty()) 
-        {
-            String[] urls = new String[imageURLS.size()];
-            urls = imageURLS.toArray(urls);
-            new FetchImages().execute(urls);
-        }
     }
 
     /**
@@ -113,11 +106,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                 @Override
                 public void onClick(View view) {
                     Constants.currentlyViewedRecipe = Constants.returnedRecipesFromSearch.get(pos);
-                    try {
-                        Constants.currentlyViewedRecipeImage = Constants.returnedRecipeImages.get(pos);
-                    } catch (IndexOutOfBoundsException e) {
-                        Log.e(TAG, "onClick: ", e);
-                    }
 
                     AppCompatActivity activity = Helper.unwrap(view.getContext());
                     activity
@@ -129,11 +117,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                 }
             });
 
-            try {
-                cardImage.setImageDrawable(Constants.returnedRecipeImages.get(pos));
-            } catch (IndexOutOfBoundsException e) {
-                Log.e(TAG, "bind: ", e);
-            }
+            String url = imageURLS.get(pos);
+            Picasso.get().load(url).into(cardImage);
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.uhcl.recipe5nd.fragments;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.squareup.picasso.Picasso;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
@@ -42,7 +42,7 @@ public class RecipeDetailsFragment extends Fragment implements View.OnClickListe
         context = rootView.getContext();
 
         ImageView imageView = rootView.findViewById(R.id.recipe_details_image);
-        imageView.setImageDrawable(Constants.currentlyViewedRecipeImage);
+        Picasso.get().load(Constants.currentlyViewedRecipe.getStrMealThumb()).into(imageView);
 
         FloatingActionButton fab = rootView.findViewById(R.id.favorite_recipe_fab);
         fab.setOnClickListener(this);
@@ -64,13 +64,7 @@ public class RecipeDetailsFragment extends Fragment implements View.OnClickListe
             Constants.favoriteRecipes = new ArrayList<>();
         }
 
-        if (Constants.favoriteRecipeImages == null)
-        {
-            Constants.favoriteRecipeImages = new ArrayList<>();
-        }
-
         Constants.favoriteRecipes.add(Constants.currentlyViewedRecipe);
-        Constants.favoriteRecipeImages.add(Constants.currentlyViewedRecipeImage);
 
         String json = CreateJSON.createRecipeJSON(context, Constants.favoriteRecipes, true);
         FileHelper fileHelper = new FileHelper();

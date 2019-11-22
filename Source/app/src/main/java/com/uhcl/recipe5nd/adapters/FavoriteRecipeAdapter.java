@@ -13,14 +13,32 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
+import com.squareup.picasso.Picasso;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.fragments.FavoriteRecipeDetailsFragment;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.Helper;
+import com.uhcl.recipe5nd.helperClasses.Recipe;
+
+import java.util.ArrayList;
 
 public class FavoriteRecipeAdapter extends RecyclerView.Adapter<FavoriteRecipeAdapter.ViewHolder>{
     private static final String TAG = "FavoriteRecipeAdapter: ";
     private Context context;
+    private ArrayList<String> imageURLS;
+
+    public FavoriteRecipeAdapter() {
+        getRecipeImageURLS();
+    }
+
+    private void getRecipeImageURLS()
+    {
+        imageURLS = new ArrayList<>();
+        for (Recipe r : Constants.favoriteRecipes)
+        {
+            imageURLS.add(r.getStrMealThumb());
+        }
+    }
 
     @Override
     public int getItemCount() {
@@ -68,11 +86,6 @@ public class FavoriteRecipeAdapter extends RecyclerView.Adapter<FavoriteRecipeAd
                 @Override
                 public void onClick(View v) {
                     Constants.currentlyViewedRecipe = Constants.favoriteRecipes.get(pos);
-                    try {
-                        Constants.currentlyViewedRecipeImage = Constants.favoriteRecipeImages.get(pos);
-                    } catch (IndexOutOfBoundsException e) {
-                        Log.e(TAG, "onClick: ", e);
-                    }
 
                     AppCompatActivity activity = Helper.unwrap(context);
                     activity
@@ -84,11 +97,8 @@ public class FavoriteRecipeAdapter extends RecyclerView.Adapter<FavoriteRecipeAd
                 }
             });
 
-            try {
-                cardImage.setImageDrawable(Constants.favoriteRecipeImages.get(pos));
-            } catch (IndexOutOfBoundsException e) {
-                Log.e(TAG, "bind: ", e);
-            }
+            String url = imageURLS.get(pos);
+            Picasso.get().load(url).into(cardImage);
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.uhcl.recipe5nd.fragments;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,18 +13,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.squareup.picasso.Picasso;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
-import com.uhcl.recipe5nd.helperClasses.Recipe;
 import com.uhcl.recipe5nd.helperClasses.StringFormatter;
-
-import java.util.ArrayList;
 
 public class FavoriteRecipeDetailsFragment extends Fragment implements View.OnClickListener
 {
@@ -48,7 +44,7 @@ public class FavoriteRecipeDetailsFragment extends Fragment implements View.OnCl
         context = rootView.getContext();
 
         ImageView imageView = rootView.findViewById(R.id.recipe_details_image);
-        imageView.setImageDrawable(Constants.currentlyViewedRecipeImage);
+        Picasso.get().load(Constants.currentlyViewedRecipe.getStrMealThumb()).into(imageView);
 
         FloatingActionButton fab = rootView.findViewById(R.id.favorite_recipe_fab);
         fab.setOnClickListener(this);
@@ -60,17 +56,14 @@ public class FavoriteRecipeDetailsFragment extends Fragment implements View.OnCl
 
         TextView recipeStepsText = rootView.findViewById(R.id.recipe_steps_text);
         recipeStepsText.setText(StringFormatter.formatRecipeSteps(Constants.currentlyViewedRecipe));
-        //fab.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.red));
         return rootView;
     }
 
     private boolean removeRecipeFromFavorites()
     {
-        if (Constants.favoriteRecipes != null && Constants.favoriteRecipeImages != null) {
+        if (Constants.favoriteRecipes != null) {
             Constants.favoriteRecipes.remove(Constants.currentlyViewedRecipe);
-            Constants.favoriteRecipeImages.remove(Constants.currentlyViewedRecipeImage);
             Constants.currentlyViewedRecipe = null;
-            Constants.currentlyViewedRecipeImage = null;
 
             String json = CreateJSON.createRecipeJSON(context, Constants.favoriteRecipes, true);
             fileHelper.saveFile(json, context, Constants.FAVORITES_FILE_NAME);
