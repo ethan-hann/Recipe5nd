@@ -40,10 +40,12 @@ public class CreateJSON
                     recipeObject.put("strYoutube", r.getStrYoutube());
 
                     JSONArray ingredients = new JSONArray();
-                    for (int i = 0; i < r.getIngredients().size(); i++) {
+                    for (int i = 0; i < r.getIngredientsAndMeasurements().size(); i++) {
                         JSONObject ingredientObject = new JSONObject();
-                        ingredientObject.put("name", r.getIngredients().get(i));
-                        ingredientObject.put("measure", r.getMeasurements().get(i));
+                        ingredientObject.put("name",
+                                r.getIngredientsAndMeasurements().get(i).getName());
+                        ingredientObject.put("measure",
+                                r.getIngredientsAndMeasurements().get(i).getMeasurement());
                         ingredients.put(ingredientObject);
                     }
                     recipeObject.put("ingredients", ingredients);
@@ -65,10 +67,12 @@ public class CreateJSON
                     recipeObject.put("strYoutube", r.getStrYoutube());
 
                     JSONArray ingredients = new JSONArray();
-                    for (int i = 0; i < r.getIngredients().size(); i++) {
+                    for (int i = 0; i < r.getIngredientsAndMeasurements().size(); i++) {
                         JSONObject ingredientObject = new JSONObject();
-                        ingredientObject.put("name", r.getIngredients().get(i));
-                        ingredientObject.put("measure", r.getMeasurements().get(i));
+                        ingredientObject.put("name",
+                                r.getIngredientsAndMeasurements().get(i).getName());
+                        ingredientObject.put("measure",
+                                r.getIngredientsAndMeasurements().get(i).getMeasurement());
                         ingredients.put(ingredientObject);
                     }
                     recipeObject.put("ingredients", ingredients);
