@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,18 +36,18 @@ public class ShoppingItemsFragment extends Fragment implements View.OnClickListe
     private RecyclerView recyclerView;
     private FloatingActionButton addButton;
     private ShoppingItemsAdapter shoppingItemsAdapter;
-    private ShoppingList shoppingList;
     private Context context;
     private FileHelper fileHelper = new FileHelper();
 
-    public ShoppingItemsFragment(ShoppingList shoppingList) {
-        this.shoppingList = shoppingList;
+    public ShoppingItemsFragment() {
+        //Required empty constructor for Android
+        //This is because we overwrite the default constructor below
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(shoppingList.getTitle());
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Constants.currentlyViewedShoppingList.getTitle());
     }
 
     @NonNull
@@ -61,7 +62,7 @@ public class ShoppingItemsFragment extends Fragment implements View.OnClickListe
 
         recyclerView = rootView.findViewById(R.id.shoppingList_recycler_view);
 
-        shoppingItemsAdapter = new ShoppingItemsAdapter(shoppingList);
+        shoppingItemsAdapter = new ShoppingItemsAdapter();
         recyclerView.setAdapter(shoppingItemsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipe());
@@ -81,8 +82,8 @@ public class ShoppingItemsFragment extends Fragment implements View.OnClickListe
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 int position = viewHolder.getAdapterPosition();
-                shoppingList.getItems().remove(position);
-                shoppingList.getIsCheckedArray().put(position, false);
+                Constants.currentlyViewedShoppingList.getItems().remove(position);
+                Constants.currentlyViewedShoppingList.getIsCheckedArray().put(position, false);
                 String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
                 fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
                 shoppingItemsAdapter.notifyDataSetChanged();
@@ -117,7 +118,7 @@ public class ShoppingItemsFragment extends Fragment implements View.OnClickListe
                 if (TextUtils.isEmpty(dialogEditText.getText())) {
                     Toast.makeText(context, "Item cannot be empty.", Toast.LENGTH_SHORT).show();
                 }else {
-                    shoppingList.addItem(dialogEditText.getText().toString());
+                    Constants.currentlyViewedShoppingList.addItem(dialogEditText.getText().toString());
                     String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
                     fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
                 }

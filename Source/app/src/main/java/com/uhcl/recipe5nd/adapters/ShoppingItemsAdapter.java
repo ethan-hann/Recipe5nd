@@ -20,7 +20,6 @@ import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Helper;
-import com.uhcl.recipe5nd.helperClasses.ShoppingList;
 
 //TODO: change this class to use a global Constants.currentlyViewedShoppingList
 //      to match the other classes.
@@ -28,14 +27,8 @@ import com.uhcl.recipe5nd.helperClasses.ShoppingList;
 public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdapter.ShoppingItemViewHolder>
 {
     private static final String TAG = "ShoppingItemsAdapter: ";
-    private ShoppingList shoppingList;
     private Context context;
     private FileHelper fileHelper = new FileHelper();
-
-    public ShoppingItemsAdapter(ShoppingList shoppingList)
-    {
-        this.shoppingList = shoppingList;
-    }
 
     @NonNull
     @Override
@@ -60,7 +53,7 @@ public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdap
     }
 
     @Override
-    public int getItemCount(){return shoppingList.getItems().size();}
+    public int getItemCount(){return Constants.currentlyViewedShoppingList.getItems().size();}
 
     class ShoppingItemViewHolder extends RecyclerView.ViewHolder
     {
@@ -76,19 +69,19 @@ public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdap
 
         void bind(int position)
         {
-            itemTextView.setText(shoppingList.getItems().get(position));
+            itemTextView.setText(Constants.currentlyViewedShoppingList.getItems().get(position));
             itemTextView.setPaintFlags(0);
 
-            if (shoppingList.isChecked(position)) {
+            if (Constants.currentlyViewedShoppingList.isChecked(position)) {
                 itemTextView.setPaintFlags(itemTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
 
             itemTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!shoppingList.isChecked(position))
+                    if (!Constants.currentlyViewedShoppingList.isChecked(position))
                     {
-                        shoppingList.setChecked(position, true);
+                        Constants.currentlyViewedShoppingList.setChecked(position, true);
                         itemTextView.setPaintFlags(itemTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                         String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
                         fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
@@ -96,7 +89,7 @@ public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdap
                     }
                     else
                     {
-                        shoppingList.setChecked(position, false);
+                        Constants.currentlyViewedShoppingList.setChecked(position, false);
                         itemTextView.setPaintFlags(0);
                         String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
                         fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
@@ -116,8 +109,8 @@ public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdap
                     AlertDialog alert = dialogBuilder.create();
 
                     EditText dialogEditText = dialogView.findViewById(R.id.shoppingDialogEditText);
-                    dialogEditText.setText(shoppingList.getItems().get(position));
-                    dialogEditText.setSelection(shoppingList.getItems().get(position).length());
+                    dialogEditText.setText(Constants.currentlyViewedShoppingList.getItems().get(position));
+                    dialogEditText.setSelection(Constants.currentlyViewedShoppingList.getItems().get(position).length());
                     dialogEditText.setVisibility(View.VISIBLE);
                     Helper.showKeyboard(dialogEditText);
 
@@ -130,8 +123,8 @@ public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdap
                     okButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            shoppingList.getItems().remove(position);
-                            shoppingList.getItems().add(position, dialogEditText.getText().toString());
+                            Constants.currentlyViewedShoppingList.getItems().remove(position);
+                            Constants.currentlyViewedShoppingList.getItems().add(position, dialogEditText.getText().toString());
                             String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
                             fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
                             notifyDataSetChanged();
