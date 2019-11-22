@@ -34,6 +34,7 @@ public class Constants
     public static ArrayList<Ingredient> usersIngredients;
 
     public static ArrayList<ShoppingList> shoppingLists;
+    public static ShoppingList currentlyViewedShoppingList;
 
 
     public static void init(Context context) {

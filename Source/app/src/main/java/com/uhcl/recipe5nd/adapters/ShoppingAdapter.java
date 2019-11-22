@@ -80,11 +80,13 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
             parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Constants.currentlyViewedShoppingList = Constants.shoppingLists.get(position);
+
                     AppCompatActivity activity = Helper.unwrap(view.getContext());
                     activity.getSupportFragmentManager()
                             .beginTransaction()
                             .addToBackStack("shopping_list")
-                            .replace(R.id.fragment_container, new ShoppingItemsFragment(s))
+                            .replace(R.id.fragment_container, new ShoppingItemsFragment())
                             .commit();
                 }
             });

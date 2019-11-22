@@ -80,6 +80,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener
         getIngredientsFromPantry(context);
         if (ingredientsList != null)
         {
+            Constants.selectedIngredients = new ArrayList<>();
             recyclerAdapter = new SearchIngredientsAdapter(ingredientsList);
             recyclerAdapter.notifyDataSetChanged();
 
