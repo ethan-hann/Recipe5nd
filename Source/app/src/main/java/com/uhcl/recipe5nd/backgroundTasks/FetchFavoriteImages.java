@@ -25,9 +25,6 @@ public class FetchFavoriteImages extends AsyncTask<String, Integer, ArrayList<Dr
     }
 
     private ArrayList<Drawable> downloadFavoriteImages(String[] urls) {
-        for (String s : urls) {
-            System.out.println(s);
-        }
 
         if (Constants.favoriteRecipeImages == null) {
             Constants.favoriteRecipeImages = new ArrayList<>();
@@ -37,7 +34,8 @@ public class FetchFavoriteImages extends AsyncTask<String, Integer, ArrayList<Dr
         InputStream in;
         BufferedInputStream bufferedInputStream;
 
-        for (String s : urls) {
+        for (String s : urls)
+        {
             try {
                 imageURL = new URL(s);
                 in = imageURL.openStream();
