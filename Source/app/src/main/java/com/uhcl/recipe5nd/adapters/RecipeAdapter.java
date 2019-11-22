@@ -108,7 +108,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             cardText = cardView.findViewById(R.id.search_results_card_text);
 
             cardText.setText(Constants.returnedRecipesFromSearch.get(pos).getStrMeal());
-            
+
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
