@@ -43,7 +43,7 @@
     <string name="delete_saved_data">Delete Saved Data</string>
     <string name="about_text">This application was created by UHCL students.\nIt is open-source and is available on GitHub at: https://github.com/ethan-hann/Recipe5nd</string>
     <string name="about_the_app">About the App</string>
-    <string name="add_missing_ingredients_to_shopping">Add Missing Ingredients to Shopping List</string>
     <string name="add_to_shopping_list">Add to Shopping List</string>
+    <string name="searching_for_recipes">Searching for recipes...</string>
 
 </resources>

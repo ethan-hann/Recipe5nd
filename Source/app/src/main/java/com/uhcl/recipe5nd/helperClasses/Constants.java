@@ -25,15 +25,15 @@ public class Constants
 
     public static Recipe currentlyViewedRecipe;
 
-    public static ArrayList<Recipe> favoriteRecipes;
+    public static ArrayList<Recipe> favoriteRecipes = new ArrayList<>();
 
-    public static ArrayList<Recipe> returnedRecipesFromSearch;
-    public static ArrayList<Drawable> returnedRecipeImages;
+    public static ArrayList<Recipe> returnedRecipesFromSearch = new ArrayList<>();
+    public static ArrayList<Drawable> returnedRecipeImages = new ArrayList<>();
 
-    public static ArrayList<Ingredient> selectedIngredients;
-    public static ArrayList<Ingredient> usersIngredients;
+    public static ArrayList<Ingredient> selectedIngredients = new ArrayList<>();
+    public static ArrayList<Ingredient> usersIngredients = new ArrayList<>();
 
-    public static ArrayList<ShoppingList> shoppingLists;
+    public static ArrayList<ShoppingList> shoppingLists = new ArrayList<>();
     public static ShoppingList currentlyViewedShoppingList;
 
 

@@ -1,11 +1,13 @@
 package com.uhcl.recipe5nd.fragments;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,10 +15,10 @@ import com.google.android.material.button.MaterialButton;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.adapters.SearchIngredientsAdapter;
 import com.uhcl.recipe5nd.backgroundTasks.FetchIds;
-import com.uhcl.recipe5nd.backgroundTasks.FetchRecipe;
 import com.uhcl.recipe5nd.helperClasses.APIConnector;
 import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
+import com.uhcl.recipe5nd.helperClasses.Helper;
 import com.uhcl.recipe5nd.helperClasses.Ingredient;
 import com.uhcl.recipe5nd.helperClasses.ParseJSON;
 import com.uhcl.recipe5nd.helperClasses.QueryType;
@@ -24,6 +26,8 @@ import com.uhcl.recipe5nd.helperClasses.Recipe;
 import com.uhcl.recipe5nd.helperClasses.SortBasedOnName;
 
 import org.json.JSONException;
+
+import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -53,8 +57,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener
 
     private Context context;
     private TextView helpText;
+    private TextView searchProgressText;
     private RecyclerView recyclerView;
     private MaterialButton searchButton;
+    private ProgressBar progressBar;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -67,8 +73,15 @@ public class SearchFragment extends Fragment implements View.OnClickListener
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
-        helpText = rootView.findViewById(R.id.search_help_text);
         context = getContext();
+        helpText = rootView.findViewById(R.id.search_help_text);
+        progressBar = rootView.findViewById(R.id.progressBar);
+        searchButton = rootView.findViewById(R.id.search_button);
+        searchProgressText = rootView.findViewById(R.id.search_progress_text);
+
+        progressBar.setVisibility(View.GONE);
+        searchProgressText.setVisibility(View.GONE);
+        searchButton.setVisibility(View.VISIBLE);
 
         //get a reference to recyclerView
         recyclerView = rootView.findViewById(R.id.recycler_view);
@@ -91,7 +104,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener
             recyclerView.setItemAnimator(new DefaultItemAnimator());
         }
 
-        searchButton = rootView.findViewById(R.id.search_button);
+
 
         //Search button functionality
         searchButton.setOnClickListener(this);
@@ -176,26 +189,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener
                         recipeQueryURLS[i] = new URL(recipeQueries[i]);
                     }
 
-                    ArrayList<Recipe> recipes = new FetchRecipe().execute(recipeQueryURLS).get();
+                    new FetchRecipe(this).execute(recipeQueryURLS);
 
-                    if (recipes != null) {
-                        Constants.returnedRecipesFromSearch = recipes;
-
-                        //Switch to the search results fragment and add to the stack
-                        //This allows the use of the back button to return to this Fragment
-                        try {
-                            getFragmentManager().beginTransaction()
-                                    .addToBackStack("searchResults")
-                                    .replace(R.id.fragment_container, new SearchResultsFragment())
-                                    .commit();
-                        } catch (NullPointerException e) {
-                            Log.e(TAG, "onClick: ", e);
-                        }
-
-                        toastText = String.format(Locale.US, "Search returned %d recipes",
-                                recipes.size());
-                        Toast.makeText(context, toastText, Toast.LENGTH_LONG).show();
-                    }
                 } else {
                     toastText = "No recipes were found with those ingredients";
                     Toast.makeText(context, toastText, Toast.LENGTH_LONG).show();
@@ -203,6 +198,100 @@ public class SearchFragment extends Fragment implements View.OnClickListener
 
             } catch (MalformedURLException | ExecutionException | InterruptedException e) {
                 Log.e(TAG, "onClick: ", e);
+            }
+        }
+    }
+
+    /**
+     * Inner class which handles fetching recipes from API
+     * A weak reference of the outer-class SearchFragment is obtained to interact
+     * with UI elements on the background thread this inner class creates.
+     */
+    private static class FetchRecipe extends AsyncTask<URL, Integer, ArrayList<Recipe>>
+    {
+        private static final String TAG = "FetchRecipe";
+        private WeakReference<SearchFragment> fragmentWeakReference;
+
+        FetchRecipe(SearchFragment fragment) {
+            fragmentWeakReference = new WeakReference<>(fragment);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            SearchFragment f = fragmentWeakReference.get();
+            if (f != null && !f.isDetached() && !f.isRemoving())
+            {
+                f.helpText.setText(R.string.searching_for_recipes);
+                f.progressBar.setVisibility(View.VISIBLE);
+                f.searchProgressText.setVisibility(View.VISIBLE);
+                f.searchButton.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        protected ArrayList<Recipe> doInBackground(URL... urls)
+        {
+            ArrayList<Recipe> recipes = new ArrayList<>();
+            try {
+                for (int i = 0; i < urls.length; i++)
+                {
+                    boolean canConnect = APIConnector.executeQuery(urls[i]);
+                    if (canConnect)
+                    {
+                        int progress = (int) (100 * ((double) i / urls.length));
+                        //Log.d(TAG, "doInBackground: " + progress);
+                        publishProgress(progress);
+                        recipes.add(ParseJSON.parseRecipe(APIConnector.apiResponse));
+                    }
+                }
+                return recipes;
+
+            } catch (JSONException e) {
+                Log.e(TAG, "doInBackground: ", e);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+
+            SearchFragment f = fragmentWeakReference.get();
+            if (f != null && !f.isDetached() && !f.isRemoving())
+            {
+                f.progressBar.setProgress(values[0]);
+                f.searchProgressText.setText(String.format(Locale.US, "%d%%", values[0]));
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Recipe> recipes)
+        {
+            super.onPostExecute(recipes);
+            SearchFragment f = fragmentWeakReference.get();
+            if (f != null && !f.isDetached() && !f.isRemoving())
+            {
+                Constants.returnedRecipesFromSearch = recipes;
+                if (Constants.returnedRecipesFromSearch != null)
+                {
+                    f.progressBar.setProgress(0);
+                    f.progressBar.setVisibility(View.GONE);
+
+                    //Switch to the search results fragment and add to the stack
+                    //This allows the use of the back button to return to the SearchFragment
+                    try {
+                        f.getFragmentManager().beginTransaction()
+                                .addToBackStack("searchResults")
+                                .replace(R.id.fragment_container, new SearchResultsFragment())
+                                .commit();
+                    } catch (NullPointerException e) {
+                        Log.e(TAG, "onClick: ", e);
+                    }
+
+                    f.toastText = String.format(Locale.US, "Search returned %d recipes",
+                            Constants.returnedRecipesFromSearch.size());
+                    Toast.makeText(f.context, f.toastText, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
