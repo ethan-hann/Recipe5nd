@@ -39,11 +39,6 @@ public class ShoppingItemsFragment extends Fragment implements View.OnClickListe
     private Context context;
     private FileHelper fileHelper = new FileHelper();
 
-    public ShoppingItemsFragment() {
-        //Required empty constructor for Android
-        //This is because we overwrite the default constructor below
-    }
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -83,10 +78,10 @@ public class ShoppingItemsFragment extends Fragment implements View.OnClickListe
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 int position = viewHolder.getAdapterPosition();
                 Constants.currentlyViewedShoppingList.getItems().remove(position);
-                Constants.currentlyViewedShoppingList.getIsCheckedArray().put(position, false);
+                Constants.currentlyViewedShoppingList.getIsCheckedArray().delete(position);
                 String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
                 fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
-                shoppingItemsAdapter.notifyDataSetChanged();
+                shoppingItemsAdapter.notifyItemRemoved(position);
             }
         };
     }

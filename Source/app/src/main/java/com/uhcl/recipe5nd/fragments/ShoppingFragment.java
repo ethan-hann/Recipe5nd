@@ -135,7 +135,7 @@ public class ShoppingFragment extends Fragment implements View.OnClickListener
                     s.setDate(Calendar.getInstance().getTime());
                     Constants.shoppingLists.add(s);
                     Collections.sort(Constants.shoppingLists, new SortBasedOnDate());
-                    String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, false);
+                    String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
                     fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
                 }
 

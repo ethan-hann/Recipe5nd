@@ -176,10 +176,6 @@ public class CreateJSON
                         builder.append(s.getItems().get(s.getItems().size() - 1));
                         itemObject.put("names", builder.toString());
                     }
-                    else
-                    {
-                        itemObject.put("names", "");
-                    }
 
                     //Getting checked values in the shopping list
                     builder = new StringBuilder();
@@ -190,11 +186,6 @@ public class CreateJSON
                         }
                         builder.append(s.getIsCheckedArray().get(s.getIsCheckedArray().size() - 1));
                         itemObject.put("isChecked", builder.toString());
-                    }
-                    else
-                    {
-                        itemObject.put("isChecked", "");
-
                     }
 
                     shoppingItems.put(itemObject);
@@ -227,10 +218,6 @@ public class CreateJSON
                         builder.append(s.getItems().get(s.getItems().size() - 1));
                         itemObject.put("names", builder.toString());
                     }
-                    else
-                    {
-                        itemObject.put("names", "");
-                    }
 
                     //Getting checked values in the shopping list
                     builder = new StringBuilder();
@@ -241,10 +228,6 @@ public class CreateJSON
                         }
                         builder.append(s.getIsCheckedArray().get(s.getIsCheckedArray().size() - 1));
                         itemObject.put("isChecked", builder.toString());
-                    }
-                    else
-                    {
-                        itemObject.put("isChecked", "");
                     }
 
                     shoppingItems.put(itemObject);

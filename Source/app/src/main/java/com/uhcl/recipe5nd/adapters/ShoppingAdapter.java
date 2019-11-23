@@ -21,9 +21,13 @@ import com.uhcl.recipe5nd.helperClasses.Constants;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Helper;
+import com.uhcl.recipe5nd.helperClasses.ParseJSON;
 import com.uhcl.recipe5nd.helperClasses.ShoppingList;
 import com.uhcl.recipe5nd.helperClasses.SortBasedOnDate;
 
+import org.json.JSONException;
+
+import java.io.File;
 import java.util.Collections;
 import java.util.Locale;
 
@@ -68,12 +72,29 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
             parent = itemView.findViewById(R.id.shoppingListParent2);
             shoppingName = itemView.findViewById(R.id.shoppingTitle);
             shoppingDate = itemView.findViewById(R.id.shoppingDate);
+            FileHelper f = new FileHelper();
+            String json = f.readFile(context, Constants.SHOPPING_LIST_FILE_NAME);
+            try {
+                Constants.shoppingLists = ParseJSON.parseShoppingLists(json);
+            } catch (JSONException e)
+            {
+                Log.e(TAG, "ShoppingViewHolder: ", e);
+            }
+
         }
 
         void bind(int position)
         {
             ShoppingList s = Constants.shoppingLists.get(position);
-            shoppingName.setText(String.format(Locale.US, "%s\n%d items", s.getTitle(), s.getItems().size()));
+            if (s.getItems().size() == 1)
+            {
+                shoppingName.setText(String.format(Locale.US, "%s\n%d item", s.getTitle(), s.getItems().size()));
+            }
+            else
+            {
+                shoppingName.setText(String.format(Locale.US, "%s\n%d items", s.getTitle(), s.getItems().size()));
+            }
+
             shoppingName.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             shoppingDate.setText(s.getDate().toString());
 
