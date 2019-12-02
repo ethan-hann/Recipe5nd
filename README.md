@@ -1,2 +1,2 @@
 # Recipe5nd
-A development branch for tracking the integration of all the various modules of the application.
+This is the official release branch of Recipe5nd.
