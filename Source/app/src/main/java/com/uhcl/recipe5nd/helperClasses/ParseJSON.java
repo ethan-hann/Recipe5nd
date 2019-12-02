@@ -1,3 +1,21 @@
+/*
+ *     Recipe5nd - Reverse recipe lookup application for Android
+ *     Copyright (C) 2019 Ethan D. Hann
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.uhcl.recipe5nd.helperClasses;
 
 import android.util.Log;
@@ -6,7 +24,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,13 +33,12 @@ import java.util.Locale;
 public class ParseJSON
 {
     private static final String TAG = "ParseJSON";
-    private static FileHelper fileHelper = new FileHelper();
 
     /**
      * Parses recipe ids from API based on a supplied HTTP response string
-     * @param idJSON the HTTP response
+     * @param idJSON : the HTTP response
      * @return ArrayList of ID strings
-     * @throws JSONException if the JSON is invalid or null and cannot be parsed successfully
+     * @throws JSONException : if the JSON is invalid or null and cannot be parsed successfully
      */
     public static ArrayList<String> parseIDS(String idJSON) throws JSONException
     {
@@ -42,72 +58,59 @@ public class ParseJSON
     }
 
     /**
-     * Parses recipe from favorites JSON file
-     * @param response object string from favorites file
-     * @return Single Recipe object
-     * @throws JSONException if the JSON is invalid or null and cannot be parsed successfully
+     * Parses multiple recipes from a local saved JSON file
+     * @param recipeJSON : the string to parse from
+     * @return ArrayList of Recipes representing the parsed data
+     * @throws JSONException : if the JSON is invalid or null and cannot be parsed successfully
      */
-    public static ArrayList<Recipe> parseLocalRecipe(String response) throws JSONException
+    public static ArrayList<Recipe> parseLocalRecipes(String recipeJSON) throws JSONException
     {
-        ArrayList<Recipe> recipeArrayList = new ArrayList<Recipe>();
-        JSONArray recipeArray = new JSONArray(response);
+        ArrayList<Recipe> recipes = new ArrayList<>();
+        JSONArray objArray = new JSONArray(recipeJSON);
 
-        for(int i=0; i<recipeArray.length(); i++){
+        if (objArray.isNull(0)) {
+            return null;
+        }
+
+        for (int i = 0; i < objArray.length(); i++)
+        {
             Recipe r = new Recipe();
-            JSONObject recipeObjectFromFile = recipeArray.getJSONObject(i);
+            JSONObject object = objArray.getJSONObject(i);
+            r.setId(object.get("id").toString());
+            r.setStrMeal(object.get("name").toString());
+            r.setStrMealThumb(object.get("strThumbnail").toString());
+            r.setStrYoutube(object.get("strYoutube").toString());
 
-            if (recipeArray.isNull(0)) {
-                return null;
-            }else{
-                r.setId(recipeObjectFromFile.get("id").toString());
-                r.setStrMeal(recipeObjectFromFile.get("name").toString());
-                if(recipeObjectFromFile.has("strDrinkAlternate"))
-                    r.setStrDrinkAlternative(recipeObjectFromFile.get("strDrinkAlternate").toString());
-                if(recipeObjectFromFile.has("strCategory"))
-                    r.setStrCategory(recipeObjectFromFile.get("strCategory").toString());
-                if(recipeObjectFromFile.has("strArea"))
-                    r.setStrArea(recipeObjectFromFile.get("strArea").toString());
-                if(recipeObjectFromFile.has("instructions"))
-                    r.setStrInstructions(recipeObjectFromFile.get("instructions").toString());
-                if(recipeObjectFromFile.has("strThumbnail"))
-                    r.setStrMealThumb(recipeObjectFromFile.get("strThumbnail").toString());
-                if(recipeObjectFromFile.has("strTags"))
-                    r.setStrTags(recipeObjectFromFile.get("strTags").toString());
-                if(recipeObjectFromFile.has("strYoutube"))
-                    r.setStrYoutube(recipeObjectFromFile.get("strYoutube").toString());
-                if(recipeObjectFromFile.has("strSource"))
-                    r.setStrSource(recipeObjectFromFile.get("strSource").toString());
+            JSONArray ingredients = object.getJSONArray("ingredients");
+            for (int j = 0; j <= 20; j++)
+            {
+                try {
+                    JSONObject ingObject = ingredients.getJSONObject(j);
+                    if (ingObject.get("name").toString().equals("null") || ingObject.get("name").equals("")) {
+                        break;
+                    } else {
+                        r.addIngredient(ingObject.get("name").toString(), ingObject.get("measure").toString());
 
-                if(recipeObjectFromFile.has("ingredients")){
-                    try{
-                        JSONArray ingredientsArray = recipeObjectFromFile.getJSONArray("ingredients");
-                        for (int j = 0; j < ingredientsArray.length(); j++) {
-                            Log.d("Favorites ingredients: ",ingredientsArray.get(j).toString());
-
-                            r.addIngredient(ingredientsArray.getJSONObject(j).get("name").toString());
-                            r.addMeasurement(ingredientsArray.getJSONObject(j).get("measure").toString());
-                        }
-                    }catch(Exception e){
-                        Log.d("Favorites Debugging: ","Can\'t read array of ingredients.");
                     }
-
+                } catch (JSONException e) {
+                    Log.e(TAG, "parseLocalRecipes: ", e);
+                    break;
                 }
+            }
+
+            r.setStrInstructions(object.get("instructions").toString());
+            recipes.add(r);
         }
 
-        recipeArrayList.add(r);
-
-        recipeArrayList = Helper.removeDuplicateRecipes(recipeArrayList);
-
-        }
-        return recipeArrayList;
+        return recipes;
     }
 
 
     /**
      * Parses recipe details from API based on a supplied HTTP response string
-     * @param recipeJSON the HTTP response
-     * @return Recipe a single recipe
-     * @throws JSONException if the JSON is invalid or null and cannot be parsed successfully
+     * @param recipeJSON : the HTTP response
+     * @return Recipe : a single recipe
+     * @throws JSONException : if the JSON is invalid or null and cannot be parsed successfully
      */
     public static Recipe parseRecipe(String recipeJSON) throws JSONException
     {
@@ -134,8 +137,16 @@ public class ParseJSON
             String jString = String.format(Locale.US, "%d", j);
             String getIngParam = "strIngredient" + jString;
             String getMeaParam = "strMeasure" + jString;
-            r.addIngredient(objArray.getJSONObject(0).get(getIngParam).toString());
-            r.addMeasurement(objArray.getJSONObject(0).get(getMeaParam).toString());
+
+            if (objArray.getJSONObject(0).get(getIngParam).toString().equals("null")) {
+                break;
+            }
+            else
+            {
+                String name = objArray.getJSONObject(0).get(getIngParam).toString();
+                String measurement = objArray.getJSONObject(0).get(getMeaParam).toString();
+                r.addIngredient(name, measurement);
+            }
         }
 
         return r;
@@ -143,8 +154,9 @@ public class ParseJSON
 
     /**
      * Parses ingredients from a local saved JSON file
-     * @param ingredientsJSON the string to parse from
+     * @param ingredientsJSON : the string to parse from
      * @return ArrayList of Ingredients representing the parsed data
+     * @throws JSONException : if the JSON is invalid or null and cannot be parsed successfully
      */
     public static ArrayList<Ingredient> parseIngredients(String ingredientsJSON) throws JSONException
     {
@@ -175,6 +187,12 @@ public class ParseJSON
         return ingredients;
     }
 
+    /**
+     * Parses shopping lists from a local saved JSON file
+     * @param shoppingJSON : the string to parse from
+     * @return ArrayList of ShoppingList representing the parsed data
+     * @throws JSONException : if the JSON is invalid or null and cannot be parsed successfully
+     */
     public static ArrayList<ShoppingList> parseShoppingLists(String shoppingJSON) throws JSONException
     {
         SimpleDateFormat sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.US);

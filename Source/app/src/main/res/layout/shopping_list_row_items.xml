@@ -7,8 +7,8 @@
         android:id="@+id/shopping_list_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="@dimen/text_padding"
         android:layout_margin="@dimen/text_padding"
+        style="@style/Theme.Recipe5nd.Dark.NoActionBar"
+        android:padding="@dimen/text_padding"
         android:textSize="@dimen/h3" />
 </LinearLayout>

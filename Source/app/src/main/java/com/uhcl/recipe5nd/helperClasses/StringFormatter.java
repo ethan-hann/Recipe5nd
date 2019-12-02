@@ -1,48 +1,37 @@
+/*
+ *     Recipe5nd - Reverse recipe lookup application for Android
+ *     Copyright (C) 2019 Ethan D. Hann
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.uhcl.recipe5nd.helperClasses;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
+/**
+ * Class used to format recipe strings for use in recipe details text views.
+ */
 public class StringFormatter
 {
-    private static int getLongestMeasurementString(Recipe r)
-    {
-        int maxLength = 0;
-        for (String s : r.getMeasurements())
-        {
-            if (s.length() > maxLength)
-            {
-                maxLength = s.length();
-            }
-        }
-        return maxLength;
-    }
-
     public static String formatRecipeIngredientsAndMeasures(Recipe r)
     {
         StringBuilder builder = new StringBuilder();
-        int maxLength = getLongestMeasurementString(r);
 
-        //Just a utility check, these should always be the same size
-        if (r.getIngredients().size() == r.getMeasurements().size())
-        {
-            //builder.append("\n");
-            for (int i = 0; i < r.getIngredients().size(); i++)
-            {
-                if (!r.getIngredients().get(i).equals(""))
-                {
-                    builder.append(r.getMeasurements().get(i));
-
-                    //Seperating the measurements and ingredients based on longest measurement string
-                    for (int j = 0; j < maxLength; j++)
-                    {
-                        builder.append(" ");
-                    }
-
-                    builder.append(r.getIngredients().get(i));
-                    builder.append("\n");
-                }
-            }
+        for (int i = 0; i < r.getIngredientsAndMeasurements().size(); i++) {
+            builder.append(r.getIngredientsAndMeasurements().get(i).toString());
+            builder.append("\n");
         }
 
         return builder.toString();
@@ -55,7 +44,6 @@ public class StringFormatter
         ArrayList<String> instructions = r.tokenizeInstructions();
         for (int i = 0; i < instructions.size(); i++)
         {
-            System.out.println(instructions.get(i));
             builder.append(instructions.get(i));
             builder.append("\n");
         }

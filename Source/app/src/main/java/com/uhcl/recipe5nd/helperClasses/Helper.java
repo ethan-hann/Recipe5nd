@@ -1,22 +1,39 @@
+/*
+ *     Recipe5nd - Reverse recipe lookup application for Android
+ *     Copyright (C) 2019 Ethan D. Hann
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.uhcl.recipe5nd.helperClasses;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.util.Log;
+import android.os.Handler;
+import android.os.SystemClock;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class Helper
 {
     private static final String TAG = "Helper";
+
     public static void hideKeyboard(View pView, Activity pActivity) {
         if (pView == null) {
             pView = pActivity.getWindow().getCurrentFocus();
@@ -30,18 +47,20 @@ public class Helper
         }
     }
 
-    public static void hideKeyboard(Activity activity) {
-        try{
-            InputMethodManager inputManager = (InputMethodManager) activity
-                    .getSystemService(Context.INPUT_METHOD_SERVICE);
-            View currentFocusedView = activity.getCurrentFocus();
-            if (currentFocusedView != null) {
-                inputManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(),
-                        InputMethodManager.HIDE_NOT_ALWAYS);
+    public static void showKeyboard(final EditText editText)
+    {
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                editText.dispatchTouchEvent(
+                        MotionEvent.obtain(SystemClock.uptimeMillis(),
+                                SystemClock.uptimeMillis(),
+                                MotionEvent.ACTION_DOWN , 0, 0, 0));
+                editText.dispatchTouchEvent(
+                        MotionEvent.obtain(SystemClock.uptimeMillis(),
+                                SystemClock.uptimeMillis(),
+                                MotionEvent.ACTION_UP , 0, 0, 0));
             }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        }, 200);
     }
 
     public static AppCompatActivity unwrap(Context context)
@@ -55,52 +74,6 @@ public class Helper
 
     public static boolean validateInput(String str)
     {
-        //checking for illegal chars
-        for (int i = 0; i < Constants.invalidCharacters.length; i++) {
-            for (int j = 0; j < str.length(); j++) {
-                if (str.charAt(j) == Constants.invalidCharacters[i])
-                {
-                    Log.d(TAG, "validateInput: " + str.charAt(j) + "\t" + Constants.invalidCharacters[i]);
-                    return false;
-                }
-            }
-        }
-
-        //checking for numbers
-        for (int i = 0; i < str.length(); i++)
-        {
-            try {
-                int a = Integer.parseInt(String.format("%c", str.charAt(i)));
-            } catch (NumberFormatException e)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static ArrayList<Recipe> removeDuplicateRecipes(ArrayList<Recipe> list){
-        LinkedHashMap<String, Recipe> tempMap = new LinkedHashMap<String, Recipe>();
-        ArrayList<Recipe> uniqueList = new ArrayList<Recipe>();
-        try {
-            Recipe oldKey;
-
-            for(int i=0; i<list.size(); i++){
-                oldKey = tempMap.put(list.get(i).getId(), list.get(i));
-                if(oldKey != null) System.out.println("Recipe: "+oldKey.getId()+" : "+oldKey.getStrMeal()+" is already in the list!");
-            }
-
-            Iterator itr = tempMap.entrySet().iterator();
-            while(itr.hasNext()){
-                Map.Entry entry = (Map.Entry)itr.next();
-                Recipe recipe = (Recipe)entry.getValue();
-                uniqueList.add(recipe);
-            }
-
-        } catch (Exception e) {
-            //TODO: handle exception
-            System.out.println("Error removing duplicates");
-        }
-        return uniqueList;
+        return !Global.validator.matcher(str).find();
     }
 }

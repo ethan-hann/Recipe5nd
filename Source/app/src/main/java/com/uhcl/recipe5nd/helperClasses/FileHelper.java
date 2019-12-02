@@ -1,3 +1,21 @@
+/*
+ *     Recipe5nd - Reverse recipe lookup application for Android
+ *     Copyright (C) 2019 Ethan D. Hann
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.uhcl.recipe5nd.helperClasses;
 
 import android.content.Context;
@@ -16,15 +34,31 @@ public class FileHelper {
     private static final String TAG = "FileHelper";
 
     /**
+     * Clears data from all files in the supplied context's files directory
+     * @param context : the application's context
+     * @return true if data deletion was successful; false if not
+     */
+    public boolean clearAllData(Context context)
+    {
+        try {
+            createBlankFile(context, Global.INGREDIENTS_FILE_NAME);
+            createBlankFile(context, Global.SHOPPING_LIST_FILE_NAME);
+            createBlankFile(context, Global.FAVORITES_FILE_NAME);
+            return true;
+        } catch (NullPointerException e) {
+            Log.e(TAG, "deleteAllFiles: ", e);
+            return false;
+        }
+    }
+
+    /**
      * Saves a file to the private file directory of the application
-     *
      * @param s        : the string to save
      * @param context  : the context of the application
      * @param fileName : the fileName the file should be saved as
      * @return boolean : true if saving was successful, false if not
      */
     public boolean saveFile(String s, Context context, String fileName) {
-        System.out.println("Saving to : "+fileName+" : "+s);
         try {
             FileOutputStream fos = new FileOutputStream(new File(context.getFilesDir().getAbsolutePath().concat("/" + fileName)), false);
             OutputStreamWriter osw = new OutputStreamWriter(fos);
@@ -33,7 +67,6 @@ public class FileHelper {
             osw.close();
             fos.flush();
             fos.close();
-            Log.i(TAG, "saveFile written: " + context.getFilesDir() + "/" + fileName);
             return true;
         } catch (IOException e) {
             Log.e(TAG, "Saving file failed: ", e);
@@ -43,8 +76,7 @@ public class FileHelper {
 
 
     /**
-     * Reads a saved file into a string.
-     *
+     * Reads a saved file into a string
      * @param context  : the context of the application
      * @param fileName : the fileName to read from
      * @return String : contents of the file or an exception if the file is not found
@@ -94,7 +126,6 @@ public class FileHelper {
             osw.close();
             fos.flush();
             fos.close();
-            Log.i(TAG, "Blank file " + context.getFilesDir() + "/" + fileName + " created");
             return true;
         } catch (IOException e) {
             Log.e(TAG, "createBlankFile: ", e);
@@ -103,7 +134,7 @@ public class FileHelper {
     }
 
     /**
-     * Checks in the supplied context for the file.
+     * Checks in the supplied context for the file
      * @param context : the application's context
      * @param fileName : the file to search for
      * @return true if file exists; false if not
@@ -116,19 +147,19 @@ public class FileHelper {
             if (file.equals(fileName))
             {
                 switch (fileName) {
-                    case Constants.INGREDIENTS_FILE_NAME:
+                    case Global.INGREDIENTS_FILE_NAME:
                     {
-                        Constants.doesIngredientsFileExist = true;
+                        Global.doesIngredientsFileExist = true;
                         break;
                     }
-                    case Constants.FAVORITES_FILE_NAME:
+                    case Global.FAVORITES_FILE_NAME:
                     {
-                        Constants.doesFavoritesExist = true;
+                        Global.doesFavoritesExist = true;
                         break;
                     }
-                    case Constants.SHOPPING_LIST_FILE_NAME:
+                    case Global.SHOPPING_LIST_FILE_NAME:
                     {
-                        Constants.doesShoppingListExist = true;
+                        Global.doesShoppingListExist = true;
                         break;
                     }
                     default:
@@ -148,23 +179,23 @@ public class FileHelper {
      * @param context : the application's context
      * @param fileName : the file to search for
      */
-    public void createIfNotExists(Context context, String fileName)
+    void createIfNotExists(Context context, String fileName)
     {
         if (!exists(context, fileName))
         {
             createBlankFile(context, fileName);
             if (createBlankFile(context, fileName)) {
                 switch (fileName) {
-                    case Constants.INGREDIENTS_FILE_NAME: {
-                        Constants.doesIngredientsFileExist = true;
+                    case Global.INGREDIENTS_FILE_NAME: {
+                        Global.doesIngredientsFileExist = true;
                         break;
                     }
-                    case Constants.FAVORITES_FILE_NAME: {
-                        Constants.doesFavoritesExist = true;
+                    case Global.FAVORITES_FILE_NAME: {
+                        Global.doesFavoritesExist = true;
                         break;
                     }
-                    case Constants.SHOPPING_LIST_FILE_NAME: {
-                        Constants.doesShoppingListExist = true;
+                    case Global.SHOPPING_LIST_FILE_NAME: {
+                        Global.doesShoppingListExist = true;
                         break;
                     }
                     default: {

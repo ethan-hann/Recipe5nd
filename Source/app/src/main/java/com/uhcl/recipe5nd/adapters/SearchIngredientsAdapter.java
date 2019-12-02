@@ -1,6 +1,23 @@
+/*
+ *     Recipe5nd - Reverse recipe lookup application for Android
+ *     Copyright (C) 2019 Ethan D. Hann
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.uhcl.recipe5nd.adapters;
 
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,18 +25,13 @@ import android.view.ViewGroup;
 import android.widget.CheckedTextView;
 
 import com.uhcl.recipe5nd.R;
-import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.Global;
 import com.uhcl.recipe5nd.helperClasses.Ingredient;
 
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-/**
- * Custom adapter class for populating the recycler view with items
- * Includes a nested class @ViewHolder that defines the individual item within the recycler view
- */
 
 public class SearchIngredientsAdapter extends RecyclerView.Adapter<SearchIngredientsAdapter.ViewHolder>
 {
@@ -29,12 +41,15 @@ public class SearchIngredientsAdapter extends RecyclerView.Adapter<SearchIngredi
 
     public SearchIngredientsAdapter(ArrayList<Ingredient> ingredients) {
         this.usersIngredients = ingredients;
-        Constants.selectedIngredients = new ArrayList<>();
+        Global.selectedIngredients = new ArrayList<>();
 
         itemStateArray = new SparseBooleanArray();
         initItemStates();
     }
 
+    /**
+     * Initializes SparseBooleanArray with false values
+     */
     private void initItemStates()
     {
         for (int i = 0; i < usersIngredients.size(); i++)
@@ -59,17 +74,7 @@ public class SearchIngredientsAdapter extends RecyclerView.Adapter<SearchIngredi
 
     @Override
     public int getItemCount() {
-        if (usersIngredients == null)
-        {
-            return 0;
-        }
-        return usersIngredients.size();
-    }
-
-    public void updateList(ArrayList<Ingredient> newList)
-    {
-        usersIngredients = newList;
-        notifyDataSetChanged();
+        return usersIngredients == null ? 0 : usersIngredients.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
@@ -97,16 +102,15 @@ public class SearchIngredientsAdapter extends RecyclerView.Adapter<SearchIngredi
         public void onClick(View view)
         {
             int adapterPos = getAdapterPosition();
-            if (!itemStateArray.get(adapterPos, false)) { //check the item
+            if (!itemStateArray.get(adapterPos, false))
+            { //check the item
                 ingredientItem.setChecked(true);
                 itemStateArray.put(adapterPos, true);
-                Constants.selectedIngredients.add(usersIngredients.get(adapterPos));
-                Log.i(TAG, "Ingredient added to search: ".concat(usersIngredients.get(adapterPos).getName()));
+                Global.selectedIngredients.add(usersIngredients.get(adapterPos));
             } else { //uncheck the item
                 ingredientItem.setChecked(false);
                 itemStateArray.put(adapterPos, false);
-                Constants.selectedIngredients.remove(usersIngredients.get(adapterPos));
-                Log.i(TAG, "Ingredient removed from search: ".concat(usersIngredients.get(adapterPos).getName()));
+                Global.selectedIngredients.remove(usersIngredients.get(adapterPos));
             }
         }
     }

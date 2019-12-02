@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/add_missing_ingredients"
+            android:icon="@drawable/ic_shopping_basket_24px"
+            android:title="@string/add_to_shopping_list" />
+    </group>
+
+</menu>

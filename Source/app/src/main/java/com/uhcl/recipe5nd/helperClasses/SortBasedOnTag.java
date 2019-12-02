@@ -21,12 +21,14 @@ package com.uhcl.recipe5nd.helperClasses;
 import java.util.Comparator;
 
 /**
- * Class used to sort ingredients by their name. Used in search fragment recycler view.
+ * Class used to sort ingredients based on their tag. The tags are ENUM's and thus
+ * the sorting uses their built-in comparator "compareTo"
  */
-public class SortBasedOnName implements Comparator<Ingredient>
+public class SortBasedOnTag implements Comparator<Ingredient>
 {
     @Override
-    public int compare(Ingredient ingredient, Ingredient t1) {
-        return ingredient.getName().compareToIgnoreCase(t1.getName());
+    public int compare(Ingredient t1, Ingredient t2)
+    {
+        return t1.getPrimaryTag().compareTo(t2.getPrimaryTag());
     }
 }

@@ -1,3 +1,21 @@
+/*
+ *     Recipe5nd - Reverse recipe lookup application for Android
+ *     Copyright (C) 2019 Ethan D. Hann
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.uhcl.recipe5nd.helperClasses;
 
 import android.content.Context;
@@ -15,11 +33,13 @@ public class CreateJSON
 
     /**
      * Creates a JSON string representing a list of Recipe objects
-     * This method will get the existing JSON string from the file if it exists and use that
+     * This method can get the existing JSON string from the file if it exists and use that
      * as a basis for the new JSON string
      * @param context : the application's context
      * @param savedRecipes : an ArrayList containing Recipe objects
-     * @return
+     * @param overwrite : if this method should take into account existing ingredients or create a
+     *                    whole new string
+     * @return string : a string representation of the formatted JSON
      */
     public static String createRecipeJSON(Context context, ArrayList<Recipe> savedRecipes, boolean overwrite)
     {
@@ -27,7 +47,7 @@ public class CreateJSON
             FileHelper fileHelper = new FileHelper();
             if (!overwrite)
             {
-                String fileContents = fileHelper.readFile(context, Constants.FAVORITES_FILE_NAME);
+                String fileContents = fileHelper.readFile(context, Global.FAVORITES_FILE_NAME);
                 JSONArray recipes = new JSONArray(fileContents);
                 for (Recipe r : savedRecipes)
                 {
@@ -38,10 +58,12 @@ public class CreateJSON
                     recipeObject.put("strYoutube", r.getStrYoutube());
 
                     JSONArray ingredients = new JSONArray();
-                    for (int i = 0; i < r.getIngredients().size(); i++) {
+                    for (int i = 0; i < r.getIngredientsAndMeasurements().size(); i++) {
                         JSONObject ingredientObject = new JSONObject();
-                        ingredientObject.put("name", r.getIngredients().get(i));
-                        ingredientObject.put("measure", r.getMeasurements().get(i));
+                        ingredientObject.put("name",
+                                r.getIngredientsAndMeasurements().get(i).getName());
+                        ingredientObject.put("measure",
+                                r.getIngredientsAndMeasurements().get(i).getMeasurement());
                         ingredients.put(ingredientObject);
                     }
                     recipeObject.put("ingredients", ingredients);
@@ -63,10 +85,12 @@ public class CreateJSON
                     recipeObject.put("strYoutube", r.getStrYoutube());
 
                     JSONArray ingredients = new JSONArray();
-                    for (int i = 0; i < r.getIngredients().size(); i++) {
+                    for (int i = 0; i < r.getIngredientsAndMeasurements().size(); i++) {
                         JSONObject ingredientObject = new JSONObject();
-                        ingredientObject.put("name", r.getIngredients().get(i));
-                        ingredientObject.put("measure", r.getMeasurements().get(i));
+                        ingredientObject.put("name",
+                                r.getIngredientsAndMeasurements().get(i).getName());
+                        ingredientObject.put("measure",
+                                r.getIngredientsAndMeasurements().get(i).getMeasurement());
                         ingredients.put(ingredientObject);
                     }
                     recipeObject.put("ingredients", ingredients);
@@ -84,7 +108,7 @@ public class CreateJSON
 
     /**
      * Creates a JSON string representing a list of Ingredient objects
-     * This method will get the existing JSON string from the file if it exists and use that
+     * This method can get the existing JSON string from the file if it exists and use that
      * as a basis for the new JSON string
      * @param context : the application's context
      * @param savedIngredients : an ArrayList containing Ingredient objects
@@ -99,7 +123,7 @@ public class CreateJSON
             FileHelper fileHelper = new FileHelper();
             if (!overwrite)
             {
-                String fileContents = fileHelper.readFile(context, Constants.INGREDIENTS_FILE_NAME);
+                String fileContents = fileHelper.readFile(context, Global.INGREDIENTS_FILE_NAME);
                 JSONArray ingredients = new JSONArray(fileContents);
                 for (Ingredient i : savedIngredients)
                 {
@@ -133,7 +157,7 @@ public class CreateJSON
 
     /**
      * Creates a JSON string representing a list of Ingredient objects
-     * This method will get the existing JSON string from the file if it exists and use that
+     * This method can get the existing JSON string from the file if it exists and use that
      * as a basis for the new JSON string
      * @param context : the application's context
      * @param shoppingData : an ArrayList containing ShoppingList objects
@@ -148,7 +172,7 @@ public class CreateJSON
             FileHelper fileHelper = new FileHelper();
             if (!overwrite)
             {
-                String fileContents = fileHelper.readFile(context, Constants.SHOPPING_LIST_FILE_NAME);
+                String fileContents = fileHelper.readFile(context, Global.SHOPPING_LIST_FILE_NAME);
                 JSONArray shoppingLists = new JSONArray(fileContents);
 
                 for (ShoppingList s : shoppingData)
@@ -170,10 +194,6 @@ public class CreateJSON
                         builder.append(s.getItems().get(s.getItems().size() - 1));
                         itemObject.put("names", builder.toString());
                     }
-                    else
-                    {
-                        itemObject.put("names", "");
-                    }
 
                     //Getting checked values in the shopping list
                     builder = new StringBuilder();
@@ -184,11 +204,6 @@ public class CreateJSON
                         }
                         builder.append(s.getIsCheckedArray().get(s.getIsCheckedArray().size() - 1));
                         itemObject.put("isChecked", builder.toString());
-                    }
-                    else
-                    {
-                        itemObject.put("isChecked", "");
-
                     }
 
                     shoppingItems.put(itemObject);
@@ -213,21 +228,25 @@ public class CreateJSON
 
                     //Getting items in the shopping list
                     StringBuilder builder = new StringBuilder();
-                    for (int i = 0; i < s.getItems().size() - 1; i++) {
-                        builder.append(s.getItems().get(i));
-                        builder.append(",");
+                    if (s.getItems().size() != 0) {
+                        for (int i = 0; i < s.getItems().size() - 1; i++) {
+                            builder.append(s.getItems().get(i));
+                            builder.append(",");
+                        }
+                        builder.append(s.getItems().get(s.getItems().size() - 1));
+                        itemObject.put("names", builder.toString());
                     }
-                    builder.append(s.getItems().get(s.getItems().size() - 1));
-                    itemObject.put("names", builder.toString());
 
                     //Getting checked values in the shopping list
                     builder = new StringBuilder();
-                    for (int i = 0; i < s.getIsCheckedArray().size() - 1; i++) {
-                        builder.append(s.isChecked(i));
-                        builder.append(",");
+                    if (s.getIsCheckedArray().size() != 0) {
+                        for (int i = 0; i < s.getIsCheckedArray().size() - 1; i++) {
+                            builder.append(s.isChecked(i));
+                            builder.append(",");
+                        }
+                        builder.append(s.getIsCheckedArray().get(s.getIsCheckedArray().size() - 1));
+                        itemObject.put("isChecked", builder.toString());
                     }
-                    builder.append(s.getIsCheckedArray().get(s.getIsCheckedArray().size() - 1));
-                    itemObject.put("isChecked", builder.toString());
 
                     shoppingItems.put(itemObject);
 

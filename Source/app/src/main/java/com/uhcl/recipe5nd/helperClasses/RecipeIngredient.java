@@ -1,6 +1,6 @@
 /*
  *     Recipe5nd - Reverse recipe lookup application for Android
- *     Copyright (C) 2019 Mark Odom
+ *     Copyright (C) 2019 Ethan D. Hann
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -18,29 +18,21 @@
 
 package com.uhcl.recipe5nd.helperClasses;
 
-public class Ingredient
+import androidx.annotation.NonNull;
+
+/**
+ * Class to define a local saved recipe ingredient. This is used in the searching and the
+ * saving of recipes
+ */
+public class RecipeIngredient
 {
-    private String name = "";
-    private PrimaryTag primaryTag;
-    private String optionalTag = "";
+    private String name;
+    private String measurement;
 
-    public Ingredient(String name, PrimaryTag pTag, String oTag) {
+    RecipeIngredient(String name, String measurement)
+    {
         this.name = name;
-        this.primaryTag = pTag;
-        this.optionalTag = oTag;
-    }
-
-    public Ingredient(String name, PrimaryTag pTag) {
-        this.name = name;
-        this.primaryTag = pTag;
-    }
-
-    public Ingredient(String name) {
-        this.name = name;
-    }
-
-    public Ingredient() {
-
+        this.measurement = measurement;
     }
 
     public String getName() {
@@ -51,19 +43,17 @@ public class Ingredient
         this.name = name;
     }
 
-    public PrimaryTag getPrimaryTag() {
-        return primaryTag;
+    public String getMeasurement() {
+        return measurement;
     }
 
-    public void setPrimaryTag(PrimaryTag primaryTag) {
-        this.primaryTag = primaryTag;
+    public void setMeasurement(String measurement) {
+        this.measurement = measurement;
     }
 
-    public String getOptionalTag() {
-        return optionalTag;
-    }
-
-    public void setOptionalTag(String optionalTag) {
-        this.optionalTag = optionalTag;
+    @NonNull
+    @Override
+    public String toString() {
+        return String.format("%s\t\t%s", measurement, name);
     }
 }

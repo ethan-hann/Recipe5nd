@@ -7,7 +7,7 @@
     android:theme="@style/Theme.Recipe5nd.Dark.NoActionBar" >
 
     <TextView
-        android:id="@+id/shoppingDialogTextView"
+        android:id="@+id/ingredient_dialog_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -16,17 +16,34 @@
         android:textSize="@dimen/h5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"  />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/shoppingDialogEditText"
+        android:id="@+id/ingredient_dialog_edit_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:textSize="@dimen/subtitle1"
         android:inputType="textPersonName"
-        android:hint="@string/empty_string"
+        android:textSize="@dimen/subtitle1"
+        android:hint="@string/pantryTextHint"
         android:maxLength="25" />
+
+    <EditText
+        android:id="@+id/ingredient_dialog_edit_opt_tag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:textSize="@dimen/subtitle1"
+        android:hint="@string/pantryOptionalTag"
+        android:maxLength="25" />
+
+    <Spinner
+        android:id="@+id/ingredient_dialog_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/pantry_spinner_prompt"
+        android:spinnerMode="dropdown" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +51,7 @@
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/shoppingDialogOk"
+            android:id="@+id/ingredient_dialog_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -43,7 +60,7 @@
             android:text="@android:string/ok" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/shoppingDialogCancel"
+            android:id="@+id/ingredient_dialog_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

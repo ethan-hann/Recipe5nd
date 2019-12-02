@@ -1,3 +1,21 @@
+/*
+ *     Recipe5nd - Reverse recipe lookup application for Android
+ *     Copyright (C) 2019 Ethan D. Hann
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.uhcl.recipe5nd.helperClasses;
 
 import android.util.Log;
@@ -8,7 +26,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Arrays;
 
 public class APIConnector
 {
@@ -57,7 +74,7 @@ public class APIConnector
         switch (type) {
             case SEARCH_BY_NAME:
                 builder = new StringBuilder();
-                base = Constants.BASE_URL.concat(Constants.NAME_SUFFIX);
+                base = Global.BASE_URL.concat(Global.NAME_SUFFIX);
                 builder.append(base);
 
                 builder.append(param);
@@ -65,7 +82,7 @@ public class APIConnector
                 return builder.toString();
             case SEARCH_BY_ID:
                 builder = new StringBuilder();
-                base = Constants.BASE_URL.concat(Constants.ID_SUFFIX);
+                base = Global.BASE_URL.concat(Global.ID_SUFFIX);
                 builder.append(base);
 
                 builder.append(param);
@@ -73,18 +90,18 @@ public class APIConnector
                 return builder.toString();
             case SEARCH_BY_INGREDIENTS:
                 builder = new StringBuilder();
-                base = Constants.BASE_URL.concat(Constants.INGREDIENT_SEARCH_SUFFIX);
+                base = Global.BASE_URL.concat(Global.INGREDIENT_SEARCH_SUFFIX);
                 builder.append(base);
 
-                for (int i = 0; i < Constants.selectedIngredients.size() - 1; i++) {
-                    builder.append(Constants.selectedIngredients.get(i).getName());
+                for (int i = 0; i < Global.selectedIngredients.size() - 1; i++) {
+                    builder.append(Global.selectedIngredients.get(i).getName());
                     builder.append(",");
                 }
-                builder.append(Constants.selectedIngredients.get(Constants.selectedIngredients.size() - 1).getName());
+                builder.append(Global.selectedIngredients.get(Global.selectedIngredients.size() - 1).getName());
 
                 return builder.toString();
             default:
-                Log.d(TAG, "buildQuery() called with: type = [" + type + "], params = [" + param + "]");
+                Log.i(TAG, "buildQuery() called with: type = [" + type + "], params = [" + param + "]");
                 return null;
         }
     }

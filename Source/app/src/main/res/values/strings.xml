@@ -35,5 +35,15 @@
     <string name="shopping_dialog_title_input">Enter Shopping List Title</string>
     <string name="shopping_dialog_item_edit">Editing Item</string>
     <string name="shopping_item_add">Add New Item</string>
+    <string name="ingredient_add_help">Add ingredients to your pantry below.</string>
+    <string name="add_a_new_ingredient">Add a new ingredient</string>
+    <string name="edit_ingredient">Edit ingredient</string>
+    <string name="Settings">settings</string>
+    <string name="delete_confirmation">Are you sure you want to delete ALL data?\n(ingredients, favorites, and shopping lists)</string>
+    <string name="delete_saved_data">Delete Saved Data</string>
+    <string name="about_text">This application was created by UHCL students.\nIt is open-source and is available on GitHub at: https://github.com/ethan-hann/Recipe5nd</string>
+    <string name="about_the_app">About the App</string>
+    <string name="add_to_shopping_list">Add to Shopping List</string>
+    <string name="searching_for_recipes">Searching for recipes...</string>
 
 </resources>

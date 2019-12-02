@@ -16,7 +16,7 @@
 
         <ImageView
             android:id="@+id/recipe_details_image"
-            android:layout_width="411dp"
+            android:layout_width="0dp"
             android:layout_height="@android:dimen/thumbnail_height"
             android:contentDescription="@string/recipe_details_image_content_description"
             android:scaleType="fitCenter"
@@ -28,13 +28,13 @@
             android:id="@+id/favorite_recipe_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="72dp"
-            android:layout_marginBottom="16dp"
+            android:layout_margin="@dimen/fab_margin_bottom"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
             android:clickable="true"
             android:focusable="true"
             app:layout_constraintBottom_toTopOf="@+id/divider"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/recipe_results_scrollview"
+            app:layout_constraintEnd_toEndOf="@+id/recipe_details_image"
             app:srcCompat="@drawable/ic_favorite_recipes_24px" />
 
         <View
@@ -60,14 +60,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/recipe_name_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/empty_string"
-                    android:textSize="@dimen/h3"
-                    android:padding="@dimen/text_padding"/>
 
                 <TextView
                     android:id="@+id/recipe_ingredients_and_measures_title"

@@ -1,21 +1,40 @@
+/*
+ *     Recipe5nd - Reverse recipe lookup application for Android
+ *     Copyright (C) 2019 Ethan D. Hann
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.uhcl.recipe5nd.fragments;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButton;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.adapters.SearchIngredientsAdapter;
 import com.uhcl.recipe5nd.backgroundTasks.FetchIds;
-import com.uhcl.recipe5nd.backgroundTasks.FetchRecipe;
 import com.uhcl.recipe5nd.helperClasses.APIConnector;
-import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.Global;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Ingredient;
 import com.uhcl.recipe5nd.helperClasses.ParseJSON;
@@ -24,6 +43,8 @@ import com.uhcl.recipe5nd.helperClasses.Recipe;
 import com.uhcl.recipe5nd.helperClasses.SortBasedOnName;
 
 import org.json.JSONException;
+
+import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -33,15 +54,12 @@ import java.util.concurrent.ExecutionException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-/**
- * Implementation of searching by multiple ingredients. Uses a RecyclerView to display list of
- * user's ingredients read from a file. User selects an item to add it to the search parameters.
- */
 public class SearchFragment extends Fragment implements View.OnClickListener
 {
     private static final String TAG = "SearchFragment";
@@ -52,16 +70,31 @@ public class SearchFragment extends Fragment implements View.OnClickListener
 
     private Context context;
     private TextView helpText;
+    private TextView searchProgressText;
     private RecyclerView recyclerView;
-    private Button searchButton;
+    private MaterialButton searchButton;
+    private ProgressBar progressBar;
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Search for Recipes");
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
-        helpText = rootView.findViewById(R.id.search_help_text);
         context = getContext();
+        helpText = rootView.findViewById(R.id.search_help_text);
+        progressBar = rootView.findViewById(R.id.progressBar);
+        searchButton = rootView.findViewById(R.id.search_button);
+        searchProgressText = rootView.findViewById(R.id.search_progress_text);
+
+        progressBar.setVisibility(View.GONE);
+        searchProgressText.setVisibility(View.GONE);
+        searchButton.setVisibility(View.VISIBLE);
 
         //get a reference to recyclerView
         recyclerView = rootView.findViewById(R.id.recycler_view);
@@ -73,6 +106,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener
         getIngredientsFromPantry(context);
         if (ingredientsList != null)
         {
+            Global.selectedIngredients = new ArrayList<>();
             recyclerAdapter = new SearchIngredientsAdapter(ingredientsList);
             recyclerAdapter.notifyDataSetChanged();
 
@@ -82,8 +116,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener
             //set item animator
             recyclerView.setItemAnimator(new DefaultItemAnimator());
         }
-
-        searchButton = rootView.findViewById(R.id.search_button);
 
         //Search button functionality
         searchButton.setOnClickListener(this);
@@ -97,10 +129,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener
      * @param context : the application's context
      */
     private void getIngredientsFromPantry(Context context) {
-        if (Constants.doesIngredientsFileExist) {
+        if (Global.doesIngredientsFileExist) {
             try {
-                String jsonResponse = fileHelper.readFile(context, Constants.INGREDIENTS_FILE_NAME);
-                System.out.println(jsonResponse);
+                String jsonResponse = fileHelper.readFile(context, Global.INGREDIENTS_FILE_NAME);
                 ingredientsList = ParseJSON.parseIngredients(jsonResponse);
                 if (ingredientsList == null)
                 {
@@ -131,6 +162,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener
          Note that these two calls cannot be run in parallel because the second
          call depends on the result of the first.
     */
+
     /**
      * OnClick listener for search button
      * @param view : the view that was clicked
@@ -139,12 +171,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener
     public void onClick(View view)
     {
         //ensure at least one ingredient is selected to include in search
-        if (!fileHelper.exists(context, Constants.INGREDIENTS_FILE_NAME)
+        if (!fileHelper.exists(context, Global.INGREDIENTS_FILE_NAME)
                 || ingredientsList == null)
         {
             toastText = "Add some ingredients first in \"Edit Ingredients\"";
             Toast.makeText(context, toastText, Toast.LENGTH_LONG).show();
-        } else if (Constants.selectedIngredients.isEmpty())
+        } else if (Global.selectedIngredients.isEmpty())
         {
             toastText = "Please select at least one ingredient";
             Toast.makeText(context, toastText, Toast.LENGTH_LONG).show();
@@ -153,7 +185,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener
             try
             {
                 String ingredientQuery = APIConnector.buildQueryString(QueryType.SEARCH_BY_INGREDIENTS, "");
-                Log.i(TAG, "idURL: " + ingredientQuery);
                 ArrayList<String> ids = new FetchIds().execute(new URL(ingredientQuery)).get();
 
                 if (ids != null) {
@@ -168,26 +199,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener
                         recipeQueryURLS[i] = new URL(recipeQueries[i]);
                     }
 
-                    ArrayList<Recipe> recipes = new FetchRecipe().execute(recipeQueryURLS).get();
+                    //Initiate new background task to search for recipes
+                    new FetchRecipe(this).execute(recipeQueryURLS);
 
-                    if (recipes != null) {
-                        Constants.returnedRecipesFromSearch = recipes;
-
-                        //Switch to the search results fragment and add to the stack
-                        //This allows the use of the back button to return to this Fragment
-                        try {
-                            getFragmentManager().beginTransaction()
-                                    .addToBackStack("searchResults")
-                                    .replace(R.id.fragment_container, new SearchResultsFragment())
-                                    .commit();
-                        } catch (NullPointerException e) {
-                            Log.e(TAG, "onClick: ", e);
-                        }
-
-                        toastText = String.format(Locale.US, "Search returned %d recipes",
-                                recipes.size());
-                        Toast.makeText(context, toastText, Toast.LENGTH_LONG).show();
-                    }
                 } else {
                     toastText = "No recipes were found with those ingredients";
                     Toast.makeText(context, toastText, Toast.LENGTH_LONG).show();
@@ -195,6 +209,94 @@ public class SearchFragment extends Fragment implements View.OnClickListener
 
             } catch (MalformedURLException | ExecutionException | InterruptedException e) {
                 Log.e(TAG, "onClick: ", e);
+            }
+        }
+    }
+
+    /**
+     * Inner class which handles fetching recipes from API
+     * A weak reference of the outer-class SearchFragment is obtained to interact
+     * with UI elements on the background thread this inner class creates.
+     */
+    private static class FetchRecipe extends AsyncTask<URL, Integer, ArrayList<Recipe>>
+    {
+        private static final String TAG = "FetchRecipe";
+        private WeakReference<SearchFragment> fragmentWeakReference;
+
+        FetchRecipe(SearchFragment fragment) {
+            fragmentWeakReference = new WeakReference<>(fragment);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            SearchFragment f = fragmentWeakReference.get();
+            if (f != null && !f.isDetached() && !f.isRemoving())
+            {
+                f.helpText.setText(R.string.searching_for_recipes);
+                f.progressBar.setVisibility(View.VISIBLE);
+                f.searchProgressText.setVisibility(View.VISIBLE);
+                f.searchButton.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        protected ArrayList<Recipe> doInBackground(URL... urls)
+        {
+            ArrayList<Recipe> recipes = new ArrayList<>();
+            try {
+                for (int i = 0; i < urls.length; i++)
+                {
+                    boolean canConnect = APIConnector.executeQuery(urls[i]);
+                    if (canConnect)
+                    {
+                        int progress = (int) (100 * ((double) i / urls.length));
+                        publishProgress(progress);
+                        recipes.add(ParseJSON.parseRecipe(APIConnector.apiResponse));
+                    }
+                }
+                return recipes;
+
+            } catch (JSONException e) {
+                Log.e(TAG, "doInBackground: ", e);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+
+            SearchFragment f = fragmentWeakReference.get();
+            if (f != null && !f.isDetached() && !f.isRemoving())
+            {
+                f.progressBar.setProgress(values[0]);
+                f.searchProgressText.setText(String.format(Locale.US, "%d%%", values[0]));
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Recipe> recipes)
+        {
+            super.onPostExecute(recipes);
+            SearchFragment f = fragmentWeakReference.get();
+            if (f != null && !f.isDetached() && !f.isRemoving())
+            {
+                Global.returnedRecipesFromSearch = recipes;
+                if (Global.returnedRecipesFromSearch != null)
+                {
+                    f.progressBar.setProgress(0);
+                    f.progressBar.setVisibility(View.GONE);
+
+                    //Switch to the search results fragment
+                    try {
+                        f.getFragmentManager().beginTransaction()
+                                .addToBackStack("searchResults")
+                                .replace(R.id.fragment_container, new SearchResultsFragment())
+                                .commit();
+                    } catch (NullPointerException e) {
+                        Log.e(TAG, "onClick: ", e);
+                    }
+                }
             }
         }
     }
