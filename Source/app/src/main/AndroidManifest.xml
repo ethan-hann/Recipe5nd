@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.uhcl.recipe5nd">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.uhcl.recipe5nd"
+    tools:ignore="GoogleAppIndexingWarning">
+
 
     <uses-permission android:name="android.permission.INTERNET" />
 
