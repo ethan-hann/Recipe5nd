@@ -1,3 +1,21 @@
+/*
+ *     Recipe5nd - Reverse recipe lookup application for Android
+ *     Copyright (C) 2019 Mark Odom
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.uhcl.recipe5nd.fragments;
 
 import android.app.AlertDialog;
@@ -26,7 +44,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.adapters.IngredientAdapter;
-import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.Global;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Helper;
@@ -66,7 +84,7 @@ public class EditIngredientsFragment extends Fragment implements View.OnClickLis
         recyclerView = rootView.findViewById(R.id.pantryRecyclerView);
 
         getIngredientData(context);
-        if (Constants.usersIngredients != null) {
+        if (Global.usersIngredients != null) {
             listViewAdapter = new IngredientAdapter();
             listViewAdapter.notifyDataSetChanged();
 
@@ -81,6 +99,7 @@ public class EditIngredientsFragment extends Fragment implements View.OnClickLis
         return rootView;
     }
 
+    //Swipe left to delete ingredient item
     private ItemTouchHelper.SimpleCallback swipe()
     {
         return new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -92,10 +111,10 @@ public class EditIngredientsFragment extends Fragment implements View.OnClickLis
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                Constants.usersIngredients.remove(position);
-                Collections.sort(Constants.usersIngredients, new SortBasedOnTag());
-                String json = CreateJSON.createIngredientsJSON(context, Constants.usersIngredients, true);
-                fileHelper.saveFile(json, context, Constants.INGREDIENTS_FILE_NAME);
+                Global.usersIngredients.remove(position);
+                Collections.sort(Global.usersIngredients, new SortBasedOnTag());
+                String json = CreateJSON.createIngredientsJSON(context, Global.usersIngredients, true);
+                fileHelper.saveFile(json, context, Global.INGREDIENTS_FILE_NAME);
                 listViewAdapter.notifyDataSetChanged();
             }
         };
@@ -117,7 +136,6 @@ public class EditIngredientsFragment extends Fragment implements View.OnClickLis
         EditText ingNameTextBox = dialogView.findViewById(R.id.ingredient_dialog_edit_name);
         Helper.showKeyboard(ingNameTextBox);
 
-
         EditText ingOptionalTagBox = dialogView.findViewById(R.id.ingredient_dialog_edit_opt_tag);
         Spinner primaryTagSpinner = dialogView.findViewById(R.id.ingredient_dialog_spinner);
         ArrayAdapter<PrimaryTag> spinnerAdapter = new ArrayAdapter<>(context,
@@ -135,25 +153,27 @@ public class EditIngredientsFragment extends Fragment implements View.OnClickLis
                 String ingredientName = ingNameTextBox.getText().toString();
                 String optionalTag = ingOptionalTagBox.getText().toString();
                 PrimaryTag primaryTag = (PrimaryTag) primaryTagSpinner.getSelectedItem();
+
                 boolean validInput = Helper.validateInput(ingredientName);
                 boolean ingredientExists = false;
 
-                for (int j = 0; j < Constants.usersIngredients.size(); j++) {
-                    if (Constants.usersIngredients.get(j)
+                for (int j = 0; j < Global.usersIngredients.size(); j++) {
+                    if (Global.usersIngredients.get(j)
                             .getName().toLowerCase().equals(ingredientName.toLowerCase())) {
                         ingredientExists = true;
                     }
                 }
 
-                if (validInput && !ingredientName.isEmpty() && !ingredientExists) {
+                if (validInput && !ingredientName.isEmpty() &&
+                        !ingredientExists && !ingredientName.startsWith(" ")) {
                     i.setName(ingredientName);
                     i.setOptionalTag(optionalTag);
                     i.setPrimaryTag(primaryTag);
-                    Constants.usersIngredients.add(i);
-                    Collections.sort(Constants.usersIngredients, new SortBasedOnTag());
+                    Global.usersIngredients.add(i);
+                    Collections.sort(Global.usersIngredients, new SortBasedOnTag());
                     listViewAdapter.notifyDataSetChanged();
-                    String json = CreateJSON.createIngredientsJSON(context, Constants.usersIngredients, true);
-                    fileHelper.saveFile(json, context, Constants.INGREDIENTS_FILE_NAME);
+                    String json = CreateJSON.createIngredientsJSON(context, Global.usersIngredients, true);
+                    fileHelper.saveFile(json, context, Global.INGREDIENTS_FILE_NAME);
                     dialog.dismiss();
                 }
                 else
@@ -182,22 +202,22 @@ public class EditIngredientsFragment extends Fragment implements View.OnClickLis
 
     private void getIngredientData(Context context)
     {
-        if (Constants.doesIngredientsFileExist) {
+        if (Global.doesIngredientsFileExist) {
             try {
-                String ingredientJSON = fileHelper.readFile(context, Constants.INGREDIENTS_FILE_NAME);
-                Constants.usersIngredients = ParseJSON.parseIngredients(ingredientJSON);
+                String ingredientJSON = fileHelper.readFile(context, Global.INGREDIENTS_FILE_NAME);
+                Global.usersIngredients = ParseJSON.parseIngredients(ingredientJSON);
 
-                if (Constants.usersIngredients != null)
+                if (Global.usersIngredients != null)
                 {
-                    Collections.sort(Constants.usersIngredients, new SortBasedOnTag());
+                    Collections.sort(Global.usersIngredients, new SortBasedOnTag());
                 }
                 else
                 {
-                    Constants.usersIngredients = new ArrayList<>();
+                    Global.usersIngredients = new ArrayList<>();
                 }
             } catch (JSONException e) {
                 Log.e(TAG, "getIngredientData: ", e);
-                Constants.usersIngredients = new ArrayList<>();
+                Global.usersIngredients = new ArrayList<>();
             }
         }
     }

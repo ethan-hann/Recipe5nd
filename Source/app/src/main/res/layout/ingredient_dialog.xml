@@ -25,7 +25,8 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:textSize="@dimen/subtitle1"
-        android:hint="@string/pantryTextHint" />
+        android:hint="@string/pantryTextHint"
+        android:maxLength="25" />
 
     <EditText
         android:id="@+id/ingredient_dialog_edit_opt_tag"
@@ -34,7 +35,8 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:textSize="@dimen/subtitle1"
-        android:hint="@string/pantryOptionalTag" />
+        android:hint="@string/pantryOptionalTag"
+        android:maxLength="25" />
 
     <Spinner
         android:id="@+id/ingredient_dialog_spinner"

@@ -1,10 +1,27 @@
+/*
+ *     Recipe5nd - Reverse recipe lookup application for Android
+ *     Copyright (C) 2019 Manuel Berlanga
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.uhcl.recipe5nd.fragments;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +41,10 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.adapters.ShoppingItemsAdapter;
-import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.Global;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Helper;
-import com.uhcl.recipe5nd.helperClasses.ShoppingList;
 
 public class ShoppingItemsFragment extends Fragment implements View.OnClickListener
 {
@@ -42,7 +58,7 @@ public class ShoppingItemsFragment extends Fragment implements View.OnClickListe
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Constants.currentlyViewedShoppingList.getTitle());
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Global.currentlyViewedShoppingList.getTitle());
     }
 
     @NonNull
@@ -66,8 +82,9 @@ public class ShoppingItemsFragment extends Fragment implements View.OnClickListe
         return rootView;
     }
 
+    //Swipe left to remove items from shopping list
     private ItemTouchHelper.SimpleCallback swipe(){
-        return new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT )
+        return new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT )
         {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -77,10 +94,10 @@ public class ShoppingItemsFragment extends Fragment implements View.OnClickListe
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 int position = viewHolder.getAdapterPosition();
-                Constants.currentlyViewedShoppingList.getItems().remove(position);
-                Constants.currentlyViewedShoppingList.getIsCheckedArray().delete(position);
-                String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
-                fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
+                Global.currentlyViewedShoppingList.getItems().remove(position);
+                Global.currentlyViewedShoppingList.getIsCheckedArray().delete(position);
+                String json = CreateJSON.createShoppingListsJSON(context, Global.shoppingLists, true);
+                fileHelper.saveFile(json, context, Global.SHOPPING_LIST_FILE_NAME);
                 shoppingItemsAdapter.notifyItemRemoved(position);
             }
         };
@@ -111,11 +128,11 @@ public class ShoppingItemsFragment extends Fragment implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if (TextUtils.isEmpty(dialogEditText.getText())) {
-                    Toast.makeText(context, "Item cannot be empty.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Item name cannot be empty", Toast.LENGTH_SHORT).show();
                 }else {
-                    Constants.currentlyViewedShoppingList.addItem(dialogEditText.getText().toString());
-                    String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
-                    fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
+                    Global.currentlyViewedShoppingList.addItem(dialogEditText.getText().toString());
+                    String json = CreateJSON.createShoppingListsJSON(context, Global.shoppingLists, true);
+                    fileHelper.saveFile(json, context, Global.SHOPPING_LIST_FILE_NAME);
                 }
                 shoppingItemsAdapter.notifyDataSetChanged();
 

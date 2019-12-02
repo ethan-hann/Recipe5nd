@@ -1,3 +1,21 @@
+/*
+ *     Recipe5nd - Reverse recipe lookup application for Android
+ *     Copyright (C) 2019 Mark Odom
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.uhcl.recipe5nd.adapters;
 
 import android.app.AlertDialog;
@@ -15,7 +33,7 @@ import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.uhcl.recipe5nd.R;
-import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.Global;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Helper;
@@ -33,7 +51,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return Constants.usersIngredients == null ? 0 : Constants.usersIngredients.size();
+        return Global.usersIngredients == null ? 0 : Global.usersIngredients.size();
     }
 
     @Override
@@ -75,9 +93,9 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
         void bind(int pos)
         {
-            ingredientNameText.setText(Constants.usersIngredients.get(pos).getName());
-            ingredientOptionalTagText.setText(Constants.usersIngredients.get(pos).getOptionalTag());
-            ingredientPrimaryTagText.setText(Constants.usersIngredients.get(pos).getPrimaryTag().name());
+            ingredientNameText.setText(Global.usersIngredients.get(pos).getName());
+            ingredientOptionalTagText.setText(Global.usersIngredients.get(pos).getOptionalTag());
+            ingredientPrimaryTagText.setText(Global.usersIngredients.get(pos).getPrimaryTag().name());
 
             parent.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -93,11 +111,11 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
                     textView.setText(R.string.edit_ingredient);
 
                     EditText ingNameTextBox = dialogView.findViewById(R.id.ingredient_dialog_edit_name);
-                    ingNameTextBox.setText(Constants.usersIngredients.get(pos).getName());
+                    ingNameTextBox.setText(Global.usersIngredients.get(pos).getName());
                     Helper.showKeyboard(ingNameTextBox);
 
                     EditText ingOptionalTagBox = dialogView.findViewById(R.id.ingredient_dialog_edit_opt_tag);
-                    ingOptionalTagBox.setText(Constants.usersIngredients.get(pos).getOptionalTag());
+                    ingOptionalTagBox.setText(Global.usersIngredients.get(pos).getOptionalTag());
 
                     Spinner primaryTagSpinner = dialogView.findViewById(R.id.ingredient_dialog_spinner);
                     ArrayAdapter<PrimaryTag> spinnerAdapter = new ArrayAdapter<>(context,
@@ -105,7 +123,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
                     spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     primaryTagSpinner.setAdapter(spinnerAdapter);
 
-                    primaryTagSpinner.setSelection(spinnerAdapter.getPosition(Constants.usersIngredients.get(pos).getPrimaryTag()));
+                    primaryTagSpinner.setSelection(spinnerAdapter.getPosition(Global.usersIngredients.get(pos).getPrimaryTag()));
 
                     MaterialButton okButton = dialogView.findViewById(R.id.ingredient_dialog_ok);
                     MaterialButton cancelButton = dialogView.findViewById(R.id.ingredient_dialog_cancel);
@@ -120,14 +138,14 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
                             boolean validInput = Helper.validateInput(ingredientName);
 
                             if (validInput && !ingredientName.isEmpty()) {
-                                Constants.usersIngredients.remove(pos);
+                                Global.usersIngredients.remove(pos);
                                 i.setName(ingredientName);
                                 i.setOptionalTag(optionalTag);
                                 i.setPrimaryTag(primaryTag);
-                                Constants.usersIngredients.add(i);
+                                Global.usersIngredients.add(i);
                                 notifyDataSetChanged();
-                                String json = CreateJSON.createIngredientsJSON(context, Constants.usersIngredients, true);
-                                fileHelper.saveFile(json, context, Constants.INGREDIENTS_FILE_NAME);
+                                String json = CreateJSON.createIngredientsJSON(context, Global.usersIngredients, true);
+                                fileHelper.saveFile(json, context, Global.INGREDIENTS_FILE_NAME);
                                 dialog.dismiss();
                             }
                             else

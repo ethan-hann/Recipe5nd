@@ -1,3 +1,21 @@
+/*
+ *     Recipe5nd - Reverse recipe lookup application for Android
+ *     Copyright (C) 2019 Ethan D. Hann
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.uhcl.recipe5nd.adapters;
 
 import android.content.Context;
@@ -16,7 +34,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.squareup.picasso.Picasso;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.fragments.FavoriteRecipeDetailsFragment;
-import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.Global;
 import com.uhcl.recipe5nd.helperClasses.Helper;
 import com.uhcl.recipe5nd.helperClasses.Recipe;
 
@@ -34,7 +52,7 @@ public class FavoriteRecipeAdapter extends RecyclerView.Adapter<FavoriteRecipeAd
     private void getRecipeImageURLS()
     {
         imageURLS = new ArrayList<>();
-        for (Recipe r : Constants.favoriteRecipes)
+        for (Recipe r : Global.favoriteRecipes)
         {
             imageURLS.add(r.getStrMealThumb());
         }
@@ -42,7 +60,7 @@ public class FavoriteRecipeAdapter extends RecyclerView.Adapter<FavoriteRecipeAd
 
     @Override
     public int getItemCount() {
-        return Constants.favoriteRecipes == null ? 0 : Constants.favoriteRecipes.size();
+        return Global.favoriteRecipes == null ? 0 : Global.favoriteRecipes.size();
     }
 
     @Override
@@ -80,12 +98,12 @@ public class FavoriteRecipeAdapter extends RecyclerView.Adapter<FavoriteRecipeAd
         void bind(int pos) {
             cardImage = cardView.findViewById(R.id.search_results_card_image);
             cardText = cardView.findViewById(R.id.search_results_card_text);
-            cardText.setText(Constants.favoriteRecipes.get(pos).getStrMeal());
+            cardText.setText(Global.favoriteRecipes.get(pos).getStrMeal());
 
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Constants.currentlyViewedRecipe = Constants.favoriteRecipes.get(pos);
+                    Global.currentlyViewedRecipe = Global.favoriteRecipes.get(pos);
 
                     AppCompatActivity activity = Helper.unwrap(context);
                     activity

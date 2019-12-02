@@ -25,7 +25,8 @@
         android:ems="10"
         android:textSize="@dimen/subtitle1"
         android:inputType="textPersonName"
-        android:hint="@string/empty_string"/>
+        android:hint="@string/empty_string"
+        android:maxLength="25" />
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -1,3 +1,21 @@
+/*
+ *     Recipe5nd - Reverse recipe lookup application for Android
+ *     Copyright (C) 2019 Ethan D. Hann
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.uhcl.recipe5nd.adapters;
 
 import android.util.Log;
@@ -11,7 +29,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.squareup.picasso.Picasso;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.fragments.RecipeDetailsFragment;
-import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.Global;
 import com.uhcl.recipe5nd.helperClasses.Helper;
 import com.uhcl.recipe5nd.helperClasses.Recipe;
 
@@ -21,12 +39,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-//TODO: Fix card images not loading until user scrolls recyclerview
-//TODO: Fix some card images not loading at all
-/**
- * Adapater class for the RecyclerView of the SearchResultsFragment
- * This class handles displaying and updating CardViews in the RecyclerView
- */
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder>
 {
     private static final String TAG = "RecipeAdapter: ";
@@ -34,14 +46,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
 
     public RecipeAdapter() {
-        if (Constants.returnedRecipesFromSearch == null)
+        if (Global.returnedRecipesFromSearch == null)
         {
-            Constants.returnedRecipesFromSearch = new ArrayList<>();
+            Global.returnedRecipesFromSearch = new ArrayList<>();
         }
 
-        if (Constants.returnedRecipeImages == null)
+        if (Global.returnedRecipeImages == null)
         {
-            Constants.returnedRecipeImages = new ArrayList<>();
+            Global.returnedRecipeImages = new ArrayList<>();
         }
 
         getRecipeImageURLS();
@@ -53,7 +65,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     private void getRecipeImageURLS()
     {
         imageURLS = new ArrayList<>();
-        for (Recipe r : Constants.returnedRecipesFromSearch)
+        for (Recipe r : Global.returnedRecipesFromSearch)
         {
             imageURLS.add(r.getStrMealThumb());
         }
@@ -79,8 +91,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return Constants.returnedRecipesFromSearch == null
-                ? 0 : Constants.returnedRecipesFromSearch.size();
+        return Global.returnedRecipesFromSearch == null
+                ? 0 : Global.returnedRecipesFromSearch.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder
@@ -100,12 +112,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             cardImage = cardView.findViewById(R.id.search_results_card_image);
             cardText = cardView.findViewById(R.id.search_results_card_text);
 
-            cardText.setText(Constants.returnedRecipesFromSearch.get(pos).getStrMeal());
+            cardText.setText(Global.returnedRecipesFromSearch.get(pos).getStrMeal());
 
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Constants.currentlyViewedRecipe = Constants.returnedRecipesFromSearch.get(pos);
+                    Global.currentlyViewedRecipe = Global.returnedRecipesFromSearch.get(pos);
 
                     AppCompatActivity activity = Helper.unwrap(view.getContext());
                     activity
@@ -117,6 +129,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                 }
             });
 
+            //Load images into the card image view using Picasso library
             String url = imageURLS.get(pos);
             Picasso.get().load(url).into(cardImage);
         }

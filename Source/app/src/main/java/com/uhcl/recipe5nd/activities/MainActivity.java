@@ -1,3 +1,21 @@
+/*
+ *     Recipe5nd - Reverse recipe lookup application for Android
+ *     Copyright (C) 2019 Ethan D. Hann
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.uhcl.recipe5nd.activities;
 
 import androidx.annotation.NonNull;
@@ -25,7 +43,7 @@ import com.uhcl.recipe5nd.fragments.EditIngredientsFragment;
 import com.uhcl.recipe5nd.fragments.SearchFragment;
 import com.uhcl.recipe5nd.fragments.ShoppingFragment;
 import com.uhcl.recipe5nd.fragments.FavoriteRecipesFragment;
-import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.Global;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Helper;
 
@@ -44,7 +62,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         context = getApplicationContext();
 
-        //Using a Toolbar instead of an Action bar to adhere to Material Design
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -57,7 +74,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         //Initialize files
-        Constants.init(this);
+        Global.init(this);
 
         drawer = findViewById(R.id.drawer_layout);
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -147,9 +164,9 @@ public class MainActivity extends AppCompatActivity
                     public void onClick(View view) {
                         FileHelper fileHelper = new FileHelper();
                         fileHelper.clearAllData(context);
-                        Constants.usersIngredients = new ArrayList<>();
-                        Constants.shoppingLists = new ArrayList<>();
-                        Constants.favoriteRecipes = new ArrayList<>();
+                        Global.usersIngredients = new ArrayList<>();
+                        Global.shoppingLists = new ArrayList<>();
+                        Global.favoriteRecipes = new ArrayList<>();
                         dialog.dismiss();
                         navView.setCheckedItem(R.id.nav_pantry);
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,

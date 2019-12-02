@@ -1,3 +1,21 @@
+/*
+ *     Recipe5nd - Reverse recipe lookup application for Android
+ *     Copyright (C) 2019 Manuel Berlanga
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.uhcl.recipe5nd.fragments;
 
 import android.app.AlertDialog;
@@ -22,7 +40,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.uhcl.recipe5nd.R;
 import com.uhcl.recipe5nd.adapters.ShoppingAdapter;
-import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.Global;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Helper;
@@ -64,7 +82,7 @@ public class ShoppingFragment extends Fragment implements View.OnClickListener
         recyclerView = rootView.findViewById(R.id.shoppingList_recycler_view);
 
         getShoppingData(context);
-        if (Constants.shoppingLists != null) {
+        if (Global.shoppingLists != null) {
             shoppingAdapter = new ShoppingAdapter();
             shoppingAdapter.notifyDataSetChanged();
 
@@ -78,18 +96,22 @@ public class ShoppingFragment extends Fragment implements View.OnClickListener
         return rootView;
     }
 
+    /**
+     * Get shopping data from a saved file
+     * @param context : the application's context
+     */
     private void getShoppingData(Context context)
     {
-        if (Constants.doesShoppingListExist) {
+        if (Global.doesShoppingListExist) {
             try {
-                String shoppingJSON = fileHelper.readFile(context, Constants.SHOPPING_LIST_FILE_NAME);
-                Constants.shoppingLists = ParseJSON.parseShoppingLists(shoppingJSON);
-                if (Constants.shoppingLists != null) {
-                    Collections.sort(Constants.shoppingLists, new SortBasedOnDate());
+                String shoppingJSON = fileHelper.readFile(context, Global.SHOPPING_LIST_FILE_NAME);
+                Global.shoppingLists = ParseJSON.parseShoppingLists(shoppingJSON);
+                if (Global.shoppingLists != null) {
+                    Collections.sort(Global.shoppingLists, new SortBasedOnDate());
                 }
                 else
                 {
-                    Constants.shoppingLists = new ArrayList<>();
+                    Global.shoppingLists = new ArrayList<>();
                 }
             } catch (JSONException e) {
                 Log.e(TAG, "getShoppingData: ", e);
@@ -124,19 +146,19 @@ public class ShoppingFragment extends Fragment implements View.OnClickListener
                     ShoppingList s = new ShoppingList();
                     s.setTitle("New Shopping List");
                     s.setDate(Calendar.getInstance().getTime());
-                    Constants.shoppingLists.add(s);
-                    Collections.sort(Constants.shoppingLists, new SortBasedOnDate());
-                    String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
-                    fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
+                    Global.shoppingLists.add(s);
+                    Collections.sort(Global.shoppingLists, new SortBasedOnDate());
+                    String json = CreateJSON.createShoppingListsJSON(context, Global.shoppingLists, true);
+                    fileHelper.saveFile(json, context, Global.SHOPPING_LIST_FILE_NAME);
                 } else
                 {
                     ShoppingList s = new ShoppingList();
                     s.setTitle(text.getText().toString());
                     s.setDate(Calendar.getInstance().getTime());
-                    Constants.shoppingLists.add(s);
-                    Collections.sort(Constants.shoppingLists, new SortBasedOnDate());
-                    String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
-                    fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
+                    Global.shoppingLists.add(s);
+                    Collections.sort(Global.shoppingLists, new SortBasedOnDate());
+                    String json = CreateJSON.createShoppingListsJSON(context, Global.shoppingLists, true);
+                    fileHelper.saveFile(json, context, Global.SHOPPING_LIST_FILE_NAME);
                 }
 
                 shoppingAdapter.notifyDataSetChanged();

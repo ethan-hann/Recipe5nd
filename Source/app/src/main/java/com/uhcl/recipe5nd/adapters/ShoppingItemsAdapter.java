@@ -1,3 +1,21 @@
+/*
+ *     Recipe5nd - Reverse recipe lookup application for Android
+ *     Copyright (C) 2019 Manuel Berlanga
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.uhcl.recipe5nd.adapters;
 
 import android.app.AlertDialog;
@@ -16,13 +34,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.uhcl.recipe5nd.R;
-import com.uhcl.recipe5nd.helperClasses.Constants;
+import com.uhcl.recipe5nd.helperClasses.Global;
 import com.uhcl.recipe5nd.helperClasses.CreateJSON;
 import com.uhcl.recipe5nd.helperClasses.FileHelper;
 import com.uhcl.recipe5nd.helperClasses.Helper;
-
-//TODO: change this class to use a global Constants.currentlyViewedShoppingList
-//      to match the other classes.
 
 public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdapter.ShoppingItemViewHolder>
 {
@@ -53,7 +68,7 @@ public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdap
     }
 
     @Override
-    public int getItemCount(){return Constants.currentlyViewedShoppingList.getItems().size();}
+    public int getItemCount(){return Global.currentlyViewedShoppingList.getItems().size();}
 
     class ShoppingItemViewHolder extends RecyclerView.ViewHolder
     {
@@ -69,30 +84,30 @@ public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdap
 
         void bind(int position)
         {
-            itemTextView.setText(Constants.currentlyViewedShoppingList.getItems().get(position));
+            itemTextView.setText(Global.currentlyViewedShoppingList.getItems().get(position));
             itemTextView.setPaintFlags(0);
 
-            if (Constants.currentlyViewedShoppingList.isChecked(position)) {
+            if (Global.currentlyViewedShoppingList.isChecked(position)) {
                 itemTextView.setPaintFlags(itemTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
 
             itemTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!Constants.currentlyViewedShoppingList.isChecked(position))
+                    if (!Global.currentlyViewedShoppingList.isChecked(position))
                     {
-                        Constants.currentlyViewedShoppingList.setChecked(position, true);
+                        Global.currentlyViewedShoppingList.setChecked(position, true);
                         itemTextView.setPaintFlags(itemTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                        String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
-                        fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
+                        String json = CreateJSON.createShoppingListsJSON(context, Global.shoppingLists, true);
+                        fileHelper.saveFile(json, context, Global.SHOPPING_LIST_FILE_NAME);
                         notifyDataSetChanged();
                     }
                     else
                     {
-                        Constants.currentlyViewedShoppingList.setChecked(position, false);
+                        Global.currentlyViewedShoppingList.setChecked(position, false);
                         itemTextView.setPaintFlags(0);
-                        String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
-                        fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
+                        String json = CreateJSON.createShoppingListsJSON(context, Global.shoppingLists, true);
+                        fileHelper.saveFile(json, context, Global.SHOPPING_LIST_FILE_NAME);
                         notifyDataSetChanged();
                     }
                 }
@@ -109,8 +124,8 @@ public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdap
                     AlertDialog alert = dialogBuilder.create();
 
                     EditText dialogEditText = dialogView.findViewById(R.id.shoppingDialogEditText);
-                    dialogEditText.setText(Constants.currentlyViewedShoppingList.getItems().get(position));
-                    dialogEditText.setSelection(Constants.currentlyViewedShoppingList.getItems().get(position).length());
+                    dialogEditText.setText(Global.currentlyViewedShoppingList.getItems().get(position));
+                    dialogEditText.setSelection(Global.currentlyViewedShoppingList.getItems().get(position).length());
                     dialogEditText.setVisibility(View.VISIBLE);
                     Helper.showKeyboard(dialogEditText);
 
@@ -123,10 +138,10 @@ public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdap
                     okButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Constants.currentlyViewedShoppingList.getItems().remove(position);
-                            Constants.currentlyViewedShoppingList.getItems().add(position, dialogEditText.getText().toString());
-                            String json = CreateJSON.createShoppingListsJSON(context, Constants.shoppingLists, true);
-                            fileHelper.saveFile(json, context, Constants.SHOPPING_LIST_FILE_NAME);
+                            Global.currentlyViewedShoppingList.getItems().remove(position);
+                            Global.currentlyViewedShoppingList.getItems().add(position, dialogEditText.getText().toString());
+                            String json = CreateJSON.createShoppingListsJSON(context, Global.shoppingLists, true);
+                            fileHelper.saveFile(json, context, Global.SHOPPING_LIST_FILE_NAME);
                             notifyDataSetChanged();
                             alert.dismiss();
                         }
