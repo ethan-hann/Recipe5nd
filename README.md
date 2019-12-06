@@ -44,4 +44,4 @@ In the security settings on your device, you need to have ```Install unknown app
 See also the list of [contributors](https://github.com/ethan-hann/Recipe5nd/graphs/contributors) who participated in this project.
 
 ## License
-This project is licensed under the GPL-v3.0 license. See the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the GPL-v3.0 license. See the [LICENSE.md](LICENSE) file for details.
