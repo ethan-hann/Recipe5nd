@@ -1,4 +1,7 @@
 # Recipe5nd
+![RELEASE](https://img.shields.io/github/v/release/ethan-hann/Recipe5nd?include_prereleases)
+
+
 *An easy to use reverse recipe lookup application for Android smartphones*
 
 ## List of Features
