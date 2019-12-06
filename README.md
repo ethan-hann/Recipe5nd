@@ -1,5 +1,6 @@
 # Recipe5nd
-![RELEASE](https://img.shields.io/github/v/release/ethan-hann/Recipe5nd?include_prereleases)
+![RELEASE](https://img.shields.io/github/v/release/ethan-hann/Recipe5nd?include_prereleases)  ![REPO-SIZE](https://img.shields.io/github/repo-size/ethan-hann/Recipe5nd)  [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9e2735a34cd948e3b52dabf454cc4925)](https://www.codacy.com/manual/ethan-hann/Recipe5nd?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ethan-hann/Recipe5nd&amp;utm_campaign=Badge_Grade)
+![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)
 
 
 *An easy to use reverse recipe lookup application for Android smartphones*
