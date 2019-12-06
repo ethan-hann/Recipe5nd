@@ -30,6 +30,7 @@ You can build and deploy the application to an emulator directly in Android Stud
 
 ## Deployment
 ![RELEASE](https://img.shields.io/github/v/release/ethan-hann/Recipe5nd?include_prereleases)
+
 There are future plans to integrate this app with Google Play, but for now here are the instructions to get the app on your smartphone:
 First make sure it meets the minimum requirements. Then go to [releases](https://github.com/ethan-hann/Recipe5nd/releases) and download the APK for the latest version.
 In the security settings on your device, you need to have ```Install unknown apps``` enabled on your device.
