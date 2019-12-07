@@ -8,6 +8,9 @@ No longer do you have to wonder what you can cook! If you have an Android phone,
 
 This application makes use of Google's [Material Design](https://material.io/) to provide a clear and clean user interface and experience.
 
+## Demo Video
+[![IMAGE ALT TEXT HERE](https://i.imgur.com/U1p74mU.png)](https://www.youtube.com/watch?v=9o17MB7_JBU)
+
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. If you wish to only install the application, see deployment.
 
@@ -32,8 +35,10 @@ You can build and deploy the application to an emulator directly in Android Stud
 ![RELEASE](https://img.shields.io/github/v/release/ethan-hann/Recipe5nd?include_prereleases)
 
 There are future plans to integrate this app with Google Play, but for now here are the instructions to get the app on your smartphone:
-First make sure it meets the minimum requirements. Then go to [releases](https://github.com/ethan-hann/Recipe5nd/releases) and download the APK for the latest version.
-In the security settings on your device, you need to have ```Install unknown apps``` enabled on your device.
+
+1. Make sure your device meets the minimum requirements.
+2. Go to [releases](https://github.com/ethan-hann/Recipe5nd/releases) and download the APK for the latest version.
+3. In the security settings on your device, you need to have ```Install unknown apps``` enabled.
 
 ## Authors
 * **Ethan Hann** - *Lead Programmer and Project Manager*
