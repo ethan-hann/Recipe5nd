@@ -42,7 +42,7 @@ There are future plans to integrate this app with Google Play, but for now here 
 
 ## Authors
 * **Ethan Hann** - *Lead Programmer and Project Manager*
-* **Mark Odom** - *Tester and Programmer* - [Github](https://github.com/wtfmark)
+* **Mark Odom** - *Tester and Programmer* - [Github](https://github.com/Mark-Odom)
 * **Ogheneovo (Nova) Abu** - *UI Design and Programmer* - [Github](https://github.com/novamapp)
 * **Thu Le** - *Presentation Manager and Programmer* - [Github](https://github.com/cf93)
 * **Manuel Berlanga** - *Research Manager and Programmer* - [Github](https://github.com/manuel113)
